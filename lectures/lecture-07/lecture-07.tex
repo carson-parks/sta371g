@@ -127,7 +127,7 @@
         \column{.5\textwidth}
           \begin{itemize}
             \item MEDV: Median Price (response)
-            \item LONG: Longitude
+            \item LON: Longitude
             \item LAT: Latitude
             \item CRIME: Per capita crime rate
             \item ZONE: Proportion of large lots
@@ -194,8 +194,8 @@
 
           & & \textbf{LAT} & \textbf{LON} & \textbf{...} &   \textbf{LSTAT} & \textbf{error}\\
           \toprule
-    $y_1$ & 1 & $x_{11}$ & $x_{12}$  & \textbf{...} & $x_{1,13}$ & $\epsilon_1$  \\
-    $y_2$ & 1 & $x_{21}$ & $x_{22}$  & \textbf{...} & $x_{2,13}$ & $\epsilon_2$\\
+    $y_1$ & 1 & $x_{1,1}$ & $x_{1,2}$  & \textbf{...} & $x_{1,13}$ & $\epsilon_1$  \\
+    $y_2$ & 1 & $x_{2,1}$ & $x_{2,2}$  & \textbf{...} & $x_{2,13}$ & $\epsilon_2$\\
     \textbf{...}  & \textbf{...} &  \textbf{...} & \textbf{...}  & \textbf{...} &   \textbf{...}  & \textbf{...}\\
     %$y_{503}$ & 1 &  $x_{503,1}$ & $x_{503,2}$  & \textbf{...} &   $x_{503,13}$  & $\epsilon_{503}$\\
       
@@ -279,7 +279,7 @@ LSTAT          -11.416      1.022 -11.169    0.000
 \end{knitrout}
       \quad \pause
       
-      INDUS, AGE, LAT and LON seem to be statistically insignificant. Should we omit them altogether?
+      Intercept, INDUS, AGE, LAT and LON seem to be statistically insignificant. Should we omit them altogether?
     \end{frame}
     
     
@@ -581,7 +581,7 @@ LSTAT        -11.072      0.957 -11.563    0.000
     
     \begin{frame}[fragile]
       \fontsize{9}{9}\selectfont
-      Which ones seem to be most important? 
+      Which ones seem to be the most important? 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
@@ -602,6 +602,7 @@ LSTAT        -11.072      0.957 -11.563    0.000
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
+      \lc
     \end{frame}
     
  
