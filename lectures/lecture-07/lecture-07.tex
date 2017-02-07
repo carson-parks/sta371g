@@ -93,7 +93,7 @@
           \begin{itemize}
             \item Distance to downtown
             \item Crime rate
-            \item Pollution
+            \item ...
           \end{itemize}
       \end{columns}
       
@@ -154,7 +154,7 @@
     
     
     \begin{frame}
-        Can you guess top three factors?
+        Can you guess the top three factors?
         \lc
     \end{frame}
     
@@ -545,23 +545,63 @@ LSTAT        -11.072      0.957 -11.563    0.000
     \begin{frame}{When to omit, when to keep?}
       We often prefer to omit statistically insignificant variables. Because:
       \begin{itemize}
-        \item The model gets simpler.
-        \item Insignificant variables may lead to incorrect interpretations (as in LON).
-        \item Especially when data is small, insignificant variables harm the quality of the model.
+        \item The model gets simpler
+        \item Insignificant variables may lead to incorrect interpretations (as in LON)
+        \item Especially when data is small, insignificant variables harm the quality of the model
         
       \end{itemize}
       
     \end{frame}
     
     \begin{frame}{When to omit, when to keep?}
-      We often prefer to omit statistically insignificant variables. Because:
+      We keep a variable in the model, even if it is statistically insignificant, when:
       \begin{itemize}
-        \item The model gets simpler.
-        \item Insignificant variables may lead to incorrect interpretations (as in LON).
-        \item Especially when data is small, insignificant variables harm the quality of the model.
+        \item We are testing a hypothesis on the variable
+        \item The variable has a big effect, although it is statistically insignificant
+        \item It is an expected control variable (e.g. age in medical studies, race in sociological studies etc.)
+        \item It is included in a higher order term (more on this later)
         
       \end{itemize}
       
+    \end{frame}
+    
+    
+    \begin{frame}{``Most important'' predictors}
+      How to identify which predictors have ``more significant'' effect on the response?
+      
+      \begin{itemize}
+        \item[] Parameter estimate? \pause
+        \item[] P-value? \pause
+        \item[] t score? \pause \greencheckmark
+        
+      \end{itemize}
+      
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]
+      \fontsize{9}{9}\selectfont
+      Which ones seem to be most important? 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlkwd{round}\hlstd{(}\hlkwd{summary}\hlstd{(model)}\hlopt{$}\hlstd{coefficients,}\hlnum{3}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)  840.065     99.001   8.485    0.000
+CRIME         -2.566      0.664  -3.866    0.000
+ZONE           0.922      0.276   3.338    0.001
+NOX         -346.926     71.811  -4.831    0.000
+ROOM          74.243      8.262   8.986    0.000
+DIST         -31.050      3.785  -8.203    0.000
+RADIAL         6.000      1.288   4.658    0.000
+TAX           -0.265      0.069  -3.870    0.000
+PTRATIO      -19.280      2.627  -7.339    0.000
+LSTAT        -11.072      0.957 -11.563    0.000
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
     \end{frame}
     
  
