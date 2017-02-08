@@ -8,7 +8,7 @@
   <<setup, include=F, cache=F>>=
   opts_knit$set(global.par=T)
   knit_hooks$set(crop=hook_pdfcrop)
-  opts_chunk$set(dev='tikz', external=F, fig.path='C:/temp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, prompt=T, tidy=F)
+  opts_chunk$set(dev='tikz', external=F, fig.path='/tmp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, prompt=T, tidy=F)
   knit_theme$set('camo')
   @
   <<include=F, cache=F>>=
@@ -145,7 +145,7 @@
         {\carlitoTLF % Use monospaced lining figures
         \begin{tabularx}{\textwidth}{Xrrrrrr}
            
-           & $\beta_0$ & $\beta_1$ & \beta_2 & \textbf{...} &   \beta_{13} & \\
+           & $\beta_0$ & $\beta_1$ & $\beta_2$ & \textbf{...} &   $\beta_{13}$ & \\
           \toprule
 
           & & \textbf{LAT} & \textbf{LON} & \textbf{...} &   \textbf{LSTAT} & \textbf{error}\\
