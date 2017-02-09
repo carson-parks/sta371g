@@ -73,10 +73,10 @@
   \begin{darkframes}
   
   
-    \begin{frame}[fragile]{Predicting House prices in Greater Boston Area}
+    \begin{frame}[fragile]{Predicting House prices in the Greater Boston Area}
       \fontsize{9}{9}\selectfont
       
-      Median house price for each census tract, along with other data.
+      Median house price for each census tract, along with other data. \pause
       
       The final model:
       
@@ -164,7 +164,7 @@
     
     \begin{frame}[fragile]{How do we do with the predictions?}
       \fontsize{9}{9}\selectfont
-      Let's plot the residuals, i.e., discrepancies between the predictions and the data.
+      Let's plot the residuals, i.e., discrepancies between the predictions and the data. \pause
       
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
@@ -183,7 +183,7 @@
     
     \begin{frame}[fragile]{How do we do with the predictions?}
       \fontsize{9}{9}\selectfont
-      It looks like a normal distribution. Let's look at the mean of the residuals:
+      It looks like a normal distribution. Let's look at the mean of the residuals: \pause
       
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
@@ -195,13 +195,13 @@
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-      Virtually zero. 
+      Virtually zero. \pause
       
-      It will be always zero since we allow an intercept and minimize the sum of squared residuals.
+      It will be always zero since we allow an intercept and minimize the sum of squared residuals. \pause
       
       \bigskip
       
-      What about the standard deviation?
+      What about the standard deviation? \pause
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
@@ -212,6 +212,7 @@
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
+      \pause
       By the 2 standard deviation rule, we could estimate that 95\% of the time residuals are in [-\$192K, \$192K] range.
     \end{frame}  
    
@@ -245,13 +246,13 @@
     
     
     \begin{frame}{Again: regression assumptions}
-      In multiple regression, we check on five things:
+      Remember the big four:
       \begin{enumerate}
-        \item The residuals are independent.
+        \item \alert{The residuals are independent.}
         \item $Y$ is a linear function of $X$s (except for the errors).
         \item The residuals are normally distributed.
         \item The variance of $Y$ is the same for any value of $X$s (``homoscedasticity'').
-        \item No multicollinearity between predictors.
+    
       \end{enumerate}
     \end{frame}
     
@@ -259,31 +260,7 @@
     \begin{frame}[fragile]{Assumption 1: Independence}
       Independence: No correlation between residuals. \pause
     
-      Difficult to verify this from plots, use: Durbin-Watson test. \pause
-    
-      \bigskip
-    
-      $H_0$: No correlation between residuals (i.e. independent).
-    
-      $H_1$: They are not independent \pause
-    
-      \bigskip
-    
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlkwd{durbinWatsonTest}\hlstd{(model)}
-\end{alltt}
-\begin{verbatim}
- lag Autocorrelation D-W Statistic p-value
-   1       0.4918641      1.002805       0
- Alternative hypothesis: rho != 0
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-      \pause
-    
-      Oops... The model seems to have failed here. 
+      Difficult to verify this from plots.
       
     \end{frame}
     
@@ -292,19 +269,18 @@
     
     
     \begin{frame}{Again: regression assumptions}
-      In multiple regression, we check on five things:
+      Remember the big four:
       \begin{enumerate}
         \item The residuals are independent.
-        \item $Y$ is a linear function of $X$s (except for the errors).
+        \item \alert{$Y$ is a linear function of $X$s (except for the errors).}
         \item The residuals are normally distributed.
         \item The variance of $Y$ is the same for any value of $X$s (``homoscedasticity'').
-        \item No multicollinearity between predictors.
       \end{enumerate}
     \end{frame}
     
     
     
-    \begin{frame}[fragile]{Assumption 2: Linearity}
+    \begin{frame}[fragile]%{Assumption 2: Linearity}
     
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
@@ -312,20 +288,19 @@
 \hlstd{> }\hlkwd{crPlots}\hlstd{(model,} \hlkwc{main}\hlstd{=}\hlstr{''}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\input{C:/temp/figures/unnamed-chunk-10-1.tikz}
+\input{C:/temp/figures/unnamed-chunk-9-1.tikz}
 
 \end{knitrout}
     \end{frame}   
     
     
     \begin{frame}{Again: regression assumptions}
-      In multiple regression, we check on five things:
+      Remember the big four:
       \begin{enumerate}
         \item The residuals are independent.
         \item $Y$ is a linear function of $X$s (except for the errors).
-        \item The residuals are normally distributed.
+        \item \alert{The residuals are normally distributed.}
         \item The variance of $Y$ is the same for any value of $X$s (``homoscedasticity'').
-        \item No multicollinearity between predictors.
       \end{enumerate}
     \end{frame}
     
@@ -339,20 +314,19 @@
 \hlstd{> }\hlkwd{qqPlot}\hlstd{(model,} \hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\input{C:/temp/figures/unnamed-chunk-11-1.tikz}
+\input{C:/temp/figures/unnamed-chunk-10-1.tikz}
 
 \end{knitrout}
     \end{frame}
     
     
     \begin{frame}{Again: regression assumptions}
-      In multiple regression, we check on five things:
+      Remember the big four:
       \begin{enumerate}
         \item The residuals are independent.
         \item $Y$ is a linear function of $X$s (except for the errors).
         \item The residuals are normally distributed.
-        \item The variance of $Y$ is the same for any value of $X$s (``homoscedasticity'').
-        \item No multicollinearity between predictors.
+        \item \alert{The variance of $Y$ is the same for any value of $X$s (``homoscedasticity'').}
       \end{enumerate}
     \end{frame}
     
@@ -365,7 +339,7 @@
 \hlstd{> }\hlkwd{spreadLevelPlot}\hlstd{(model,} \hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{,} \hlkwc{main}\hlstd{=}\hlstr{''}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\input{C:/temp/figures/unnamed-chunk-12-1.tikz}
+\input{C:/temp/figures/unnamed-chunk-11-1.tikz}
 \begin{kframe}\begin{verbatim}
 
 Suggested power transformation:  0.8440952 
@@ -375,47 +349,213 @@ Suggested power transformation:  0.8440952
     \end{frame}
     
     
-    \begin{frame}{Again: regression assumptions}
-      In multiple regression, we check on five things:
-      \begin{enumerate}
-        \item The residuals are independent.
-        \item $Y$ is a linear function of $X$s (except for the errors).
-        \item The residuals are normally distributed.
-        \item The variance of $Y$ is the same for any value of $X$s (``homoscedasticity'').
-        \item No multicollinearity between predictors.
-      \end{enumerate}
+    
+    
+    \begin{frame}[fragile]{We have a model. Then what?}
+    
+      Let's make some predictions.
     \end{frame}
     
     
-    \begin{frame}[fragile]{Assumption 5: No multicollinearity}
-    
+    \begin{frame}[fragile]{Model Coefficients}
+      Regression model estimates the coefficients of the predictors.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }\hlkwd{sqrt}\hlstd{(}\hlkwd{vif}\hlstd{(model))}
+\hlstd{> }\hlkwd{round}\hlstd{(}\hlkwd{summary}\hlstd{(model)}\hlopt{$}\hlstd{coefficients,}\hlnum{2}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
-   CRIME     ZONE      NOX     ROOM     DIST   RADIAL      TAX  PTRATIO 
-1.326272 1.496362 1.932860 1.348359 1.851271 2.605272 2.684171 1.321139 
-   LSTAT 
-1.588188 
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)   840.07      99.00    8.49        0
+CRIME          -2.57       0.66   -3.87        0
+ZONE            0.92       0.28    3.34        0
+NOX          -346.93      71.81   -4.83        0
+ROOM           74.24       8.26    8.99        0
+DIST          -31.05       3.78   -8.20        0
+RADIAL          6.00       1.29    4.66        0
+TAX            -0.27       0.07   -3.87        0
+PTRATIO       -19.28       2.63   -7.34        0
+LSTAT         -11.07       0.96  -11.56        0
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+      
+    \end{frame}
+    
+    
+    
+    
+      \begin{frame}[fragile]{Model Coefficients}
+      Let's estimate the median house price in a district, where:
+      
+      \begin{table}[!b]
+        {\carlitoTLF % Use monospaced lining figures
+        \begin{tabularx}{\textwidth}{XXrrr}
+           
+           $j$ & Predictor  & $\beta_j$   &  $X_j$  & $\beta_j X_j$ \\ 
+          \toprule
+            0 & Intercept	&	840.07	&	1	&	840.07  \\
+            1 & CRIME	&	-2.57	&	0.03	&	-0.0771  \\
+            2 & ZONE	&	0.92	&	10	&	9.2  \\
+            3 & NOX	&	-346.93	&	0.5	&	-173.465  \\
+            4 & ROOM	&	74.24	&	4	&	296.96  \\
+            5 & DIST	&	-31.05	&	5	&	-155.25  \\
+            6 & RADIAL	&	6	&	1	&	6  \\
+            7 & TAX	&	-0.27	&	300	&	-81  \\
+            8 & PTRATIO	&	-19.28	&	15	&	-385.6  \\
+            9 & LSTAT	&	-11.07	&	10	&	-110.7  \\
+          \bottomrule
+             Price &  Estimate 	& (\$1000)		&		&	342.538   \\
+        
+        
+        \end{tabularx}}
+        
+      \end{table} 
+      
+    \end{frame}
+
+
+
+    \begin{frame}[fragile]{Model Coefficients}
+      Let R do it for us!
+      
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlkwd{predict.lm}\hlstd{(model,} \hlkwd{list}\hlstd{(}\hlkwc{CRIME}\hlstd{=}\hlnum{0.03}\hlstd{,} \hlkwc{ZONE}\hlstd{=}\hlnum{10}\hlstd{,}
+\hlstd{+ }                       \hlkwc{NOX}\hlstd{=}\hlnum{0.5}\hlstd{,} \hlkwc{ROOM}\hlstd{=}\hlnum{4}\hlstd{,}
+\hlstd{+ }                       \hlkwc{DIST}\hlstd{=}\hlnum{5}\hlstd{,}  \hlkwc{RADIAL}\hlstd{=}\hlnum{1}\hlstd{,}
+\hlstd{+ }                       \hlkwc{TAX}\hlstd{=}\hlnum{300}\hlstd{,} \hlkwc{PTRATIO}\hlstd{=}\hlnum{15}\hlstd{,}
+\hlstd{+ }                       \hlkwc{LSTAT}\hlstd{=}\hlnum{10}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
+       1 
+343.9552 
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+      \pause
+      Cool! That was easy!
+      \note{The discrepancy is due to rounding in the previous slide.}
+      
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]{Model Coefficients}
+      Assume that there are 420 students and 28 teachers in the disctrict (that is why PTRATIO is 15). \pause
+      
+      \bigskip
+      
+      The school board is considering to hire 2 more teachers. How would this affect the house prices in the district? \pause
+      
+      \bigskip
+      
+      The new PTRATIO will be $420/30=14$. \pause
+      
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlkwd{predict.lm}\hlstd{(model,} \hlkwd{list}\hlstd{(}\hlkwc{CRIME}\hlstd{=}\hlnum{0.03}\hlstd{,} \hlkwc{ZONE}\hlstd{=}\hlnum{10}\hlstd{,}
+\hlstd{+ }                       \hlkwc{NOX}\hlstd{=}\hlnum{0.5}\hlstd{,} \hlkwc{ROOM}\hlstd{=}\hlnum{4}\hlstd{,}
+\hlstd{+ }                       \hlkwc{DIST}\hlstd{=}\hlnum{5}\hlstd{,}  \hlkwc{RADIAL}\hlstd{=}\hlnum{1}\hlstd{,}
+\hlstd{+ }                       \hlkwc{TAX}\hlstd{=}\hlnum{300}\hlstd{,} \hlkwc{PTRATIO}\hlstd{=}\hlnum{14}\hlstd{,}
+\hlstd{+ }                       \hlkwc{LSTAT}\hlstd{=}\hlnum{10}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
+       1 
+363.2349 
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
     \end{frame}
     
     
-    \begin{frame}[fragile]{We have a model. What is next?}
     
-      Make predictions
+    \begin{frame}[fragile]{Model Coefficients}
+      Nothing is free. To be able to compansate the new hires, the ISD decides to add \$50 more on your tax bill for every \$10K of your house price. \pause
       
-      Change one of the Xs by one unit
+      \bigskip
+      So, the tax rate increases to 350 per \$10K. How would this affect the median house price?
       
-      Confidence Intervals: Mean Value and Single case
-      
-      
+      \lc
     
     \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Confidence intervals}
+      We all know our predictions are wrong. 
+      
+      Can we come up with some confidence intervals on our predictions? \pause
+      \bigskip
+      
+      Remember the two kinds of intervals:
+      \bigskip
+
+      \begin{tabular}{lp{1in}p{2in}}
+        \textbf{Confidence} & Predicting the mean value of $Y$ for a particular  set of $X$ values. & Among all the districts whose predictors are as above, what is the mean value of median house price?  \\
+        \textbf{Prediction} & Predicting $Y$ for a single new case. & If Springfield has the predictors above, what is the median house price in Springfield?\\
+      \end{tabular}
+    
+    
+    \end{frame}
+        
+      
+    
+    \begin{frame}[fragile]{Confidence intervals}
+    
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlkwd{predict.lm}\hlstd{(model,} \hlkwd{list}\hlstd{(}\hlkwc{CRIME}\hlstd{=}\hlnum{0.03}\hlstd{,} \hlkwc{ZONE}\hlstd{=}\hlnum{10}\hlstd{,}
+\hlstd{+ }                       \hlkwc{NOX}\hlstd{=}\hlnum{0.5}\hlstd{,} \hlkwc{ROOM}\hlstd{=}\hlnum{4}\hlstd{,}
+\hlstd{+ }                       \hlkwc{DIST}\hlstd{=}\hlnum{5}\hlstd{,}  \hlkwc{RADIAL}\hlstd{=}\hlnum{1}\hlstd{,}
+\hlstd{+ }                       \hlkwc{TAX}\hlstd{=}\hlnum{350}\hlstd{,} \hlkwc{PTRATIO}\hlstd{=}\hlnum{14}\hlstd{,}
+\hlstd{+ }                       \hlkwc{LSTAT}\hlstd{=}\hlnum{10}\hlstd{),}
+\hlstd{+ }                       \hlkwc{interval} \hlstd{=} \hlstr{'confidence'}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+       fit      lwr      upr
+1 349.9684 301.9485 397.9883
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+     \lc
+     \end{frame}
+     
+     
+     
+     \begin{frame}[fragile]%{Confidence intervals}
+        We can also put a confidence intervals on a coefficient to estimate the range of its effect.
+        
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlkwd{confint}\hlstd{(model)}
+\end{alltt}
+\begin{verbatim}
+                   2.5 %       97.5 %
+(Intercept)  645.5520530 1034.5782470
+CRIME         -3.8703245   -1.2618439
+ZONE           0.3792933    1.4647029
+NOX         -488.0175640 -205.8337804
+ROOM          58.0099148   90.4751248
+DIST         -38.4860994  -23.6129585
+RADIAL         3.4693548    8.5311305
+TAX           -0.4000457   -0.1306157
+PTRATIO      -24.4415728  -14.1179304
+LSTAT        -12.9529546   -9.1905075
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+     
+     \end{frame}
+     
+     \begin{frame}[fragile]{Confidence intervals}
+        Reducing the PTRATIO by one could increase the median house price from \$14K to \$24K!
+     \end{frame}
+        
+        
  
   \end{darkframes}
 
