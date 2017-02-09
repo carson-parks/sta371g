@@ -1,0 +1,306 @@
+\documentclass{beamer}
+\usepackage{../371g-slides}
+\title{Multiple Regression 2}
+\subtitle{Lecture 8}
+\author{STA 371G}
+
+\begin{document}
+  <<setup, include=F, cache=F>>=
+  opts_knit$set(global.par=T)
+  knit_hooks$set(crop=hook_pdfcrop)
+  opts_chunk$set(dev='tikz', external=F, fig.path='C:/temp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, prompt=T, tidy=F)
+  knit_theme$set('camo')
+  @
+  <<include=F, cache=F>>=
+  par(fg='#fefefe', col.axis='#fefefe', col.lab='#fefefe', col.main="#fefefe", mar=c(5.1, 4.1, 1.1, 2.1))
+  @
+  <<include=F>>=
+  library(readr)
+  library(car)
+  boston <- read_csv("../../data/boston.csv")
+  
+  @
+
+  \frame{\maketitle}
+
+  % Show outline at beginning of each section
+  \AtBeginSection[]{ 
+    \begin{frame}<beamer>
+      \tableofcontents[currentsection]
+    \end{frame}
+  }
+
+  %%%%%%% Slides start here %%%%%%%
+
+  \begin{darkframes}
+  
+  
+    \begin{frame}[fragile]{Predicting House prices in Greater Boston Area}
+      \fontsize{9}{9}\selectfont
+      
+      Median house price for each census tract, along with other data.
+      
+      The final model:
+      
+      <<>>=
+      model <- lm(MEDV ~ CRIME+ZONE+NOX+ROOM+DIST
+                        +RADIAL+TAX+PTRATIO+LSTAT, data=boston)
+      
+      @
+      \begin{columns}[onlytextwidth]
+        \column{.5\textwidth}
+          \begin{itemize}
+            \item MEDV: Median Price (response)
+            \item CRIME: Per capita crime rate
+            \item ZONE: Proportion of large lots
+            \item NOX: Nitrogen Oxide concentration
+            \item DIST: Distance to employment centers
+          \end{itemize}
+        \column{.5\textwidth}
+          \begin{itemize}
+            \item ROOM: Average \# of rooms
+            \item RADIAL: Accessibility to highways
+            \item TAX: Tax rate (per \$10K)
+            \item PTRATIO: Pupil-to-teacher ratio
+            \item LSTAT: Proportion of ``lower status''
+            %  proportion of adults without some high school education or that are classified as laborers
+          \end{itemize}
+      \end{columns}
+    \end{frame}
+    
+   
+   
+    \begin{frame}[fragile]{Overall Null Hypothesis}
+      \fontsize{9}{9}\selectfont
+    
+      Is our model useful? Check the R-squared:
+      <<>>=
+      summary(model)$r.squared
+      @
+      \quad \pause
+      
+      Are we really sure? \pause
+      
+      \bigskip
+      
+      $H_0: \beta_1=\beta_2=\beta_3=\beta_4=\beta_5=\beta_6=\beta_7=\beta_8=\beta_9=0$ (Data explains nothing!) \pause
+      
+      $H_1: \beta_i \neq 0$ for some $i$ (At least one predictor is useful) \pause
+      
+      \bigskip
+      
+      or 
+      
+      \bigskip
+      
+      $H_0: R^2=0$
+      
+      $H_1: R^2>0$
+    \end{frame}
+   
+   
+   
+   \begin{frame}[fragile]{Overall Null Hypothesis}
+      \fontsize{9}{9}\selectfont
+      Check the P-value for the  F-statistic in the summary
+      \begin{center}
+        \includegraphics[width=4in]{r_sq_pval} \\
+      \end{center}
+      So we can reject the overall null hypothesis! \pause
+      
+      R-squared was already too big to suspect that it is zero and we already knew some predictors are statistically significant.
+      
+    \end{frame}  
+   
+   
+    
+    \begin{frame}[fragile]{How do we do with the predictions?}
+      \fontsize{9}{9}\selectfont
+      Let's plot the residuals, i.e., discrepancies between the predictions and the data.
+      
+      <<fig.height=2>>=
+      hist(model$residuals, col='green', 
+        main='', xlab='Residuals (in $1K)', ylab='Frequency')
+      @
+      
+      
+    \end{frame}  
+    
+    
+    \begin{frame}[fragile]{How do we do with the predictions?}
+      \fontsize{9}{9}\selectfont
+      It looks like a normal distribution. Let's look at the mean of the residuals:
+      
+      <<>>=
+      mean(model$residuals)
+      @
+      Virtually zero. 
+      
+      It will be always zero since we allow an intercept and minimize the sum of squared residuals.
+      
+      \bigskip
+      
+      What about the standard deviation?
+      <<>>=
+      sd(model$residuals)
+      @
+      By the 2 standard deviation rule, we could estimate that 95\% of the time residuals are in [-\$192K, \$192K] range.
+    \end{frame}  
+   
+    
+    \begin{frame}[fragile]{How do we do with the predictions?}
+      \fontsize{9}{9}\selectfont
+      
+      Can we obtain a \alert{similar} measure directly from the summary of the regression?
+      
+      \note{Emphasize that standard error and what we get with sd() is similar, but not exactly the same. 
+           sd() estimates the population std dev, standard error is obtained by dividing SS by the num. deg. of freedom. } \pause
+           
+      It is the Residual standard error!
+      <<>>=
+      summary(model)$sigma
+      @     
+      \quad \pause
+      \begin{center}
+        \includegraphics[width=4in]{std_err} \\
+      \end{center}
+      
+    \end{frame}
+    
+    
+    
+    \begin{frame}{Again: regression assumptions}
+      In multiple regression, we check on five things:
+      \begin{enumerate}
+        \item The residuals are independent.
+        \item $Y$ is a linear function of $X$s (except for the errors).
+        \item The residuals are normally distributed.
+        \item The variance of $Y$ is the same for any value of $X$s (``homoscedasticity'').
+        \item No multicollinearity between predictors.
+      \end{enumerate}
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]{Assumption 1: Independence}
+      Independence: No correlation between residuals. \pause
+    
+      Difficult to verify this from plots, use: Durbin-Watson test. \pause
+    
+      \bigskip
+    
+      $H_0$: No correlation between residuals (i.e. independent).
+    
+      $H_1$: They are not independent \pause
+    
+      \bigskip
+    
+      <<>>=
+      durbinWatsonTest(model)
+      @    
+      \pause
+    
+      Oops... The model seems to have failed here. 
+      
+    \end{frame}
+    
+
+    
+    
+    
+    \begin{frame}{Again: regression assumptions}
+      In multiple regression, we check on five things:
+      \begin{enumerate}
+        \item The residuals are independent.
+        \item $Y$ is a linear function of $X$s (except for the errors).
+        \item The residuals are normally distributed.
+        \item The variance of $Y$ is the same for any value of $X$s (``homoscedasticity'').
+        \item No multicollinearity between predictors.
+      \end{enumerate}
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Assumption 2: Linearity}
+    
+      <<>>=
+      crPlots(model, main='')
+      @
+    \end{frame}   
+    
+    
+    \begin{frame}{Again: regression assumptions}
+      In multiple regression, we check on five things:
+      \begin{enumerate}
+        \item The residuals are independent.
+        \item $Y$ is a linear function of $X$s (except for the errors).
+        \item The residuals are normally distributed.
+        \item The variance of $Y$ is the same for any value of $X$s (``homoscedasticity'').
+        \item No multicollinearity between predictors.
+      \end{enumerate}
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Assumption 3: Normally distributed residuals}
+    
+      <<>>=
+      qqPlot(model, col='green')
+      @
+    \end{frame}
+    
+    
+    \begin{frame}{Again: regression assumptions}
+      In multiple regression, we check on five things:
+      \begin{enumerate}
+        \item The residuals are independent.
+        \item $Y$ is a linear function of $X$s (except for the errors).
+        \item The residuals are normally distributed.
+        \item The variance of $Y$ is the same for any value of $X$s (``homoscedasticity'').
+        \item No multicollinearity between predictors.
+      \end{enumerate}
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]{Assumption 4: The variance of $Y$ is the same across}
+    
+      <<warning=F>>=
+      spreadLevelPlot(model, col='green', main='')
+      @
+    \end{frame}
+    
+    
+    \begin{frame}{Again: regression assumptions}
+      In multiple regression, we check on five things:
+      \begin{enumerate}
+        \item The residuals are independent.
+        \item $Y$ is a linear function of $X$s (except for the errors).
+        \item The residuals are normally distributed.
+        \item The variance of $Y$ is the same for any value of $X$s (``homoscedasticity'').
+        \item No multicollinearity between predictors.
+      \end{enumerate}
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]{Assumption 5: No multicollinearity}
+    
+      <<>>=
+      sqrt(vif(model))
+      @
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]{We have a model. What is next?}
+    
+      Make predictions
+      
+      Change one of the Xs by one unit
+      
+      Confidence Intervals: Mean Value and Single case
+      
+      
+    
+    \end{frame}
+ 
+  \end{darkframes}
+
+\end{document}
