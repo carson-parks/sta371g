@@ -398,6 +398,8 @@
      
      \begin{frame}[fragile]{Confidence intervals}
         Reducing the PTRATIO by one could increase the median house price from \$14K to \$24K!
+        
+        \lc
      \end{frame}
         
         
