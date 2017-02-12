@@ -32,11 +32,9 @@
 
   %%%%%%% Slides start here %%%%%%%
 
-  \begin{darkframes}
-  
-  
+  \begin{darkframes}    
     \begin{frame}
-      How would you know how much to pay for a house? \pause
+      How do you know how much to pay for a house? \pause
       
       Zillow? How do they know? 
       
@@ -203,11 +201,11 @@
     
     
     \begin{frame}
-      P-value of a predictor shown in the summary is in the \alert{marginal} sense! 
+      A $p$-value of predictor $i$ tests the null hypothesis that $\beta_i=0$; i.e., that predictor $i$ has no contribution to predicting $Y$ independent above and beyond the other predictors
       
       \bigskip
       
-      Omitting other predictors might increase the significance (decrease the P-value) of a statistically insignificant predictor.
+      Omitting other predictors might increase the significance (decrease the $p$-value) of a statistically insignificant predictor.
     \end{frame}
 
     
@@ -321,12 +319,11 @@
     
     
     \begin{frame}{When to omit, when to keep?}
-      We often prefer to omit statistically insignificant variables. Because:
+      It is usually good to omit statistically insignificant variables, because:
       \begin{itemize}
         \item The model gets simpler
         \item Insignificant variables may lead to incorrect interpretations (as in LON)
-        \item Especially when data is small, insignificant variables harm the quality of the model
-        
+        \item When the data set is small, we can read too much into the impact of insignificant variables    
       \end{itemize}
       
     \end{frame}
@@ -349,7 +346,7 @@
       
       \begin{itemize}
         \item[] Parameter estimate? \pause
-        \item[] P-value? \pause
+        \item[] $p$-value? \pause
         \item[] t score? \pause \greencheckmark
         
       \end{itemize}
@@ -366,6 +363,13 @@
       \lc
     \end{frame}
     
+
+    \begin{frame}
+      \begin{itemize}
+        \item Reminder to keep up with the readings in Perusall
+        \item The readings often have technical discussions (e.g., matrix algebra, ANOVA tables) that you don't need to worry about (we'll talk about it in class if you need to know it)
+      \end{itemize}
+    \end{frame}
  
   \end{darkframes}
 
