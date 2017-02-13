@@ -114,7 +114,7 @@
    
    
     
-    \begin{frame}[fragile]{How do we do with the predictions?}
+    \begin{frame}[fragile]{How are we doing with the predictions?}
       \fontsize{9}{9}\selectfont
       Let's plot the residuals, i.e., discrepancies between the predictions and the data. \pause
       
@@ -127,7 +127,7 @@
     \end{frame}  
     
     
-    \begin{frame}[fragile]{How do we do with the predictions?}
+    \begin{frame}[fragile]{How are we doing with the predictions?}
       \fontsize{9}{9}\selectfont
       It looks like a normal distribution. Let's look at the mean of the residuals: \pause
       
@@ -149,7 +149,7 @@
     \end{frame}  
    
     
-    \begin{frame}[fragile]{How do we do with the predictions?}
+    \begin{frame}[fragile]{How are we doing with the predictions?}
       \fontsize{9}{9}\selectfont
       
       Can we obtain a \alert{similar} measure directly from the summary of the regression?
@@ -171,6 +171,7 @@
     
     
     \begin{frame}{Again: regression assumptions}
+    \fontsize{9}{9}\selectfont
       Remember the big four:
       \begin{enumerate}
         \item \alert{The residuals are independent.}
@@ -183,6 +184,7 @@
     
     
     \begin{frame}[fragile]{Assumption 1: Independence}
+    \fontsize{9}{9}\selectfont
       Independence: No correlation between residuals. \pause
     
       Difficult to verify this from plots.
@@ -194,6 +196,7 @@
     
     
     \begin{frame}{Again: regression assumptions}
+    \fontsize{9}{9}\selectfont
       Remember the big four:
       \begin{enumerate}
         \item The residuals are independent.
@@ -206,7 +209,7 @@
     
     
     \begin{frame}[fragile]%{Assumption 2: Linearity}
-    
+      \fontsize{9}{9}\selectfont
       <<>>=
       crPlots(model, main='')
       @
@@ -214,6 +217,7 @@
     
     
     \begin{frame}{Again: regression assumptions}
+    \fontsize{9}{9}\selectfont
       Remember the big four:
       \begin{enumerate}
         \item The residuals are independent.
@@ -226,7 +230,7 @@
     
     
     \begin{frame}[fragile]{Assumption 3: Normally distributed residuals}
-    
+      \fontsize{9}{9}\selectfont
       <<fig.height=2>>=
       qqPlot(model, col='green')
       @
@@ -234,6 +238,7 @@
     
     
     \begin{frame}{Again: regression assumptions}
+    \fontsize{9}{9}\selectfont
       Remember the big four:
       \begin{enumerate}
         \item The residuals are independent.
@@ -245,7 +250,7 @@
     
     
     \begin{frame}[fragile]{Assumption 4: The variance of $Y$ is the same across}
-    
+      \fontsize{9}{9}\selectfont
       <<fig.height=2, warning=F>>=
       spreadLevelPlot(model, col='green', main='')
       @
@@ -255,12 +260,13 @@
     
     
     \begin{frame}[fragile]{We have a model. Then what?}
-    
+      \fontsize{9}{9}\selectfont
       Let's make some predictions.
     \end{frame}
     
     
     \begin{frame}[fragile]{Model Coefficients}
+    \fontsize{9}{9}\selectfont  
       Regression model estimates the coefficients of the predictors.
       <<>>=
       round(summary(model)$coefficients,2)
@@ -272,6 +278,7 @@
     
     
       \begin{frame}[fragile]{Model Coefficients}
+      \fontsize{9}{9}\selectfont
       Let's estimate the median house price in a district, where:
       
       \begin{table}[!b]
@@ -303,6 +310,7 @@
 
 
     \begin{frame}[fragile]{Model Coefficients}
+    \fontsize{9}{9}\selectfont
       Let R do it for us!
       
       <<>>=
@@ -320,6 +328,7 @@
     
     
     \begin{frame}[fragile]{Model Coefficients}
+    \fontsize{9}{9}\selectfont
       Assume that there are 420 students and 28 teachers in the disctrict (that is why PTRATIO is 15). \pause
       
       \bigskip
@@ -342,6 +351,7 @@
     
     
     \begin{frame}[fragile]{Model Coefficients}
+    \fontsize{9}{9}\selectfont
       Nothing is free. To be able to compansate the new hires, the ISD decides to add \$50 more on your tax bill for every \$10K of your house price. \pause
       
       \bigskip
@@ -354,6 +364,7 @@
     
     
     \begin{frame}[fragile]{Confidence intervals}
+    \fontsize{9}{9}\selectfont
       We all know our predictions are wrong. 
       
       Can we come up with some confidence intervals on our predictions? \pause
@@ -373,7 +384,7 @@
       
     
     \begin{frame}[fragile]{Confidence intervals}
-    
+      \fontsize{9}{9}\selectfont
       <<>>=
       predict.lm(model, list(CRIME=0.03, ZONE=10,	
                              NOX=0.5,	ROOM=4,	
@@ -388,6 +399,7 @@
      
      
      \begin{frame}[fragile]%{Confidence intervals}
+      \fontsize{9}{9}\selectfont
         We can also put a confidence intervals on a coefficient to estimate the range of its effect.
         
       <<>>=
@@ -397,6 +409,7 @@
      \end{frame}
      
      \begin{frame}[fragile]{Confidence intervals}
+      \fontsize{9}{9}\selectfont
         Reducing the PTRATIO by one could increase the median house price from \$14K to \$24K!
         
         \lc
