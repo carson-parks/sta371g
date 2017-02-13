@@ -8,7 +8,7 @@
   <<setup, include=F, cache=F>>=
   opts_knit$set(global.par=T)
   knit_hooks$set(crop=hook_pdfcrop)
-  opts_chunk$set(dev='tikz', external=F, fig.path='C:/temp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, prompt=T, tidy=F)
+  opts_chunk$set(dev='tikz', external=F, fig.path='/tmp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, prompt=T, tidy=F)
   knit_theme$set('camo')
   @
   <<include=F, cache=F>>=
@@ -79,7 +79,7 @@
       @
       \quad \pause
       
-      Are we really sure? \pause
+      Can we be confident that our model will generalize to the \alert{population}?  \pause
       
       \bigskip
       
@@ -114,7 +114,7 @@
    
    
     
-    \begin{frame}[fragile]{How are we doing with the predictions?}
+    \begin{frame}[fragile]{How good are our predictions?}
       \fontsize{9}{9}\selectfont
       Let's plot the residuals, i.e., discrepancies between the predictions and the data. \pause
       
@@ -127,7 +127,7 @@
     \end{frame}  
     
     
-    \begin{frame}[fragile]{How are we doing with the predictions?}
+    \begin{frame}[fragile]{How good are our predictions?}
       \fontsize{9}{9}\selectfont
       It looks like a normal distribution. Let's look at the mean of the residuals: \pause
       
@@ -135,8 +135,9 @@
       mean(model$residuals)
       @
       Virtually zero. \pause
-      
-      It will be always zero since we allow an intercept and minimize the sum of squared residuals. \pause
+
+      \bigskip
+      (It will be always zero since regression minimizes the sum of squared residuals.) \pause
       
       \bigskip
       
@@ -149,7 +150,7 @@
     \end{frame}  
    
     
-    \begin{frame}[fragile]{How are we doing with the predictions?}
+    \begin{frame}[fragile]{How good are our predictions?}
       \fontsize{9}{9}\selectfont
       
       Can we obtain a \alert{similar} measure directly from the summary of the regression?
@@ -208,10 +209,12 @@
     
     
     
-    \begin{frame}[fragile]%{Assumption 2: Linearity}
-      \fontsize{9}{9}\selectfont
-      <<>>=
-      crPlots(model, main='')
+    \begin{frame}[fragile]{Assumption 2: Linearity}
+    
+      Plot the residuals vs the predicted Y-values and ensure there is no trend:
+      <<fig.height=2>>=
+      plot(predict.lm(model), resid(model),
+        xlab='Predicted values', ylab='Residuals')
       @
     \end{frame}   
     
@@ -230,9 +233,9 @@
     
     
     \begin{frame}[fragile]{Assumption 3: Normally distributed residuals}
-      \fontsize{9}{9}\selectfont
+      Ensure that the Q-Q plot shows a (roughly) straight line:
       <<fig.height=2>>=
-      qqPlot(model, col='green')
+      qqnorm(resid(model), main='')
       @
     \end{frame}
     
@@ -250,9 +253,10 @@
     
     
     \begin{frame}[fragile]{Assumption 4: The variance of $Y$ is the same across}
-      \fontsize{9}{9}\selectfont
-      <<fig.height=2, warning=F>>=
-      spreadLevelPlot(model, col='green', main='')
+      Look for a (roughly) constant vertical ``thickness'':  
+      <<fig.height=2>>=
+      plot(predict.lm(model), resid(model),
+        xlab='Predicted values', ylab='Residuals')
       @
     \end{frame}
     
