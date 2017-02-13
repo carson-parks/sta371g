@@ -173,7 +173,7 @@
 \hlstd{+ }  \hlkwc{main}\hlstd{=}\hlstr{''}\hlstd{,} \hlkwc{xlab}\hlstd{=}\hlstr{'Residuals (in $1K)'}\hlstd{,} \hlkwc{ylab}\hlstd{=}\hlstr{'Frequency'}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\input{C:/temp/figures/unnamed-chunk-5-1.tikz}
+\input{/tmp/figures/unnamed-chunk-5-1.tikz}
 
 \end{knitrout}
       
@@ -181,7 +181,7 @@
     \end{frame}  
     
     
-    \begin{frame}[fragile]{How good are our predictions?}
+    \begin{frame}[fragile]{How are we doing with the predictions?}
       \fontsize{9}{9}\selectfont
       It looks like a normal distribution. Let's look at the mean of the residuals: \pause
       
@@ -218,7 +218,7 @@
     \end{frame}  
    
     
-    \begin{frame}[fragile]{How good are our predictions?}
+    \begin{frame}[fragile]{How are we doing with the predictions?}
       \fontsize{9}{9}\selectfont
       
       Can we obtain a \alert{similar} measure directly from the summary of the regression?
@@ -247,6 +247,7 @@
     
     
     \begin{frame}{Again: regression assumptions}
+    \fontsize{9}{9}\selectfont
       Remember the big four:
       \begin{enumerate}
         \item \alert{The residuals are independent.}
@@ -259,6 +260,7 @@
     
     
     \begin{frame}[fragile]{Assumption 1: Independence}
+    \fontsize{9}{9}\selectfont
       Independence: No correlation between residuals. \pause
     
       Difficult to verify this from plots.
@@ -270,6 +272,7 @@
     
     
     \begin{frame}{Again: regression assumptions}
+    \fontsize{9}{9}\selectfont
       Remember the big four:
       \begin{enumerate}
         \item The residuals are independent.
@@ -291,13 +294,14 @@
 \hlstd{+ }  \hlkwc{xlab}\hlstd{=}\hlstr{'Predicted values'}\hlstd{,} \hlkwc{ylab}\hlstd{=}\hlstr{'Residuals'}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\input{C:/temp/figures/unnamed-chunk-9-1.tikz}
+\input{/tmp/figures/unnamed-chunk-9-1.tikz}
 
 \end{knitrout}
     \end{frame}   
     
     
     \begin{frame}{Again: regression assumptions}
+    \fontsize{9}{9}\selectfont
       Remember the big four:
       \begin{enumerate}
         \item The residuals are independent.
@@ -311,19 +315,21 @@
     
     \begin{frame}[fragile]{Assumption 3: Normally distributed residuals}
       Ensure that the Q-Q plot shows a (roughly) straight line:
+      \fontsize{9}{9}\selectfont
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
 \hlstd{> }\hlkwd{qqnorm}\hlstd{(}\hlkwd{resid}\hlstd{(model),} \hlkwc{main}\hlstd{=}\hlstr{''}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\input{C:/temp/figures/unnamed-chunk-10-1.tikz}
+\input{/tmp/figures/unnamed-chunk-10-1.tikz}
 
 \end{knitrout}
     \end{frame}
     
     
     \begin{frame}{Again: regression assumptions}
+    \fontsize{9}{9}\selectfont
       Remember the big four:
       \begin{enumerate}
         \item The residuals are independent.
@@ -343,7 +349,7 @@
 \hlstd{+ }  \hlkwc{xlab}\hlstd{=}\hlstr{'Predicted values'}\hlstd{,} \hlkwc{ylab}\hlstd{=}\hlstr{'Residuals'}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\input{C:/temp/figures/unnamed-chunk-11-1.tikz}
+\input{/tmp/figures/unnamed-chunk-11-1.tikz}
 
 \end{knitrout}
     \end{frame}
@@ -352,12 +358,13 @@
     
     
     \begin{frame}[fragile]{We have a model. Then what?}
-    
+      \fontsize{9}{9}\selectfont
       Let's make some predictions.
     \end{frame}
     
     
     \begin{frame}[fragile]{Model Coefficients}
+    \fontsize{9}{9}\selectfont  
       Regression model estimates the coefficients of the predictors.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
@@ -386,6 +393,7 @@ LSTAT         -11.07       0.96  -11.56        0
     
     
       \begin{frame}[fragile]{Model Coefficients}
+      \fontsize{9}{9}\selectfont
       Let's estimate the median house price in a district, where:
       
       \begin{table}[!b]
@@ -417,6 +425,7 @@ LSTAT         -11.07       0.96  -11.56        0
 
 
     \begin{frame}[fragile]{Model Coefficients}
+    \fontsize{9}{9}\selectfont
       Let R do it for us!
       
 \begin{knitrout}
@@ -442,6 +451,7 @@ LSTAT         -11.07       0.96  -11.56        0
     
     
     \begin{frame}[fragile]{Model Coefficients}
+    \fontsize{9}{9}\selectfont
       Assume that there are 420 students and 28 teachers in the disctrict (that is why PTRATIO is 15). \pause
       
       \bigskip
@@ -472,6 +482,7 @@ LSTAT         -11.07       0.96  -11.56        0
     
     
     \begin{frame}[fragile]{Model Coefficients}
+    \fontsize{9}{9}\selectfont
       Nothing is free. To be able to compansate the new hires, the ISD decides to add \$50 more on your tax bill for every \$10K of your house price. \pause
       
       \bigskip
@@ -484,6 +495,7 @@ LSTAT         -11.07       0.96  -11.56        0
     
     
     \begin{frame}[fragile]{Confidence intervals}
+    \fontsize{9}{9}\selectfont
       We all know our predictions are wrong. 
       
       Can we come up with some confidence intervals on our predictions? \pause
@@ -503,7 +515,7 @@ LSTAT         -11.07       0.96  -11.56        0
       
     
     \begin{frame}[fragile]{Confidence intervals}
-    
+      \fontsize{9}{9}\selectfont
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
@@ -526,6 +538,7 @@ LSTAT         -11.07       0.96  -11.56        0
      
      
      \begin{frame}[fragile]%{Confidence intervals}
+      \fontsize{9}{9}\selectfont
         We can also put a confidence intervals on a coefficient to estimate the range of its effect.
         
 \begin{knitrout}
@@ -552,6 +565,7 @@ LSTAT        -12.9529546   -9.1905075
      \end{frame}
      
      \begin{frame}[fragile]{Confidence intervals}
+      \fontsize{9}{9}\selectfont
         Reducing the PTRATIO by one could increase the median house price from \$14K to \$24K!
         
         \lc
