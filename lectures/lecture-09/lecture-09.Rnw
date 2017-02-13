@@ -1,0 +1,350 @@
+\documentclass{beamer}
+\usepackage{../371g-slides}
+\title{Dummy Variables}
+\subtitle{Lecture 9}
+\author{STA 371G}
+
+\begin{document}
+  <<setup, include=F, cache=F>>=
+  opts_knit$set(global.par=T)
+  knit_hooks$set(crop=hook_pdfcrop)
+  opts_chunk$set(dev='tikz', external=F, fig.path='C:/temp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, prompt=T, tidy=F)
+  knit_theme$set('camo')
+  @
+  <<include=F, cache=F>>=
+  par(fg='#fefefe', col.axis='#fefefe', col.lab='#fefefe', col.main="#fefefe", mar=c(5.1, 4.1, 1.1, 2.1))
+  @
+  <<include=F>>=
+  library(readr)
+  library(car)
+  auto_mpg <- read_csv("../../data/auto_mpg.csv")
+  auto_mpg_all <- read_csv("../../data/auto_mpg_all.csv")
+  
+  @
+
+  \frame{\maketitle}
+
+  % Show outline at beginning of each section
+  \AtBeginSection[]{ 
+    \begin{frame}<beamer>
+      \tableofcontents[currentsection]
+    \end{frame}
+  }
+
+  %%%%%%% Slides start here %%%%%%%
+
+  \begin{darkframes}
+  
+    \begin{darkframes}    
+    
+    
+    \begin{frame}
+      \fontsize{9}{9}\selectfont
+      Predicting the fuel economy (MPG) for different car models of `70s.
+      
+      \begin{center}
+        \includegraphics[width=2.8in]{bmw} \\
+      \end{center} \pause
+      
+      \begin{columns}[onlytextwidth]
+        \column{.5\textwidth}
+          \begin{itemize}
+            \item Cylinders
+            \item Displacement
+            \item Horsepower
+          \end{itemize}
+        \column{.5\textwidth}
+          \begin{itemize}
+            \item Weight
+            \item Acceleration
+            \item Year (After 1975 or not)
+          \end{itemize}
+      \end{columns}
+    \end{frame}
+    
+    
+    
+    
+    
+    \begin{frame}[fragile]{Exploring the data}
+      \fontsize{9}{9}\selectfont
+      Let's display the first 5 rows (and all columns).
+      <<>>=
+      auto_mpg[1:5,]
+      @ 
+      \pause
+      No??? What the... What to do with that? \pause
+      
+      Maybe just omit the ``After1975'' column?
+  
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]%{Exploring the data}
+      \fontsize{9}{9}\selectfont
+      \note{This slide is to get familiar with boxplots. Conclusion: Being manufactured after 1975 matters}
+      <<>>=
+      boxplot(MPG ~ After1975, data=auto_mpg, ylab="MPG", 
+                    xlab="After 1975", col='darkgray')
+      @
+      
+    \end{frame}
+    
+    
+    
+    
+    \begin{frame}[fragile]{Regression with categorical variables}
+      \fontsize{9}{9}\selectfont
+      Can we go ahead and run a regression anyway? \pause
+      <<>>=
+        model <- lm(MPG ~ Cylinders +Displacement + HP
+                    + Weight + Acceleration + After1975, 
+                    data=auto_mpg)
+        summary(model)$r.squared
+      @
+      \pause
+      
+      R was able to handle the ``After1975'' column, which is a \alert{categorical variable} (or a \alert{factor} as R calls them).
+    \end{frame}
+    
+    
+    
+    
+    \begin{frame}[fragile]{Dummy variables}
+      \fontsize{9}{9}\selectfont
+    <<>>=
+      round(summary(model)$coefficients, 2)
+    @
+    R has created a \alert{dummy variable}, ``After1975Yes.'' \pause 
+    A dummy variable is always 0 or 1, indicating the absence or presence of some categorical effect.
+    
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Dummy variables}
+      \fontsize{9}{9}\selectfont
+      ``After1975Yes'' is 1 whenever ``After1975'' is a ``Yes,'' and 0 otherwise.
+    
+      \begin{table}[!b]
+        {\carlitoTLF % Use monospaced lining figures
+        \begin{tabularx}{\textwidth}{rrrrr}
+           
+           MPG &  ... & Acceleration & After1975 & After1975Yes\\ 
+          \toprule
+            ... & ... & ... & ... & ... \\
+            25 & ... & 13.5 & No & 0 \\
+            33 & ... & 17.5 & No & 0 \\
+            28 & ... & 15.5 & Yes & 1 \\
+            25 & ... & 16.9 & Yes & 1 \\
+            ... & ... & ... & ... & ... \\
+          \bottomrule
+            
+        \end{tabularx}}
+        
+      \end{table} 
+      
+      \pause
+      Notice that we do not have a ``After1975No'' variable. 
+      
+      It would cause problems because it would be perfectly correlated with ``After1975Yes.''
+      \end{frame}
+      
+      
+      
+      \begin{frame}[fragile]{Regression with categorical variables}
+        \fontsize{9}{9}\selectfont
+        Our model contains some statistically insignificant variables. 
+        
+        Your task is to start omiting them one by one. What is the $R^2$ in your final model?
+        \lc
+      
+      \end{frame}
+      
+      
+      
+      \begin{frame}[fragile]{Regression with categorical variables}
+        \fontsize{9}{9}\selectfont
+        <<>>=
+        model <- lm(MPG ~  HP + Weight + After1975,  
+                           data=auto_mpg)
+        summary(model)$r.squared
+        round(summary(model)$coefficients, 2)
+        @
+        \pause
+        Horsepower seems to be already capturing the information in Cylinders, Displacement and Acceleration. 
+      
+      \end{frame}
+      
+      
+      \begin{frame}[fragile]{Interpretation of the $\beta$ of the dummy variable}
+        \fontsize{9}{9}\selectfont
+        Consider this:
+        \begin{itemize}
+          \item Model A and B have the same HP and Weight.
+          \item Model A was manufactured before 1975, whereas B was manufactured after 1975.
+          \item Our model's prediction for Model A is 21 MPG.
+          \item What is the prediction for Model B?
+        \end{itemize} 
+          \lc
+      \end{frame}
+      
+      
+      \begin{frame}[fragile]{Interpretation of the $\beta$ of the dummy variable}
+        \fontsize{9}{9}\selectfont
+          Our ``reference level'' is the cars manufactured before 1975. \bigskip
+          
+          For the same Weight and HP, our MPG prediction for a car manufactured after 1975 is always exactly 4.33 higher compared to its reference.  \bigskip
+          
+          There are other coding schemes too, where the reference is chosen differently.
+          
+          
+          
+          
+      \end{frame}
+      
+      
+      \begin{frame}[fragile]{Why not to create two separate models?}
+        \fontsize{9}{9}\selectfont
+        
+        *** THIS DATA DO NOT SUPPORT THIS ARGUMENT BECAUSE OF THE NONLINEARITY ***
+        
+         First regress a model only for the cars manufactured before 1975.
+         <<>>=
+        Weight_B <- auto_mpg$Weight[auto_mpg$After1975=='No']
+        HP_B     <- auto_mpg$HP[auto_mpg$After1975=='No']
+        MPG_B    <- auto_mpg$MPG[auto_mpg$After1975=='No']
+        
+        model_B <- lm(MPG_B ~  HP_B + Weight_B)
+        @
+          
+          
+      \end{frame}
+      
+      \begin{frame}[fragile]{Why not to create two separate models?}
+        \fontsize{9}{9}\selectfont
+         <<>>=
+          summary(model_B)
+          @
+          
+          
+      \end{frame}
+      
+      
+      
+      
+      
+      \begin{frame}[fragile]{Why not to create two separate models?}
+        \fontsize{9}{9}\selectfont
+        
+        
+        
+        Now regress a model only for the cars manufactured after 1975.
+         <<>>=
+        Weight_A <- auto_mpg$Weight[auto_mpg$After1975=='Yes']
+        HP_A     <- auto_mpg$HP[auto_mpg$After1975=='Yes']
+        MPG_A    <- auto_mpg$MPG[auto_mpg$After1975=='Yes']
+        
+        model_A <- lm(MPG_A ~  HP_A + Weight_A)
+        @
+          
+          
+      \end{frame}
+      
+      \begin{frame}[fragile]{Why not to create two separate models?}
+        \fontsize{9}{9}\selectfont
+         <<>>=
+          summary(model_A)
+          @
+          
+          
+      \end{frame}
+      
+      
+      
+      
+      \begin{frame}[fragile]{What if there are more than two categories?}
+        \fontsize{8}{8}\selectfont
+        <<>>=
+        auto_mpg_all[1:5,]
+        levels(as.factor(auto_mpg_all$Origin))
+        @
+        \pause
+        Let's first see if ``Origin'' makes a difference.
+      
+      \end{frame}
+      
+      \begin{frame}[fragile]%{Exploring the data}
+        \fontsize{9}{9}\selectfont
+        <<>>=
+        boxplot(MPG ~ Origin, data=auto_mpg_all, ylab="MPG", 
+                      xlab="Origin", col='darkgray')
+        @
+      
+    \end{frame}
+      
+      
+      
+      \begin{frame}[fragile]{Regression with categorical variables}
+        \fontsize{9}{9}\selectfont
+        <<>>=
+        omodel <- lm(MPG ~  HP + Weight + After1975 + Origin,  
+                           data=auto_mpg_all)
+        round(summary(omodel)$coefficients,3)
+        @
+        \pause
+        For the origin variable, R has chosen ``EU'' as the base, created a dummy variable for JP and US each.
+      
+      \end{frame}
+      
+      
+      
+      \begin{frame}[fragile]{Regression with categorical variables}
+        \fontsize{9}{9}\selectfont
+        While dealing with categorical variables, we look at the significance of the categorical variable as a whole.
+        \bigskip  
+        
+        Unless all the dummy variables are insignificant, we do not omit the column of that categorical variable.
+      
+      \end{frame}
+      
+      
+      
+      \begin{frame}[fragile]{Assumptions}
+        \fontsize{9}{9}\selectfont
+        What are the issues with this model?
+        \lc
+        <<>>=
+        plot(predict.lm(omodel), resid(omodel), col='green', main='')
+        @
+      
+      \end{frame}
+      
+      
+      
+      \begin{frame}[fragile]{Assumptions}
+        \fontsize{9}{9}\selectfont
+        What about normality?
+        
+        <<>>=
+          hist(resid(omodel), col='green', main='')
+        @
+      
+      \end{frame}
+      
+      
+      \begin{frame}[fragile]{Assumptions}
+        \fontsize{9}{9}\selectfont
+        What about normality?
+        
+        <<>>=
+          qqnorm(resid(omodel), col='green', main='')
+        @
+      
+      \end{frame}
+      
+ 
+  \end{darkframes}
+
+\end{document}
