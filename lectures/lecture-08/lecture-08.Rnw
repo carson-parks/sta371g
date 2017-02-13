@@ -79,7 +79,7 @@
       @
       \quad \pause
       
-      Are we really sure? \pause
+      Can we be confident that our model will generalize to the \alert{population}?  \pause
       
       \bigskip
       
@@ -114,7 +114,7 @@
    
    
     
-    \begin{frame}[fragile]{How do we do with the predictions?}
+    \begin{frame}[fragile]{How good are our predictions?}
       \fontsize{9}{9}\selectfont
       Let's plot the residuals, i.e., discrepancies between the predictions and the data. \pause
       
@@ -127,7 +127,7 @@
     \end{frame}  
     
     
-    \begin{frame}[fragile]{How do we do with the predictions?}
+    \begin{frame}[fragile]{How good are our predictions?}
       \fontsize{9}{9}\selectfont
       It looks like a normal distribution. Let's look at the mean of the residuals: \pause
       
@@ -135,8 +135,9 @@
       mean(model$residuals)
       @
       Virtually zero. \pause
-      
-      It will be always zero since we allow an intercept and minimize the sum of squared residuals. \pause
+
+      \bigskip
+      (It will be always zero since regression minimizes the sum of squared residuals.) \pause
       
       \bigskip
       
@@ -149,7 +150,7 @@
     \end{frame}  
    
     
-    \begin{frame}[fragile]{How do we do with the predictions?}
+    \begin{frame}[fragile]{How good are our predictions?}
       \fontsize{9}{9}\selectfont
       
       Can we obtain a \alert{similar} measure directly from the summary of the regression?
@@ -205,10 +206,12 @@
     
     
     
-    \begin{frame}[fragile]%{Assumption 2: Linearity}
+    \begin{frame}[fragile]{Assumption 2: Linearity}
     
-      <<>>=
-      crPlots(model, main='')
+      Plot the residuals vs the predicted Y-values and ensure there is no trend:
+      <<fig.height=2>>=
+      plot(predict.lm(model), resid(model),
+        xlab='Predicted values', ylab='Residuals')
       @
     \end{frame}   
     
@@ -226,9 +229,9 @@
     
     
     \begin{frame}[fragile]{Assumption 3: Normally distributed residuals}
-    
+      Ensure that the Q-Q plot shows a (roughly) straight line:
       <<fig.height=2>>=
-      qqPlot(model, col='green')
+      qqnorm(resid(model), main='')
       @
     \end{frame}
     
@@ -245,9 +248,10 @@
     
     
     \begin{frame}[fragile]{Assumption 4: The variance of $Y$ is the same across}
-    
-      <<fig.height=2, warning=F>>=
-      spreadLevelPlot(model, col='green', main='')
+      Look for a (roughly) constant vertical ``thickness'':  
+      <<fig.height=2>>=
+      plot(predict.lm(model), resid(model),
+        xlab='Predicted values', ylab='Residuals')
       @
     \end{frame}
     

@@ -127,7 +127,7 @@
 \end{knitrout}
       \quad \pause
       
-      Are we really sure? \pause
+      Can we be confident that our model will generalize to the \alert{population}?  \pause
       
       \bigskip
       
@@ -162,7 +162,7 @@
    
    
     
-    \begin{frame}[fragile]{How do we do with the predictions?}
+    \begin{frame}[fragile]{How good are our predictions?}
       \fontsize{9}{9}\selectfont
       Let's plot the residuals, i.e., discrepancies between the predictions and the data. \pause
       
@@ -181,7 +181,7 @@
     \end{frame}  
     
     
-    \begin{frame}[fragile]{How do we do with the predictions?}
+    \begin{frame}[fragile]{How good are our predictions?}
       \fontsize{9}{9}\selectfont
       It looks like a normal distribution. Let's look at the mean of the residuals: \pause
       
@@ -196,8 +196,9 @@
 \end{kframe}
 \end{knitrout}
       Virtually zero. \pause
-      
-      It will be always zero since we allow an intercept and minimize the sum of squared residuals. \pause
+
+      \bigskip
+      (It will be always zero since regression minimizes the sum of squared residuals.) \pause
       
       \bigskip
       
@@ -217,7 +218,7 @@
     \end{frame}  
    
     
-    \begin{frame}[fragile]{How do we do with the predictions?}
+    \begin{frame}[fragile]{How good are our predictions?}
       \fontsize{9}{9}\selectfont
       
       Can we obtain a \alert{similar} measure directly from the summary of the regression?
@@ -280,12 +281,14 @@
     
     
     
-    \begin{frame}[fragile]%{Assumption 2: Linearity}
+    \begin{frame}[fragile]{Assumption 2: Linearity}
     
+      Plot the residuals vs the predicted Y-values and ensure there is no trend:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }\hlkwd{crPlots}\hlstd{(model,} \hlkwc{main}\hlstd{=}\hlstr{''}\hlstd{)}
+\hlstd{> }\hlkwd{plot}\hlstd{(}\hlkwd{predict.lm}\hlstd{(model),} \hlkwd{resid}\hlstd{(model),}
+\hlstd{+ }  \hlkwc{xlab}\hlstd{=}\hlstr{'Predicted values'}\hlstd{,} \hlkwc{ylab}\hlstd{=}\hlstr{'Residuals'}\hlstd{)}
 \end{alltt}
 \end{kframe}
 \input{C:/temp/figures/unnamed-chunk-9-1.tikz}
@@ -307,11 +310,11 @@
     
     
     \begin{frame}[fragile]{Assumption 3: Normally distributed residuals}
-    
+      Ensure that the Q-Q plot shows a (roughly) straight line:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }\hlkwd{qqPlot}\hlstd{(model,} \hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{)}
+\hlstd{> }\hlkwd{qqnorm}\hlstd{(}\hlkwd{resid}\hlstd{(model),} \hlkwc{main}\hlstd{=}\hlstr{''}\hlstd{)}
 \end{alltt}
 \end{kframe}
 \input{C:/temp/figures/unnamed-chunk-10-1.tikz}
@@ -332,19 +335,16 @@
     
     
     \begin{frame}[fragile]{Assumption 4: The variance of $Y$ is the same across}
-    
+      Look for a (roughly) constant vertical ``thickness'':  
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }\hlkwd{spreadLevelPlot}\hlstd{(model,} \hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{,} \hlkwc{main}\hlstd{=}\hlstr{''}\hlstd{)}
+\hlstd{> }\hlkwd{plot}\hlstd{(}\hlkwd{predict.lm}\hlstd{(model),} \hlkwd{resid}\hlstd{(model),}
+\hlstd{+ }  \hlkwc{xlab}\hlstd{=}\hlstr{'Predicted values'}\hlstd{,} \hlkwc{ylab}\hlstd{=}\hlstr{'Residuals'}\hlstd{)}
 \end{alltt}
 \end{kframe}
 \input{C:/temp/figures/unnamed-chunk-11-1.tikz}
-\begin{kframe}\begin{verbatim}
 
-Suggested power transformation:  0.8440952 
-\end{verbatim}
-\end{kframe}
 \end{knitrout}
     \end{frame}
     
