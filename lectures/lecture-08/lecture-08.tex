@@ -261,10 +261,7 @@
     
     \begin{frame}[fragile]{Assumption 1: Independence}
     \fontsize{9}{9}\selectfont
-      Independence: No correlation between residuals. \pause
-    
-      Difficult to verify this from plots.
-      
+      Independence: No correlation between residuals \pause --- we have to think this through; can't use a plot here.
     \end{frame}
     
 
@@ -389,11 +386,9 @@ LSTAT         -11.07       0.96  -11.56        0
     \end{frame}
     
     
-    
-    
-      \begin{frame}[fragile]{Model Coefficients}
+    \begin{frame}[fragile]{Model Coefficients}
       \fontsize{9}{9}\selectfont
-      Let's estimate the median house price in a district, where:
+      Let's estimate the median house price in a particular district:
       
       \begin{table}[!b]
         {\carlitoTLF % Use monospaced lining figures
@@ -442,8 +437,6 @@ LSTAT         -11.07       0.96  -11.56        0
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-      \pause
-      Cool! That was easy!
       \note{The discrepancy is due to rounding in the previous slide.}
       
     \end{frame}
@@ -451,11 +444,11 @@ LSTAT         -11.07       0.96  -11.56        0
     
     \begin{frame}[fragile]{Model Coefficients}
     \fontsize{9}{9}\selectfont
-      Assume that there are 420 students and 28 teachers in the disctrict (that is why PTRATIO is 15). \pause
+      Assume that there are 420 students and 28 teachers in the disctrict ($\text{PTRATIO}=420/28=15$). \pause
       
       \bigskip
       
-      The school board is considering to hire 2 more teachers. How would this affect the house prices in the district? \pause
+      The school board is considering hiring 2 more teachers. How would this affect the house prices in the district? \pause
       
       \bigskip
       
@@ -481,7 +474,6 @@ LSTAT         -11.07       0.96  -11.56        0
     
     
     \begin{frame}[fragile]{Model Coefficients}
-    \fontsize{9}{9}\selectfont
       Nothing is free. To be able to compansate the new hires, the ISD decides to add \$50 more on your tax bill for every \$10K of your house price. \pause
       
       \bigskip
@@ -494,8 +486,7 @@ LSTAT         -11.07       0.96  -11.56        0
     
     
     \begin{frame}[fragile]{Confidence intervals}
-    \fontsize{9}{9}\selectfont
-      We all know our predictions are wrong. 
+      We all know our predictions are not exactly right. 
       
       Can we come up with some confidence intervals on our predictions? \pause
       \bigskip
@@ -538,7 +529,7 @@ LSTAT         -11.07       0.96  -11.56        0
      
      \begin{frame}[fragile]%{Confidence intervals}
       \fontsize{9}{9}\selectfont
-        We can also put a confidence intervals on a coefficient to estimate the range of its effect.
+        We can also put a confidence interval on a coefficient to estimate the plausible range of its effect.
         
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
@@ -561,11 +552,8 @@ LSTAT        -12.9529546   -9.1905075
 \end{kframe}
 \end{knitrout}
      
-     \end{frame}
-     
-     \begin{frame}[fragile]{Confidence intervals}
-      \fontsize{9}{9}\selectfont
-        Reducing the PTRATIO by one could increase the median house price from \$14K to \$24K!
+        \pause
+        Reducing the parent/teacher ratio (PTRATIO) by one could increase the median house price from \$14K to \$24K!
         
         \lc
      \end{frame}
