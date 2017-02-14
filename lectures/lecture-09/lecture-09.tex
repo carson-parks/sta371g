@@ -101,6 +101,54 @@
     
     
     
+    \begin{frame}[fragile]{Exploring the data}
+      \fontsize{9}{9}\selectfont
+      Let's load the data from web and save it to the local directory.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlcom{# auto_mpg <- read.csv(file_url_goes_here_in_quotes, header=T)}
+\hlstd{> }\hlcom{# to save this to your local directory, use}
+\hlstd{> }\hlcom{# write_csv(auto_mpg, "./auto_mpg.csv")}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+      \pause
+      And calculate the average MPG.
+      \lc
+  
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Exploring the data}
+      \fontsize{9}{9}\selectfont
+      Let's display the first 5 rows (and all columns).
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlstd{auto_mpg[}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{,]}
+\end{alltt}
+\begin{verbatim}
+# A tibble: 5 × 7
+    MPG Cylinders Displacement    HP Weight Acceleration After1975
+  <dbl>     <int>        <dbl> <int>  <int>        <dbl>     <chr>
+1    18         8          307   130   3504         12.0        No
+2    15         8          350   165   3693         11.5        No
+3    18         8          318   150   3436         11.0        No
+4    16         8          304   150   3433         12.0        No
+5    17         8          302   140   3449         10.5        No
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+      \pause
+      No??? What the... What to do with that? \pause
+      
+      Maybe just omit the ``After1975'' column?
+  
+    \end{frame}
+    
+    
     
     
     \begin{frame}[fragile]{Exploring the data}
@@ -142,7 +190,7 @@
 \hlstd{+ }              \hlkwc{xlab}\hlstd{=}\hlstr{"After 1975"}\hlstd{,} \hlkwc{col}\hlstd{=}\hlstr{'darkgray'}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\input{C:/temp/figures/unnamed-chunk-4-1.tikz}
+\input{C:/temp/figures/unnamed-chunk-6-1.tikz}
 
 \end{knitrout}
       
@@ -235,7 +283,9 @@ After1975Yes     4.36       0.40   10.85     0.00
         \fontsize{9}{9}\selectfont
         Our model contains some statistically insignificant variables. 
         
-        Your task is to start omiting them one by one. What is the $R^2$ in your final model?
+        Your task is to omit them one by one. 
+        
+        What is the $R^2$ in your final model?
         \lc
       
       \end{frame}
@@ -272,6 +322,47 @@ After1975Yes     4.33       0.40   10.83     0.00
       \end{frame}
       
       
+      
+      \begin{frame}[fragile]{Regression with categorical variables}
+        \fontsize{9}{9}\selectfont
+        To see the correlation between variables:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlstd{mpg_numeric} \hlkwb{=} \hlstd{auto_mpg[,}\hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{5}\hlstd{,}\hlnum{6}\hlstd{)]}
+\hlstd{> }\hlkwd{round}\hlstd{(}\hlkwd{cor}\hlstd{(mpg_numeric),}\hlnum{2}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+               MPG Cylinders Displacement    HP Weight Acceleration
+MPG           1.00     -0.78        -0.81 -0.78  -0.83         0.42
+Cylinders    -0.78      1.00         0.95  0.84   0.90        -0.50
+Displacement -0.81      0.95         1.00  0.90   0.93        -0.54
+HP           -0.78      0.84         0.90  1.00   0.86        -0.69
+Weight       -0.83      0.90         0.93  0.86   1.00        -0.42
+Acceleration  0.42     -0.50        -0.54 -0.69  -0.42         1.00
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+      \end{frame}
+      
+      
+      
+      \begin{frame}[fragile]{Regression with categorical variables}
+        \fontsize{9}{9}\selectfont
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlkwd{plot}\hlstd{(auto_mpg}\hlopt{$}\hlstd{HP, auto_mpg}\hlopt{$}\hlstd{Displacement,}
+\hlstd{+ }  \hlkwc{xlab}\hlstd{=}\hlstr{'HP'}\hlstd{,} \hlkwc{ylab}\hlstd{=}\hlstr{'Acceleration'}\hlstd{,}\hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{,} \hlkwc{main}\hlstd{=}\hlstr{''}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\input{C:/temp/figures/unnamed-chunk-11-1.tikz}
+
+\end{knitrout}
+      \end{frame}
+      
+      
+      
       \begin{frame}[fragile]{Interpretation of the $\beta$ of the dummy variable}
         \fontsize{9}{9}\selectfont
         Consider this:
@@ -285,133 +376,22 @@ After1975Yes     4.33       0.40   10.83     0.00
       \end{frame}
       
       
+      
+      
       \begin{frame}[fragile]{Interpretation of the $\beta$ of the dummy variable}
         \fontsize{9}{9}\selectfont
-          Our ``reference level'' is the cars manufactured before 1975. \bigskip
+          Our ``reference level'' is the cars manufactured before 1975. \bigskip \pause
           
-          For the same Weight and HP, our MPG prediction for a car manufactured after 1975 is always exactly 4.33 higher compared to its reference.  \bigskip
+          For the same Weight and HP, our MPG prediction for a car manufactured after 1975 is always exactly 4.33 higher compared to its reference.  \bigskip  \pause
           
-          There are other coding schemes too, where the reference is chosen differently.
+          $\beta$ gives us the increment in our prediction for the cars manufactured after 1975.\bigskip  \pause
           
-          
-          
-          
-      \end{frame}
-      
-      
-      \begin{frame}[fragile]{Why not to create two separate models?}
-        \fontsize{9}{9}\selectfont
-        
-        *** THIS DATA DO NOT SUPPORT THIS ARGUMENT BECAUSE OF THE NONLINEARITY ***
-        
-         First regress a model only for the cars manufactured before 1975.
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
-\begin{alltt}
-\hlstd{> }        \hlstd{Weight_B} \hlkwb{<-} \hlstd{auto_mpg}\hlopt{$}\hlstd{Weight[auto_mpg}\hlopt{$}\hlstd{After1975}\hlopt{==}\hlstr{'No'}\hlstd{]}
-\hlstd{> }        \hlstd{HP_B}     \hlkwb{<-} \hlstd{auto_mpg}\hlopt{$}\hlstd{HP[auto_mpg}\hlopt{$}\hlstd{After1975}\hlopt{==}\hlstr{'No'}\hlstd{]}
-\hlstd{> }        \hlstd{MPG_B}    \hlkwb{<-} \hlstd{auto_mpg}\hlopt{$}\hlstd{MPG[auto_mpg}\hlopt{$}\hlstd{After1975}\hlopt{==}\hlstr{'No'}\hlstd{]}
-\hlstd{> }        
-\hlstd{> }        \hlstd{model_B} \hlkwb{<-} \hlkwd{lm}\hlstd{(MPG_B} \hlopt{~}  \hlstd{HP_B} \hlopt{+} \hlstd{Weight_B)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-          
-          
-      \end{frame}
-      
-      \begin{frame}[fragile]{Why not to create two separate models?}
-        \fontsize{9}{9}\selectfont
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
-\begin{alltt}
-\hlstd{> } \hlkwd{summary}\hlstd{(model_B)}
-\end{alltt}
-\begin{verbatim}
-
-Call:
-lm(formula = MPG_B ~ HP_B + Weight_B)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--7.2199 -1.7683 -0.0254  1.7336  6.9173 
-
-Coefficients:
-              Estimate Std. Error t value Pr(>|t|)    
-(Intercept) 37.1585134  0.6664457   55.76   <2e-16 ***
-HP_B        -0.0145377  0.0083065   -1.75   0.0818 .  
-Weight_B    -0.0050048  0.0003896  -12.85   <2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 2.49 on 177 degrees of freedom
-Multiple R-squared:   0.82,	Adjusted R-squared:  0.818 
-F-statistic: 403.2 on 2 and 177 DF,  p-value: < 2.2e-16
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-          
+          There are other coding schemes too, where the reference is chosen differently, therefore $\beta$ is interpreted differently.
           
       \end{frame}
       
       
       
-      
-      
-      \begin{frame}[fragile]{Why not to create two separate models?}
-        \fontsize{9}{9}\selectfont
-        
-        
-        
-        Now regress a model only for the cars manufactured after 1975.
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
-\begin{alltt}
-\hlstd{> }        \hlstd{Weight_A} \hlkwb{<-} \hlstd{auto_mpg}\hlopt{$}\hlstd{Weight[auto_mpg}\hlopt{$}\hlstd{After1975}\hlopt{==}\hlstr{'Yes'}\hlstd{]}
-\hlstd{> }        \hlstd{HP_A}     \hlkwb{<-} \hlstd{auto_mpg}\hlopt{$}\hlstd{HP[auto_mpg}\hlopt{$}\hlstd{After1975}\hlopt{==}\hlstr{'Yes'}\hlstd{]}
-\hlstd{> }        \hlstd{MPG_A}    \hlkwb{<-} \hlstd{auto_mpg}\hlopt{$}\hlstd{MPG[auto_mpg}\hlopt{$}\hlstd{After1975}\hlopt{==}\hlstr{'Yes'}\hlstd{]}
-\hlstd{> }        
-\hlstd{> }        \hlstd{model_A} \hlkwb{<-} \hlkwd{lm}\hlstd{(MPG_A} \hlopt{~}  \hlstd{HP_A} \hlopt{+} \hlstd{Weight_A)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-          
-          
-      \end{frame}
-      
-      \begin{frame}[fragile]{Why not to create two separate models?}
-        \fontsize{9}{9}\selectfont
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
-\begin{alltt}
-\hlstd{> } \hlkwd{summary}\hlstd{(model_A)}
-\end{alltt}
-\begin{verbatim}
-
-Call:
-lm(formula = MPG_A ~ HP_A + Weight_A)
-
-Residuals:
-   Min     1Q Median     3Q    Max 
--8.869 -2.724 -0.379  2.265 13.229 
-
-Coefficients:
-              Estimate Std. Error t value Pr(>|t|)    
-(Intercept) 52.0736406  1.1142331  46.735  < 2e-16 ***
-HP_A        -0.0716222  0.0184989  -3.872 0.000145 ***
-Weight_A    -0.0066577  0.0007383  -9.018  < 2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 3.982 on 209 degrees of freedom
-Multiple R-squared:  0.7296,	Adjusted R-squared:  0.727 
-F-statistic:   282 on 2 and 209 DF,  p-value: < 2.2e-16
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-          
-          
-      \end{frame}
       
       
       

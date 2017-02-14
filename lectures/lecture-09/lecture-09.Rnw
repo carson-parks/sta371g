@@ -64,6 +64,20 @@
     
     
     
+    \begin{frame}[fragile]{Exploring the data}
+      \fontsize{9}{9}\selectfont
+      Let's load the data from web and save it to the local directory.
+      <<>>=
+      # auto_mpg <- read.csv(file_url_goes_here_in_quotes, header=T)
+      # to save this to your local directory, use
+      # write_csv(auto_mpg, "./auto_mpg.csv")
+      @ 
+      \pause
+      And calculate the average MPG.
+      \lc
+  
+    \end{frame}
+    
     
     
     \begin{frame}[fragile]{Exploring the data}
@@ -81,6 +95,7 @@
     
     
     
+    
     \begin{frame}[fragile]%{Exploring the data}
       \fontsize{9}{9}\selectfont
       \note{This slide is to get familiar with boxplots. Conclusion: Being manufactured after 1975 matters}
@@ -93,10 +108,28 @@
     
     
     
+    \begin{frame}[fragile]{Exploring the data}
+      \fontsize{9}{9}\selectfont
+        How can we incorporate the ``After1975'' variable into a regression model? \bigskip \pause
+        
+        Create a \alert{dummy variable} that maps a ``Yes'' to 1, and ``No'' to 0. \pause
+      <<>>=
+      auto_mpg$LateModel <- ifelse(auto_mpg$After1975 == "Yes", 1, 0)
+      @
+      \pause  
+      Now run a regression model using the predictors Cylinders, Displacement, HP, Weight, Acceleration and LateModel.
+      
+      What is your $R^2$?
+    
+      \lc
+    \end{frame}
+    
+    
+    
     
     \begin{frame}[fragile]{Regression with categorical variables}
       \fontsize{9}{9}\selectfont
-      Can we go ahead and run a regression anyway? \pause
+      Let's see how R handles it. \pause
       <<>>=
         model <- lm(MPG ~ Cylinders +Displacement + HP
                     + Weight + Acceleration + After1975, 
@@ -117,6 +150,7 @@
       round(summary(model)$coefficients, 2)
     @
     R has created a \alert{dummy variable}, ``After1975Yes.'' \pause 
+    
     A dummy variable is always 0 or 1, indicating the absence or presence of some categorical effect.
     
     \end{frame}
@@ -157,7 +191,9 @@
         \fontsize{9}{9}\selectfont
         Our model contains some statistically insignificant variables. 
         
-        Your task is to start omiting them one by one. What is the $R^2$ in your final model?
+        Your task is to omit them one by one. 
+        
+        What is the $R^2$ in your final model?
         \lc
       
       \end{frame}
@@ -178,6 +214,28 @@
       \end{frame}
       
       
+      
+      \begin{frame}[fragile]{Regression with categorical variables}
+        \fontsize{9}{9}\selectfont
+        To see the correlation between variables:
+        <<>>=
+        mpg_numeric = auto_mpg[,c(1,2,3,4,5,6)]
+        round(cor(mpg_numeric),2)
+        @
+      \end{frame}
+      
+      
+      
+      \begin{frame}[fragile]{Regression with categorical variables}
+        \fontsize{9}{9}\selectfont
+        <<fig.height=2>>=
+        plot(auto_mpg$HP, auto_mpg$Displacement, 
+          xlab='HP', ylab='Acceleration',col='green', main='')
+        @
+      \end{frame}
+      
+      
+      
       \begin{frame}[fragile]{Interpretation of the $\beta$ of the dummy variable}
         \fontsize{9}{9}\selectfont
         Consider this:
@@ -191,75 +249,22 @@
       \end{frame}
       
       
+      
+      
       \begin{frame}[fragile]{Interpretation of the $\beta$ of the dummy variable}
         \fontsize{9}{9}\selectfont
-          Our ``reference level'' is the cars manufactured before 1975. \bigskip
+          Our ``reference level'' is the cars manufactured before 1975. \bigskip \pause
           
-          For the same Weight and HP, our MPG prediction for a car manufactured after 1975 is always exactly 4.33 higher compared to its reference.  \bigskip
+          For the same Weight and HP, our MPG prediction for a car manufactured after 1975 is always exactly 4.33 higher compared to its reference.  \bigskip  \pause
           
-          There are other coding schemes too, where the reference is chosen differently.
+          $\beta$ gives us the increment in our prediction for the cars manufactured after 1975.\bigskip  \pause
           
-          
-          
-          
-      \end{frame}
-      
-      
-      \begin{frame}[fragile]{Why not to create two separate models?}
-        \fontsize{9}{9}\selectfont
-        
-        *** THIS DATA DO NOT SUPPORT THIS ARGUMENT BECAUSE OF THE NONLINEARITY ***
-        
-         First regress a model only for the cars manufactured before 1975.
-         <<>>=
-        Weight_B <- auto_mpg$Weight[auto_mpg$After1975=='No']
-        HP_B     <- auto_mpg$HP[auto_mpg$After1975=='No']
-        MPG_B    <- auto_mpg$MPG[auto_mpg$After1975=='No']
-        
-        model_B <- lm(MPG_B ~  HP_B + Weight_B)
-        @
-          
-          
-      \end{frame}
-      
-      \begin{frame}[fragile]{Why not to create two separate models?}
-        \fontsize{9}{9}\selectfont
-         <<>>=
-          summary(model_B)
-          @
-          
+          There are other coding schemes too, where the reference is chosen differently, therefore $\beta$ is interpreted differently.
           
       \end{frame}
       
       
       
-      
-      
-      \begin{frame}[fragile]{Why not to create two separate models?}
-        \fontsize{9}{9}\selectfont
-        
-        
-        
-        Now regress a model only for the cars manufactured after 1975.
-         <<>>=
-        Weight_A <- auto_mpg$Weight[auto_mpg$After1975=='Yes']
-        HP_A     <- auto_mpg$HP[auto_mpg$After1975=='Yes']
-        MPG_A    <- auto_mpg$MPG[auto_mpg$After1975=='Yes']
-        
-        model_A <- lm(MPG_A ~  HP_A + Weight_A)
-        @
-          
-          
-      \end{frame}
-      
-      \begin{frame}[fragile]{Why not to create two separate models?}
-        \fontsize{9}{9}\selectfont
-         <<>>=
-          summary(model_A)
-          @
-          
-          
-      \end{frame}
       
       
       
