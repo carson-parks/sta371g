@@ -151,35 +151,6 @@
     
     
     
-    \begin{frame}[fragile]{Exploring the data}
-      \fontsize{9}{9}\selectfont
-      Let's display the first 5 rows (and all columns).
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{auto_mpg[}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{,]}
-\end{alltt}
-\begin{verbatim}
-# A tibble: 5 × 7
-    MPG Cylinders Displacement    HP Weight Acceleration After1975
-  <dbl>     <int>        <dbl> <int>  <int>        <dbl>     <chr>
-1    18         8          307   130   3504         12.0        No
-2    15         8          350   165   3693         11.5        No
-3    18         8          318   150   3436         11.0        No
-4    16         8          304   150   3433         12.0        No
-5    17         8          302   140   3449         10.5        No
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-      \pause
-      No??? What the... What to do with that? \pause
-      
-      Maybe just omit the ``After1975'' column?
-  
-    \end{frame}
-    
-    
-    
     \begin{frame}[fragile]%{Exploring the data}
       \fontsize{9}{9}\selectfont
       \note{This slide is to get familiar with boxplots. Conclusion: Being manufactured after 1975 matters}
@@ -190,7 +161,7 @@
 \hlstd{+ }              \hlkwc{xlab}\hlstd{=}\hlstr{"After 1975"}\hlstd{,} \hlkwc{col}\hlstd{=}\hlstr{'darkgray'}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\input{C:/temp/figures/unnamed-chunk-6-1.tikz}
+\input{C:/temp/figures/unnamed-chunk-5-1.tikz}
 
 \end{knitrout}
       
@@ -198,10 +169,32 @@
     
     
     
+    \begin{frame}[fragile]{Exploring the data}
+      \fontsize{9}{9}\selectfont
+        How can we incorporate the ``After1975'' variable into a regression model? \bigskip \pause
+        
+        Create a \alert{dummy variable} that maps a ``Yes'' to 1, and ``No'' to 0. \pause
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlstd{auto_mpg}\hlopt{$}\hlstd{LateModel} \hlkwb{<-} \hlkwd{ifelse}\hlstd{(auto_mpg}\hlopt{$}\hlstd{After1975} \hlopt{==} \hlstr{"Yes"}\hlstd{,} \hlnum{1}\hlstd{,} \hlnum{0}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+      \pause  
+      Now run a regression model using the predictors Cylinders, Displacement, HP, Weight, Acceleration and LateModel.
+      
+      What is your $R^2$?
+    
+      \lc
+    \end{frame}
+    
+    
+    
     
     \begin{frame}[fragile]{Regression with categorical variables}
       \fontsize{9}{9}\selectfont
-      Can we go ahead and run a regression anyway? \pause
+      Let's see how R handles it. \pause
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
@@ -243,6 +236,7 @@ After1975Yes     4.36       0.40   10.85     0.00
 \end{kframe}
 \end{knitrout}
     R has created a \alert{dummy variable}, ``After1975Yes.'' \pause 
+    
     A dummy variable is always 0 or 1, indicating the absence or presence of some categorical effect.
     
     \end{frame}
@@ -476,6 +470,21 @@ OriginUS       -1.593      0.562  -2.834    0.005
         \bigskip  
         
         Unless all the dummy variables are insignificant, we do not omit the column of that categorical variable.
+      
+      \end{frame}
+      
+      
+      
+      \begin{frame}[fragile]{Categorical Variables with Numeric Representations}
+        \fontsize{9}{9}\selectfont
+          In the original dataset, the origin was represented as 1 for U.S., 2 for EU and 3 for JP.
+        \bigskip  \pause
+        
+        Or, assume that we have a column for the ``U.S. News Brand Ranking.''
+        
+        \bigskip  \pause
+        
+        They are still categorical variables and should be treated as such.
       
       \end{frame}
       

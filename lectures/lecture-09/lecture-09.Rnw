@@ -316,6 +316,21 @@
       
       
       
+      \begin{frame}[fragile]{Categorical Variables with Numeric Representations}
+        \fontsize{9}{9}\selectfont
+          In the original dataset, the origin was represented as 1 for U.S., 2 for EU and 3 for JP.
+        \bigskip  \pause
+        
+        Or, assume that we have a column for the ``U.S. News Brand Ranking.''
+        
+        \bigskip  \pause
+        
+        They are still categorical variables and should be treated as such.
+      
+      \end{frame}
+      
+      
+      
       \begin{frame}[fragile]{Assumptions}
         \fontsize{9}{9}\selectfont
         What are the issues with this model?
