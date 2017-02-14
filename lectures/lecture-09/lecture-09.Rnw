@@ -230,7 +230,7 @@
         \fontsize{9}{9}\selectfont
         <<fig.height=2>>=
         plot(auto_mpg$HP, auto_mpg$Displacement, 
-          xlab='HP', ylab='Acceleration',col='green', main='')
+          xlab='HP', ylab='Displacement',col='green', main='')
         @
       \end{frame}
       
