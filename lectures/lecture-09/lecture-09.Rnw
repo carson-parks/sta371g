@@ -240,7 +240,7 @@
       
       \begin{frame}[fragile]{What if there are more than two categories?}
         The Origin variable represents the country of manufacture.
-        \fontsize{9}{9}\selectfont
+        \fontsize{8}{8}\selectfont
         <<>>=
         auto_mpg_all[1:5,]
         levels(as.factor(auto_mpg_all$Origin))
