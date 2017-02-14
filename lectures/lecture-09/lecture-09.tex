@@ -71,13 +71,9 @@
   %%%%%%% Slides start here %%%%%%%
 
   \begin{darkframes}
-  
-    \begin{darkframes}    
-    
-    
     \begin{frame}
       \fontsize{9}{9}\selectfont
-      Predicting the fuel economy (MPG) for different car models of `70s.
+      Let's predict fuel economy (miles per gallon) for different car models of the 70s.
       
       \begin{center}
         \includegraphics[width=2.8in]{bmw} \\
@@ -100,37 +96,16 @@
     \end{frame}
     
     
-    
-    \begin{frame}[fragile]{Exploring the data}
-      \fontsize{9}{9}\selectfont
-      Let's load the data from web and save it to the local directory.
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlcom{# auto_mpg <- read.csv(file_url_goes_here_in_quotes, header=T)}
-\hlstd{> }\hlcom{# to save this to your local directory, use}
-\hlstd{> }\hlcom{# write_csv(auto_mpg, "./auto_mpg.csv")}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-      \pause
-      And calculate the average MPG.
-      \lc
-  
-    \end{frame}
-    
-    
-    
     \begin{frame}[fragile]{Exploring the data}
       \fontsize{9}{9}\selectfont
       Let's display the first 5 rows (and all columns).
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }\hlstd{auto_mpg[}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{,]}
+\hlstd{auto_mpg[}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{,]}
 \end{alltt}
 \begin{verbatim}
-# A tibble: 5 × 7
+# A tibble: 5 <U+00D7> 7
     MPG Cylinders Displacement    HP Weight Acceleration After1975
   <dbl>     <int>        <dbl> <int>  <int>        <dbl>     <chr>
 1    18         8          307   130   3504         12.0        No
@@ -142,26 +117,22 @@
 \end{kframe}
 \end{knitrout}
       \pause
-      No??? What the... What to do with that? \pause
-      
-      Maybe just omit the ``After1975'' column?
-  
+      How do we handle the Yes/No data in the ``After1975'' column?
     \end{frame}
     
     
     
     
     \begin{frame}[fragile]%{Exploring the data}
-      \fontsize{9}{9}\selectfont
       \note{This slide is to get familiar with boxplots. Conclusion: Being manufactured after 1975 matters}
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }\hlkwd{boxplot}\hlstd{(MPG} \hlopt{~} \hlstd{After1975,} \hlkwc{data}\hlstd{=auto_mpg,} \hlkwc{ylab}\hlstd{=}\hlstr{"MPG"}\hlstd{,}
-\hlstd{+ }              \hlkwc{xlab}\hlstd{=}\hlstr{"After 1975"}\hlstd{,} \hlkwc{col}\hlstd{=}\hlstr{'darkgray'}\hlstd{)}
+\hlkwd{boxplot}\hlstd{(MPG} \hlopt{~} \hlstd{After1975,} \hlkwc{data}\hlstd{=auto_mpg,} \hlkwc{ylab}\hlstd{=}\hlstr{"MPG"}\hlstd{,}
+              \hlkwc{xlab}\hlstd{=}\hlstr{"After 1975"}\hlstd{,} \hlkwc{col}\hlstd{=}\hlstr{'darkgray'}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\input{C:/temp/figures/unnamed-chunk-5-1.tikz}
+\input{/tmp/figures/unnamed-chunk-4-1.tikz}
 
 \end{knitrout}
       
@@ -170,21 +141,18 @@
     
     
     \begin{frame}[fragile]{Exploring the data}
-      \fontsize{9}{9}\selectfont
-        How can we incorporate the ``After1975'' variable into a regression model? \bigskip \pause
-        
-        Create a \alert{dummy variable} that maps a ``Yes'' to 1, and ``No'' to 0. \pause
+        To incorporate the ``After1975'' variable into a regression model, 
+        create a \alert{dummy variable} that maps a ``Yes'' to 1, and ``No'' to 0. \pause
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }\hlstd{auto_mpg}\hlopt{$}\hlstd{LateModel} \hlkwb{<-} \hlkwd{ifelse}\hlstd{(auto_mpg}\hlopt{$}\hlstd{After1975} \hlopt{==} \hlstr{"Yes"}\hlstd{,} \hlnum{1}\hlstd{,} \hlnum{0}\hlstd{)}
+\hlstd{auto_mpg}\hlopt{$}\hlstd{LateModel} \hlkwb{<-}
+  \hlkwd{ifelse}\hlstd{(auto_mpg}\hlopt{$}\hlstd{After1975} \hlopt{==} \hlstr{"Yes"}\hlstd{,} \hlnum{1}\hlstd{,} \hlnum{0}\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
       \pause  
-      Now run a regression model using the predictors Cylinders, Displacement, HP, Weight, Acceleration and LateModel.
-      
-      What is your $R^2$?
+      Now let's a regression model using the predictors Cylinders, Displacement, HP, Weight, Acceleration and LateModel.
     
       \lc
     \end{frame}
@@ -193,15 +161,14 @@
     
     
     \begin{frame}[fragile]{Regression with categorical variables}
-      \fontsize{9}{9}\selectfont
-      Let's see how R handles it. \pause
+      R will actually create this ``dummy'' (0/1) variable for us automatically! \pause
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }  \hlstd{model} \hlkwb{<-} \hlkwd{lm}\hlstd{(MPG} \hlopt{~} \hlstd{Cylinders} \hlopt{+}\hlstd{Displacement} \hlopt{+} \hlstd{HP}
-\hlstd{+ }              \hlopt{+} \hlstd{Weight} \hlopt{+} \hlstd{Acceleration} \hlopt{+} \hlstd{After1975,}
-\hlstd{+ }              \hlkwc{data}\hlstd{=auto_mpg)}
-\hlstd{> }  \hlkwd{summary}\hlstd{(model)}\hlopt{$}\hlstd{r.squared}
+\hlstd{model} \hlkwb{<-} \hlkwd{lm}\hlstd{(MPG} \hlopt{~} \hlstd{Cylinders} \hlopt{+} \hlstd{Displacement} \hlopt{+} \hlstd{HP}
+            \hlopt{+} \hlstd{Weight} \hlopt{+} \hlstd{Acceleration} \hlopt{+} \hlstd{After1975,}
+            \hlkwc{data}\hlstd{=auto_mpg)}
+\hlkwd{summary}\hlstd{(model)}\hlopt{$}\hlstd{r.squared}
 \end{alltt}
 \begin{verbatim}
 [1] 0.776176
@@ -217,11 +184,10 @@
     
     
     \begin{frame}[fragile]{Dummy variables}
-      \fontsize{9}{9}\selectfont
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }  \hlkwd{round}\hlstd{(}\hlkwd{summary}\hlstd{(model)}\hlopt{$}\hlstd{coefficients,} \hlnum{2}\hlstd{)}
+\hlkwd{round}\hlstd{(}\hlkwd{summary}\hlstd{(model)}\hlopt{$}\hlstd{coefficients,} \hlnum{2}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
              Estimate Std. Error t value Pr(>|t|)
@@ -235,17 +201,13 @@ After1975Yes     4.36       0.40   10.85     0.00
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-    R has created a \alert{dummy variable}, ``After1975Yes.'' \pause 
-    
-    A dummy variable is always 0 or 1, indicating the absence or presence of some categorical effect.
-    
+      R has created a \alert{dummy variable} ``After1975Yes.''
     \end{frame}
     
     
     
     \begin{frame}[fragile]{Dummy variables}
-      \fontsize{9}{9}\selectfont
-      ``After1975Yes'' is 1 whenever ``After1975'' is a ``Yes,'' and 0 otherwise.
+      ``After1975Yes'' is 1 whenever ``After1975'' is ``Yes,'' and 0 otherwise:
     
       \begin{table}[!b]
         {\carlitoTLF % Use monospaced lining figures
@@ -266,18 +228,14 @@ After1975Yes     4.36       0.40   10.85     0.00
       \end{table} 
       
       \pause
-      Notice that we do not have a ``After1975No'' variable. 
+      Notice that we do not have a ``After1975No'' variable.\pause
       
       It would cause problems because it would be perfectly correlated with ``After1975Yes.''
       \end{frame}
       
       
-      
       \begin{frame}[fragile]{Regression with categorical variables}
-        \fontsize{9}{9}\selectfont
-        Our model contains some statistically insignificant variables. 
-        
-        Your task is to omit them one by one. 
+        Let's simplify our model by omitting statistically insignificant variables one by one. (Make sure to re-run the model after omitting each variable, starting with the least signfiicant.)
         
         What is the $R^2$ in your final model?
         \lc
@@ -291,15 +249,15 @@ After1975Yes     4.36       0.40   10.85     0.00
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }\hlstd{model} \hlkwb{<-} \hlkwd{lm}\hlstd{(MPG} \hlopt{~}  \hlstd{HP} \hlopt{+} \hlstd{Weight} \hlopt{+} \hlstd{After1975,}
-\hlstd{+ }                   \hlkwc{data}\hlstd{=auto_mpg)}
-\hlstd{> }\hlkwd{summary}\hlstd{(model)}\hlopt{$}\hlstd{r.squared}
+\hlstd{model} \hlkwb{<-} \hlkwd{lm}\hlstd{(MPG} \hlopt{~}  \hlstd{HP} \hlopt{+} \hlstd{Weight} \hlopt{+} \hlstd{After1975,}
+                   \hlkwc{data}\hlstd{=auto_mpg)}
+\hlkwd{summary}\hlstd{(model)}\hlopt{$}\hlstd{r.squared}
 \end{alltt}
 \begin{verbatim}
 [1] 0.7745063
 \end{verbatim}
 \begin{alltt}
-\hlstd{> }\hlkwd{round}\hlstd{(}\hlkwd{summary}\hlstd{(model)}\hlopt{$}\hlstd{coefficients,} \hlnum{2}\hlstd{)}
+\hlkwd{round}\hlstd{(}\hlkwd{summary}\hlstd{(model)}\hlopt{$}\hlstd{coefficients,} \hlnum{2}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
              Estimate Std. Error t value Pr(>|t|)
@@ -311,20 +269,21 @@ After1975Yes     4.33       0.40   10.83     0.00
 \end{kframe}
 \end{knitrout}
         \pause
-        Horsepower seems to be already capturing the information in Cylinders, Displacement and Acceleration. 
+        Is Horsepower capturing the information in Cylinders, Displacement and Acceleration?
       
       \end{frame}
       
       
       
       \begin{frame}[fragile]{Regression with categorical variables}
-        \fontsize{9}{9}\selectfont
-        To see the correlation between variables:
+        Let's look at the correlations between variables:
+        
+        {
+          \fontsize{9}{9}\selectfont
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }\hlstd{mpg_numeric} \hlkwb{=} \hlstd{auto_mpg[,}\hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{5}\hlstd{,}\hlnum{6}\hlstd{)]}
-\hlstd{> }\hlkwd{round}\hlstd{(}\hlkwd{cor}\hlstd{(mpg_numeric),}\hlnum{2}\hlstd{)}
+\hlkwd{cor}\hlstd{(auto_mpg[,}\hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{5}\hlstd{,}\hlnum{6}\hlstd{)])}
 \end{alltt}
 \begin{verbatim}
                MPG Cylinders Displacement    HP Weight Acceleration
@@ -337,51 +296,55 @@ Acceleration  0.42     -0.50        -0.54 -0.69  -0.42         1.00
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
+        }
+        We have \alert{multicollinearity} between HP, Cylinders, Displacement, and Acceleration --- all are highly correlated so it only makes sense to have one of these in the model.
       \end{frame}
       
       
       
       \begin{frame}[fragile]{Regression with categorical variables}
-        \fontsize{9}{9}\selectfont
+        The information in Displacement is already mostly captured by HP:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }\hlkwd{plot}\hlstd{(auto_mpg}\hlopt{$}\hlstd{HP, auto_mpg}\hlopt{$}\hlstd{Displacement,}
-\hlstd{+ }  \hlkwc{xlab}\hlstd{=}\hlstr{'HP'}\hlstd{,} \hlkwc{ylab}\hlstd{=}\hlstr{'Displacement'}\hlstd{,}\hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{,} \hlkwc{main}\hlstd{=}\hlstr{''}\hlstd{)}
+\hlkwd{plot}\hlstd{(auto_mpg}\hlopt{$}\hlstd{HP, auto_mpg}\hlopt{$}\hlstd{Displacement,} \hlkwc{pch}\hlstd{=}\hlnum{16}\hlstd{,}
+  \hlkwc{xlab}\hlstd{=}\hlstr{'HP'}\hlstd{,} \hlkwc{ylab}\hlstd{=}\hlstr{'Displacement'}\hlstd{,}\hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{,} \hlkwc{main}\hlstd{=}\hlstr{''}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\input{C:/temp/figures/unnamed-chunk-11-1.tikz}
+\input{/tmp/figures/unnamed-chunk-11-1.tikz}
 
 \end{knitrout}
       \end{frame}
       
       
       
-      \begin{frame}[fragile]{Interpretation of the $\beta$ of the dummy variable}
-        \fontsize{9}{9}\selectfont
+      \begin{frame}[fragile]{Interpretation of the $\hat\beta$ of the dummy variable}
+        Our regression equation is:
+        \[
+          \widehat{\text{Price}} = 41.71 -
+          0.02 \cdot \text{HP} -
+          0.01 \cdot \text{Weight} +
+          4.33 \cdot \text{After1975Yes}.
+        \] 
+        \pause
+
+        Let's interpret the coefficient 4.33.
         Consider this:
-        \begin{itemize}
+        \begin{itemize}[<+->]
           \item Model A and B have the same HP and Weight.
           \item Model A was manufactured before 1975, whereas B was manufactured after 1975.
-          \item Our model's prediction for Model A is 21 MPG.
-          \item What is the prediction for Model B?
+          \item We predict Model B will have a MPG that is 4.33 higher than Model A.
         \end{itemize} 
-          \lc
+        \lc
       \end{frame}
       
       
       
       
-      \begin{frame}[fragile]{Interpretation of the $\beta$ of the dummy variable}
-        \fontsize{9}{9}\selectfont
-          Our ``reference level'' is the cars manufactured before 1975. \bigskip \pause
-          
-          For the same Weight and HP, our MPG prediction for a car manufactured after 1975 is always exactly 4.33 higher compared to its reference.  \bigskip  \pause
-          
-          $\beta$ gives us the increment in our prediction for the cars manufactured after 1975.\bigskip  \pause
-          
-          There are other coding schemes too, where the reference is chosen differently, therefore $\beta$ is interpreted differently.
-          
+      \begin{frame}[fragile]{Interpretation of the $\hat\beta$ of the dummy variable}
+        R has assigned ``Yes'' to 1 and ``No'' to 0 in our dummy variable, so the ``reference level'' is cars manufactured before 1975.
+        \pause\bigskip
+        If we created a dummy variable After1975No that is 1 for cars manufactured \emph{before} 1975, what would the regression look like?          
       \end{frame}
       
       
@@ -391,33 +354,31 @@ Acceleration  0.42     -0.50        -0.54 -0.69  -0.42         1.00
       
       
       \begin{frame}[fragile]{What if there are more than two categories?}
-        \fontsize{8}{8}\selectfont
+        The Origin variable represents the country of manufacture.
+        \fontsize{9}{9}\selectfont
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }\hlstd{auto_mpg_all[}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{,]}
+\hlstd{auto_mpg_all[}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{,]}
 \end{alltt}
 \begin{verbatim}
-# A tibble: 5 × 8
+# A tibble: 5 <U+00D7> 8
     MPG Cylinders Displacement    HP Weight Acceleration After1975 Origin
   <dbl>     <int>        <dbl> <int>  <int>        <dbl>     <chr>  <chr>
-1    18         8          307   130   3504         12.0        No     US
-2    15         8          350   165   3693         11.5        No     US
-3    18         8          318   150   3436         11.0        No     US
-4    16         8          304   150   3433         12.0        No     US
-5    17         8          302   140   3449         10.5        No     US
+1    18         8          307   130   3504           12        No     US
+2    15         8          350   165   3693           12        No     US
+3    18         8          318   150   3436           11        No     US
+4    16         8          304   150   3433           12        No     US
+5    17         8          302   140   3449           10        No     US
 \end{verbatim}
 \begin{alltt}
-\hlstd{> }\hlkwd{levels}\hlstd{(}\hlkwd{as.factor}\hlstd{(auto_mpg_all}\hlopt{$}\hlstd{Origin))}
+\hlkwd{levels}\hlstd{(}\hlkwd{as.factor}\hlstd{(auto_mpg_all}\hlopt{$}\hlstd{Origin))}
 \end{alltt}
 \begin{verbatim}
 [1] "EU" "JP" "US"
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-        \pause
-        Let's first see if ``Origin'' makes a difference.
-      
       \end{frame}
       
       \begin{frame}[fragile]%{Exploring the data}
@@ -425,15 +386,15 @@ Acceleration  0.42     -0.50        -0.54 -0.69  -0.42         1.00
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }\hlkwd{boxplot}\hlstd{(MPG} \hlopt{~} \hlstd{Origin,} \hlkwc{data}\hlstd{=auto_mpg_all,} \hlkwc{ylab}\hlstd{=}\hlstr{"MPG"}\hlstd{,}
-\hlstd{+ }              \hlkwc{xlab}\hlstd{=}\hlstr{"Origin"}\hlstd{,} \hlkwc{col}\hlstd{=}\hlstr{'darkgray'}\hlstd{)}
+\hlkwd{boxplot}\hlstd{(MPG} \hlopt{~} \hlstd{Origin,} \hlkwc{data}\hlstd{=auto_mpg_all,} \hlkwc{ylab}\hlstd{=}\hlstr{"MPG"}\hlstd{,}
+              \hlkwc{xlab}\hlstd{=}\hlstr{"Origin"}\hlstd{,} \hlkwc{col}\hlstd{=}\hlstr{'darkgray'}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\input{C:/temp/figures/unnamed-chunk-13-1.tikz}
+\input{/tmp/figures/unnamed-chunk-13-1.tikz}
 
 \end{knitrout}
       
-    \end{frame}
+      \end{frame}
       
       
       
@@ -442,49 +403,36 @@ Acceleration  0.42     -0.50        -0.54 -0.69  -0.42         1.00
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }\hlstd{omodel} \hlkwb{<-} \hlkwd{lm}\hlstd{(MPG} \hlopt{~}  \hlstd{HP} \hlopt{+} \hlstd{Weight} \hlopt{+} \hlstd{After1975} \hlopt{+} \hlstd{Origin,}
-\hlstd{+ }                   \hlkwc{data}\hlstd{=auto_mpg_all)}
-\hlstd{> }\hlkwd{round}\hlstd{(}\hlkwd{summary}\hlstd{(omodel)}\hlopt{$}\hlstd{coefficients,}\hlnum{3}\hlstd{)}
+\hlstd{omodel} \hlkwb{<-} \hlkwd{lm}\hlstd{(MPG} \hlopt{~} \hlstd{HP} \hlopt{+} \hlstd{Weight} \hlopt{+} \hlstd{After1975} \hlopt{+} \hlstd{Origin,}
+            \hlkwc{data}\hlstd{=auto_mpg_all)}
+\hlkwd{round}\hlstd{(}\hlkwd{summary}\hlstd{(omodel)}\hlopt{$}\hlstd{coefficients,}\hlnum{3}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
              Estimate Std. Error t value Pr(>|t|)
-(Intercept)    40.182      0.874  45.961    0.000
-HP             -0.028      0.010  -2.837    0.005
-Weight         -0.005      0.000 -10.815    0.000
-After1975Yes    4.334      0.393  11.033    0.000
-OriginJP        1.001      0.612   1.635    0.103
-OriginUS       -1.593      0.562  -2.834    0.005
+(Intercept)    40.182       0.87    46.0    0.000
+HP             -0.028       0.01    -2.8    0.005
+Weight         -0.005       0.00   -10.8    0.000
+After1975Yes    4.334       0.39    11.0    0.000
+OriginJP        1.001       0.61     1.6    0.103
+OriginUS       -1.593       0.56    -2.8    0.005
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
         \pause
-        For the origin variable, R has chosen ``EU'' as the base, created a dummy variable for JP and US each.
-      
+        \fontsize{10}{10}\selectfont
+        For Origin, R has chosen EU as the reference level and create dummy variables for both JP and US.
       \end{frame}
       
       
+
       
-      \begin{frame}[fragile]{Regression with categorical variables}
-        \fontsize{9}{9}\selectfont
-        While dealing with categorical variables, we look at the significance of the categorical variable as a whole.
-        \bigskip  
-        
-        Unless all the dummy variables are insignificant, we do not omit the column of that categorical variable.
-      
-      \end{frame}
-      
-      
-      
-      \begin{frame}[fragile]{Categorical Variables with Numeric Representations}
+      \begin{frame}[fragile]{A warning about categorical variables with numeric representations}
         \fontsize{9}{9}\selectfont
           In the original dataset, the origin was represented as 1 for U.S., 2 for EU and 3 for JP.
-        \bigskip  \pause
-        
-        Or, assume that we have a column for the ``U.S. News Brand Ranking.''
-        
-        \bigskip  \pause
-        
-        They are still categorical variables and should be treated as such.
+          \bigskip  \pause
+          We would NOT want to just put these numbers in the regression as numbers, because then regression would treat this as if it were a quantitative variable!        
+          \bigskip  \pause
+          Even though the representation in the file is numeric, it is still a categorical variable and should be treated as such.
       
       \end{frame}
       
@@ -497,15 +445,31 @@ OriginUS       -1.593      0.562  -2.834    0.005
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }\hlkwd{plot}\hlstd{(}\hlkwd{predict.lm}\hlstd{(omodel),} \hlkwd{resid}\hlstd{(omodel),} \hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{,} \hlkwc{main}\hlstd{=}\hlstr{''}\hlstd{)}
+\hlkwd{plot}\hlstd{(}\hlkwd{predict.lm}\hlstd{(omodel),} \hlkwd{resid}\hlstd{(omodel),} \hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{,} \hlkwc{main}\hlstd{=}\hlstr{''}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\input{C:/temp/figures/unnamed-chunk-15-1.tikz}
+\input{/tmp/figures/unnamed-chunk-15-1.tikz}
 
 \end{knitrout}
       
       \end{frame}
       
+      
+      
+      \begin{frame}[fragile]{Assumptions}
+      \fontsize{9}{9}\selectfont
+        What about normality?
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+  \hlkwd{hist}\hlstd{(}\hlkwd{resid}\hlstd{(omodel),} \hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{,} \hlkwc{main}\hlstd{=}\hlstr{''}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\input{/tmp/figures/unnamed-chunk-16-1.tikz}
+
+\end{knitrout}
+      
+      \end{frame}
       
       
       \begin{frame}[fragile]{Assumptions}
@@ -515,30 +479,49 @@ OriginUS       -1.593      0.562  -2.834    0.005
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }  \hlkwd{hist}\hlstd{(}\hlkwd{resid}\hlstd{(omodel),} \hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{,} \hlkwc{main}\hlstd{=}\hlstr{''}\hlstd{)}
+  \hlkwd{qqnorm}\hlstd{(}\hlkwd{resid}\hlstd{(omodel),} \hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{,} \hlkwc{main}\hlstd{=}\hlstr{''}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\input{C:/temp/figures/unnamed-chunk-16-1.tikz}
+\input{/tmp/figures/unnamed-chunk-17-1.tikz}
 
 \end{knitrout}
       
       \end{frame}
+
+      \begin{frame}[fragile]{Testing the significance of a categorical variable}
+        While dealing with categorical variables, we want to look at the significance of the categorical variable as a whole, rather than looking at $p$-values of individual dummy variables.
+
+        \bigskip\pause
+
+        We want to test the null hypothesis 
+        \[
+          H_0 : \beta_{\text{US}} = \beta_{\text{EU}} = 0.
+        \]
+      \end{frame}
       
-      
-      \begin{frame}[fragile]{Assumptions}
+      \begin{frame}[fragile]{Testing the significance of a categorical variable}
+        To do this, we look at the ANOVA table; the $p$-value on the Origin line ($2.4 \times 10^{-5}$) is the $p$-value for the compound null hypothesis $H_0 : \beta_{\text{US}} = \beta_{\text{EU}} = 0$.
         \fontsize{9}{9}\selectfont
-        What about normality?
-        
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{> }  \hlkwd{qqnorm}\hlstd{(}\hlkwd{resid}\hlstd{(omodel),} \hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{,} \hlkwc{main}\hlstd{=}\hlstr{''}\hlstd{)}
+\hlkwd{anova}\hlstd{(omodel)}
 \end{alltt}
-\end{kframe}
-\input{C:/temp/figures/unnamed-chunk-17-1.tikz}
+\begin{verbatim}
+Analysis of Variance Table
 
+Response: MPG
+           Df Sum Sq Mean Sq F value  Pr(>F)    
+HP          1  14433   14433  1096.0 < 2e-16 ***
+Weight      1   2392    2392   181.6 < 2e-16 ***
+After1975   1   1623    1623   123.2 < 2e-16 ***
+Origin      2    288     144    10.9 2.4e-05 ***
+Residuals 386   5083      13                    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+\end{kframe}
 \end{knitrout}
-      
       \end{frame}
       
  
