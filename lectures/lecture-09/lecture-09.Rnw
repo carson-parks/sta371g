@@ -206,7 +206,7 @@
       \begin{frame}[fragile]{Interpretation of the $\hat\beta$ of the dummy variable}
         Our regression equation is:
         \[
-          \widehat{\text{Price}} = \Sexpr{model$coefficients['(Intercept)']} -
+          \widehat{\text{MPG}} = \Sexpr{model$coefficients['(Intercept)']} -
           \Sexpr{abs(model$coefficients['HP'])} \cdot \text{HP} -
           \Sexpr{abs(model$coefficients['Weight'])} \cdot \text{Weight} +
           \Sexpr{model$coefficients['After1975Yes']} \cdot \text{After1975Yes}.
