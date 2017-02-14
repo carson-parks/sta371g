@@ -317,18 +317,18 @@
       
       \end{frame}
 
-      \begin{frame}[fragile]{Testing the significance of a categorical variable}
+      \begin{frame}[fragile]{Statistical significance of a categorical variable}
         While dealing with categorical variables, we want to look at the significance of the categorical variable as a whole, rather than looking at $p$-values of individual dummy variables.
 
         \bigskip\pause
 
-        We want to test the null hypothesis 
+        We want to test the \alert{compound null hypothesis} 
         \[
           H_0 : \beta_{\text{US}} = \beta_{\text{EU}} = 0.
         \]
       \end{frame}
       
-      \begin{frame}[fragile]{Testing the significance of a categorical variable}
+      \begin{frame}[fragile]{Statistical significance of a categorical variable}
         To do this, we look at the ANOVA table; the $p$-value on the Origin line ($2.4 \times 10^{-5}$) is the $p$-value for the compound null hypothesis $H_0 : \beta_{\text{US}} = \beta_{\text{EU}} = 0$.
         \fontsize{9}{9}\selectfont
         <<>>=
@@ -336,6 +336,28 @@
         @
       \end{frame}
       
+      \begin{frame}{Practical significance of a categorical variable}
+        Since $p<.05$, we can conclude that Origin is a statistically significant predictor of MPG.
+        But is it a \emph{practically} significant predictor?
+        
+        \bigskip\pause
+        
+        To do this, compare $R^2$ values, or standard error of residuals:
+
+        \bigskip
+
+        \begin{tabular}{lll}
+        \textbf{Model} & \textbf{$R^2$} & \textbf{Residual standard error} \\
+        \hline
+        Without Origin in model & \Sexpr{summary(model)$r.squared} & \Sexpr{summary(model)$sigma} \\
+        With Origin in model & \Sexpr{summary(omodel)$r.squared} & \Sexpr{summary(omodel)$sigma} \\
+        \hline
+        \end{tabular}
+
+        \bigskip
+
+        We have to decide if the increased precision is worth the extra complexity in the model.
+      \end{frame}
  
   \end{darkframes}
 
