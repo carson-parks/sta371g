@@ -15,7 +15,7 @@ There are two ways to load files. The easiest is to load it directly from GitHub
 
 As an alternative, you can save the raw CSV file to your computer, and use the **Import Dataset** button in RStudio to load it.
 
-**Saving data**
+## Saving data
 
 If you have loaded data from GitHub, you can save it as a CSV file on your computer so you can load it in the future without having to download it again. Once you have loaded the data, you can save it to a file with a command like the following:
 
