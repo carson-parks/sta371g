@@ -104,6 +104,7 @@
       \]
       The average difference between houses with and without a fireplace is \$65261.
       \lc
+      \note{What is the reference level?}
     \end{frame}
 
     \begin{frame}{What is the relationship between price and size?}
@@ -326,6 +327,31 @@ Living.Area:FireplaceYes       27        6.5     4.2  3.4e-05
       When we have an interaction term in the model, we \emph{must} include the main effect as well!
 
       \lc
+    \end{frame}
+
+    \begin{frame}[fragile]{Making predictions}
+      Let's make predictions for the price of a 2500 sq ft house, both with and without a fireplace:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+\hlkwd{predict.lm}\hlstd{(model3,} \hlkwd{list}\hlstd{(}\hlkwc{Living.Area}\hlstd{=}\hlnum{2500}\hlstd{,} \hlkwc{Fireplace}\hlstd{=}\hlstr{'Yes'}\hlstd{),}
+  \hlkwc{interval}\hlstd{=}\hlstr{'prediction'}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+     fit    lwr    upr
+1 301331 166362 436300
+\end{verbatim}
+\begin{alltt}
+\hlkwd{predict.lm}\hlstd{(model3,} \hlkwd{list}\hlstd{(}\hlkwc{Living.Area}\hlstd{=}\hlnum{2500}\hlstd{,} \hlkwc{Fireplace}\hlstd{=}\hlstr{'No'}\hlstd{),}
+  \hlkwc{interval}\hlstd{=}\hlstr{'prediction'}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+     fit    lwr    upr
+1 271811 136405 407217
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+      \note{Discuss the meaning of the overlap here}
     \end{frame}
 
   \end{darkframes}
