@@ -324,12 +324,12 @@
 
         We want to test the \alert{compound null hypothesis} 
         \[
-          H_0 : \beta_{\text{US}} = \beta_{\text{EU}} = 0.
+          H_0 : \beta_{\text{US}} = \beta_{\text{JP}} = 0.
         \]
       \end{frame}
       
       \begin{frame}[fragile]{Statistical significance of a categorical variable}
-        To do this, we look at the ANOVA table; the $p$-value on the Origin line ($2.4 \times 10^{-5}$) is the $p$-value for the compound null hypothesis $H_0 : \beta_{\text{US}} = \beta_{\text{EU}} = 0$.
+        To do this, we look at the ANOVA table; the $p$-value on the Origin line ($2.4 \times 10^{-5}$) is the $p$-value for the compound null hypothesis $H_0 : \beta_{\text{US}} = \beta_{\text{JP}} = 0$.
         \fontsize{9}{9}\selectfont
         <<>>=
         anova(omodel)
