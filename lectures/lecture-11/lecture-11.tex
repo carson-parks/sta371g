@@ -70,6 +70,14 @@
   %%%%%%% Slides start here %%%%%%%
 
   \begin{darkframes}
+    \begin{frame}{Midterm 1}
+      \begin{itemize}
+        \item Review sessions tonight and Sunday night, 5-7 PM, in the ModLab
+        \item Make sure to work on the practice questions posted on Canvas
+        \item Try to do HW 4 before the test, if possible
+      \end{itemize}
+    \end{frame}
+
     \begin{frame}{NBA data}
       Basketball-Reference.com provides detailed data on NBA teams and players. We'll look at team data for 4 seasons ending in 2016; each of these metrics is the average across the season:
       \begin{itemize}
@@ -180,7 +188,7 @@ Coefficients:
             Estimate Std. Error t value Pr(>|t|)    
 (Intercept) 62.00493    5.61396  11.045  < 2e-16 ***
 N3PA         0.56467    0.07587   7.442 1.82e-11 ***
-PCT3P       73.41526   16.29198   4.506 1.57e-05 ***
+PCT3P        0.73415    0.16292   4.506 1.57e-05 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -220,11 +228,11 @@ Residuals:
 -7.2629 -2.2757  0.1148  1.9698  9.3756 
 
 Coefficients:
-            Estimate Std. Error t value Pr(>|t|)    
-(Intercept)  122.849     30.589   4.016 0.000105 ***
-N3PA          -2.119      1.329  -1.594 0.113561    
-PCT3P        -98.410     86.465  -1.138 0.257400    
-N3PA:PCT3P     7.561      3.739   2.023 0.045423 *  
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 122.84903   30.58937   4.016 0.000105 ***
+N3PA         -2.11904    1.32903  -1.594 0.113561    
+PCT3P        -0.98410    0.86465  -1.138 0.257400    
+N3PA:PCT3P    0.07561    0.03739   2.023 0.045423 *  
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -242,8 +250,8 @@ F-statistic: 34.89 on 3 and 116 DF,  p-value: 3.798e-16
       \[
         \widehat{\text{PTS}} = 122.85 
           - 2.12 \cdot\text{N3PA}
-          - 98.41 \cdot\text{PCT3P}
-          + 7.56 \cdot\text{N3PA}\cdot\text{PCT3P}.
+          - 0.98 \cdot\text{PCT3P}
+          + 0.08 \cdot\text{N3PA}\cdot\text{PCT3P}.
       \]
 
       \pause
@@ -252,8 +260,8 @@ F-statistic: 34.89 on 3 and 116 DF,  p-value: 3.798e-16
       \begin{itemize}[<+->]
         \item \textbf{Intercept} (122.85) is our prediction of total points when $\text{N3PA}=\text{PCT3P}=0$. (Meaningless in this context!)
         \item \textbf{N3PA} ($-2.12$) is the predicted increase in total points for each additional 3-pointer taken, when $\text{PCT3P}=0$.
-        \item \textbf{PCT3P} ($-98.41$)  is the predicted increase in total points for each additional percentage point of 3-point shooting accuracy, when $\text{N3PA}=0$.
-        \item \textbf{$\text{N3PA}\cdot\text{PCT3P}$} ($7.56$) can be interpreted in two ways:\pause
+        \item \textbf{PCT3P} ($-0.98$)  is the predicted increase in total points for each additional percentage point of 3-point shooting accuracy, when $\text{N3PA}=0$.
+        \item \textbf{$\text{N3PA}\cdot\text{PCT3P}$} ($0.08$) can be interpreted in two ways:\pause
           \begin{itemize}[<+->]
             \item the increase in the \emph{slope coefficient} for N3PA for each 1-unit increase of PCT3P.
             \item the increase in the \emph{slope coefficient} for PCT3P for each 1-unit increase of N3PA.

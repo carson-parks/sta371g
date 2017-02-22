@@ -28,6 +28,14 @@
   %%%%%%% Slides start here %%%%%%%
 
   \begin{darkframes}
+    \begin{frame}{Midterm 1}
+      \begin{itemize}
+        \item Review sessions tonight and Sunday night, 5-7 PM, in the ModLab
+        \item Make sure to work on the practice questions posted on Canvas
+        \item Try to do HW 4 before the test, if possible
+      \end{itemize}
+    \end{frame}
+
     \begin{frame}{NBA data}
       Basketball-Reference.com provides detailed data on NBA teams and players. We'll look at team data for 4 seasons ending in 2016; each of these metrics is the average across the season:
       \begin{itemize}
@@ -205,10 +213,11 @@
       abline(a, b, col='green', lwd=4)
       text(29, b*29+a, "2 SD above avg (39.2%)", col="green", pos=3, srt=b*40)
 
-      a <- model3$coefficients["(Intercept)"] + 0.28 * model3$coefficients["PCT3P"]
-      b <- model3$coefficients["N3PA"] + model3$coefficients["N3PA:PCT3P"] * 0.28
+      breakeven <- -model3$coefficients["N3PA"] / model3$coefficients["N3PA:PCT3P"]
+      a <- model3$coefficients["(Intercept)"] + breakeven * model3$coefficients["PCT3P"]
+      b <- model3$coefficients["N3PA"] + model3$coefficients["N3PA:PCT3P"] * breakeven
       abline(a, b, col='pink', lwd=4)
-      text(29.5, b*29.5+a, "28% 3P shooting", col="pink", pos=3, srt=b*45)
+      text(29, b*29+a, "26.5% 3P shooting", col="pink", pos=3, srt=b*45)
       @
     \end{frame}
 
