@@ -245,7 +245,7 @@
       Is this ``significant?''
       \pause
       \begin{itemize}[<+->]
-        \item \textbf{Statistical significance:} Can we reject the null hypothesis that the correlation between $X$ and $Y$ in the \emph{population} is not zero?
+        \item \textbf{Statistical significance:} Can we reject the null hypothesis that the correlation between $X$ and $Y$ in the \emph{population} is zero?
         \item \textbf{Practical significance:} Is the correlation in our sample large enough to be meaningful?
       \end{itemize}
     \end{frame}
