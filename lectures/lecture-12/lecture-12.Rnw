@@ -1,0 +1,239 @@
+\documentclass{beamer}
+\usepackage{../371g-slides}
+\title{Diagnostics \& Transformations}
+\subtitle{Lecture 12}
+\author{STA 371G}
+
+\begin{document}
+  <<setup, include=F, cache=F>>=
+  opts_knit$set(global.par=T)
+  knit_hooks$set(crop=hook_pdfcrop)
+  opts_chunk$set(dev='tikz', external=F, fig.path='/tmp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, tidy=F)
+  knit_theme$set('camo')
+  @
+  <<include=F, cache=F>>=
+  library(readr)
+  library(car)
+  auto_mpg <- read_csv("../../data/auto_mpg.csv")
+  par(fg='#fefefe', col.axis='#fefefe', col.lab='#fefefe', col.main="#fefefe", mar=c(5.1, 4.1, 1.1, 2.1))
+  @
+
+  \frame{\maketitle}
+
+  % Show outline at beginning of each section
+  \AtBeginSection[]{ 
+    \begin{frame}<beamer>
+      \tableofcontents[currentsection]
+    \end{frame}
+  }
+
+  %%%%%%% Slides start here %%%%%%%
+
+  \begin{darkframes}
+    
+    
+    \begin{frame}
+      \fontsize{9}{9}\selectfont
+      Predicting the fuel economy (miles per gallon) for different car models of the 70s.
+      
+      \begin{center}
+        \includegraphics[width=2.8in]{bmw} \\
+      \end{center} \pause
+      
+      ``LINE'' assumptions:
+      \begin{columns}[onlytextwidth]
+        \column{.5\textwidth}
+          \begin{itemize}
+            \item Linearity
+            \item Independent errors
+          \end{itemize}
+        \column{.5\textwidth}
+          \begin{itemize}
+            \item Normally distributed errors
+            \item Equal Variance (Homoscedasticity)
+          \end{itemize}
+      \end{columns}
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Predicting MPG from Horsepower}
+    \fontsize{9}{9}\selectfont
+      <<>>=
+        model<-lm(MPG ~ HP, data=auto_mpg)
+        summary(model)
+      @
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]
+    \fontsize{9}{9}\selectfont
+      <<fig.height=2.5>>=
+        plot(model$fitted.values, resid(model), col='green')
+      @
+      \pause  
+      The trend in the residuals implies linearity issues.
+      
+      The ``funnel'' implies equal variance issues.
+    
+      
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Addressing the linearity issue}
+      \fontsize{9}{9}\selectfont
+        The relation between MPG and horsepower does not seem to be linear.
+      <<fig.height=2.5>>=
+        plot(auto_mpg$HP, auto_mpg$MPG, col='green', 
+             xlab='Horsepower', ylab='MPG')
+      @
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Addressing the linearity issue}
+      %\fontsize{9}{9}\selectfont
+      \begin{center}
+        If we could horizontally shift the data on the far right towards left, the plot would look ``more'' linear.
+        \bigskip \pause
+        
+        Predict the MPG of a car not from the horsepower, but from a ``transformation'' of the horsepower. \pause
+        \bigskip
+        
+        For example, the relation between MPG and HP is not linear, the one between MPG and $\sqrt{\text{HP}}$ is!
+      \end{center}
+    
+    \end{frame}
+    
+    
+    
+    
+    \begin{frame}[fragile]{Addressing the linearity issue}
+      \fontsize{9}{9}\selectfont
+      <<fig.height=2.5>>=
+        auto_mpg$HP_sqrt <- sqrt(auto_mpg$HP)
+        plot(auto_mpg$HP_sqrt, auto_mpg$MPG, col='green', 
+             xlab='Squareroot of Horsepower', ylab='MPG')
+      @
+     \end{frame}  
+    
+    
+      
+    
+    
+    
+    \begin{frame}[fragile]{Addressing the linearity issue}
+      \fontsize{9}{9}\selectfont
+      
+        It indeed seems a bit better. Notice the change in the range of the horizontal axis. \pause
+      
+        It has changed from [49,225] to [7,15]. The shift is larger for the data on the far right. 
+      
+       <<fig.height=2.5>>=
+        plot(auto_mpg$HP, auto_mpg$HP_sqrt, col='green', 
+            xlab='Horsepower', ylab='Squareroot of Horsepower')
+        @ 
+    \end{frame}
+  
+  
+  
+    \begin{frame}[fragile]{Addressing the linearity issue}
+      \fontsize{9}{9}\selectfont
+      <<>>=
+        model2<-lm(MPG ~ HP_sqrt, data=auto_mpg)
+        summary(model2)
+      @
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]
+    \fontsize{9}{9}\selectfont
+      <<fig.height=2.5>>=
+        plot(model2$fitted.values, resid(model2), col='green')
+      @
+      The trend flattened a bit. \pause
+      
+      Can we do better? Let's try some other transformation.
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Logarithmic transformation}
+    %\fontsize{9}{9}\selectfont
+      \begin{center}
+        One of the most common transformations is the logarithmic transformation with base $e$ (natural logarithm). \bigskip \pause
+        
+        $e=2.7182818284\ldots$ \bigskip \pause
+        
+        $e^2 = 7.389$ \bigskip \pause
+        
+        $\log 7.389 = 2$ \bigskip \pause
+        
+        In general:
+        
+        $y=e^x \rightarrow \log y = x$.
+      
+      \end{center}
+        
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]{Logarithmic transformation}
+      \fontsize{9}{9}\selectfont
+      <<fig.height=2.5>>=
+        auto_mpg$HP_ln <- log(auto_mpg$HP)
+        plot(auto_mpg$HP, auto_mpg$HP_ln, col='green', 
+            xlab='Horsepower', ylab='Log of Horsepower')
+      @
+     \end{frame}  
+    
+    
+    
+    
+    \begin{frame}[fragile]{Logarithmic transformation}
+      \fontsize{9}{9}\selectfont
+      <<fig.height=2.5>>=
+        plot(auto_mpg$HP_ln, auto_mpg$MPG, col='green', 
+             xlab='Log of Horsepower', ylab='MPG')
+      @
+    \end{frame}
+    
+
+    \begin{frame}[fragile]
+      \fontsize{9}{9}\selectfont
+      <<>>=
+        model3<-lm(MPG ~ HP_ln, data=auto_mpg)
+        summary(model3)
+      @
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]
+    \fontsize{9}{9}\selectfont
+      <<fig.height=2.5>>=
+        plot(model3$fitted.values, resid(model3), col='green')
+      @
+      The trend flattened even more. 
+    \end{frame}
+
+
+    \begin{frame}[fragile]{Transforming a Predictor}
+      \begin{center}
+        It is equivalent to ``cutting the distribution of $X$ into vertical slices and changing the spacing of the slices.'' \bigskip \pause
+        
+        It does not affect the vertical locations of the data (MPG did not change!). \bigskip \pause
+        
+        When the nonlinearity is the biggest issue in the model, transforming the predictor is a good start. \bigskip \pause
+        
+        Finding the right transformation is a bit of art, field knowledge and trial and error.
+        
+      \end{center}
+    
+    \end{frame}
+
+
+  \end{darkframes}
+
+  \end{document}
