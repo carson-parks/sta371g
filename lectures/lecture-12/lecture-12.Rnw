@@ -276,7 +276,7 @@
     \begin{frame}[fragile]
     \fontsize{9}{9}\selectfont
       <<fig.height=2.5>>=
-        plot(model4$fitted.values, resid(model3), col='green')
+        plot(model4$fitted.values, resid(model4), col='green')
       @
       Things look much nicer!
     \end{frame}
