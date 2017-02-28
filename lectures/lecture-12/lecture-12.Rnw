@@ -88,6 +88,7 @@
       <<fig.height=2.5>>=
         plot(auto_mpg$HP, auto_mpg$MPG, col='green', 
              xlab='Horsepower', ylab='MPG')
+        abline(model, col='cyan', lwd=3)
       @
     \end{frame}
     
@@ -102,7 +103,7 @@
         Predict the MPG of a car not from the horsepower, but from a ``transformation'' of the horsepower. \pause
         \bigskip
         
-        For example, the relation between MPG and HP is not linear, the one between MPG and $\sqrt{\text{HP}}$ is!
+        For example, the relation between MPG and HP is not linear, but the one between MPG and $\sqrt{\text{HP}}$ could be!
       \end{center}
     
     \end{frame}
@@ -230,9 +231,149 @@
         Finding the right transformation is a bit of art, field knowledge and trial and error.
         
       \end{center}
+      
+      \lc
     
     \end{frame}
-
+    
+    
+    
+    
+    
+    \begin{frame}[fragile]{Addressing the equal variance issue}
+      \begin{center} 
+        The (unexplained) variance in the response is higher in some regions. \bigskip \pause
+        
+        Remember how log-transformation shrinks larger numbers more than it shrinks smaller numbers. \bigskip \pause
+      
+        Log-transformation of the response often helps with fixing heteroscedasticity (and non-normality)!
+      
+      \end{center}
+    \end{frame}
+  
+  
+  
+    \begin{frame}[fragile]{Addressing the equal variance issue}
+      \fontsize{9}{9}\selectfont
+      <<>>=
+        auto_mpg$MPG_ln <- log(auto_mpg$MPG)
+        model4<-lm(MPG_ln ~ HP_ln, data=auto_mpg)
+        summary(model4)
+      @
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]%{Addressing the equal variance issues}
+      \fontsize{9}{9}\selectfont
+      <<>>=
+        plot(auto_mpg$HP_ln, auto_mpg$MPG_ln, col='green', 
+             xlab='Log of Horsepower', ylab='Log of MPG')
+        abline(model4, col='cyan', lwd=3)
+      @
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]
+    \fontsize{9}{9}\selectfont
+      <<fig.height=2.5>>=
+        plot(model4$fitted.values, resid(model3), col='green')
+      @
+      Things look much nicer!
+    \end{frame}
+  
+  
+  
+  
+  
+    \begin{frame}[fragile]{Interpretation of $\beta$ values}
+      <<echo=F>>=
+      options(digits=2)
+      @
+      \begin{center} 
+        The model before the transformations was: \bigskip
+        
+        \[
+        \widehat{\text{MPG}} = \Sexpr{model$coefficients['(Intercept)']} 
+        - \Sexpr{abs(model$coefficients['HP'])} \cdot\text{HP}
+        
+        \] \bigskip \pause
+        
+        The interpretation of $- \Sexpr{abs(model$coefficients['HP'])}$ is ``for each unit of increase in the horsepower, the MPG estimate reduces by $ \Sexpr{abs(model$coefficients['HP'])}$''.
+        \bigskip \pause
+        
+        \alert{After transforming the predictor or the response, this interpretation does not hold!}
+      
+      \end{center}
+    \end{frame}
+  
+  
+  
+  \begin{frame}[fragile]{Interpretation of $\beta$ values}
+      <<echo=F>>=
+      options(digits=2)
+      @
+      \begin{center} 
+        When the square root of HP is used: \bigskip
+        
+        \[
+        \widehat{\text{MPG}} = \Sexpr{model2$coefficients['(Intercept)']} 
+        - \Sexpr{abs(model2$coefficients['HP_sqrt'])} \cdot\sqrt{\text{HP}}
+        
+        \] \bigskip \pause
+        
+        The interpretation of $- \Sexpr{abs(model2$coefficients['HP_sqrt'])}$ is ``for each unit of increase \alert{in the square root of the horsepower}, the MPG estimate reduces by $ \Sexpr{abs(model2$coefficients['HP_sqrt'])}$''.
+        
+        \lc
+        
+      
+      \end{center}
+    \end{frame}
+  
+  
+  \begin{frame}[fragile]{Interpretation of $\beta$ values}
+      <<echo=F>>=
+      options(digits=2)
+      @
+      \begin{center} 
+        Similarly, in the following model: \bigskip
+        
+        \[
+        \widehat{\text{MPG}} = \Sexpr{model3$coefficients['(Intercept)']} 
+        - \Sexpr{abs(model3$coefficients['HP_ln'])} \cdot\log{\text{HP}}
+        
+        \] \bigskip \pause
+        
+        The interpretation of $- \Sexpr{abs(model3$coefficients['HP_ln'])}$ is ``for each unit of increase \alert{in the natural logarithm of the horsepower}, the MPG estimate reduces by $ \Sexpr{abs(model3$coefficients['HP_ln'])}$''.
+        
+        \lc
+        
+      
+      \end{center}
+    \end{frame}
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    \begin{frame}[fragile]{Where to start}
+      \begin{center}
+        If the model has two or three of the equal variance, normality and linearity issues, transform $Y$. \bigskip \pause
+        
+        Transforming the response often fixes nonlinearity in addition to fixing normality and equal variance issues. \bigskip \pause
+        
+        After tansforming the response, if the nonlinearity is not fixed, try transforming the predictor(s) as well. \bigskip \pause
+        
+        Remember, the interpretations of the coefficients will change after you transform one or more variables!
+        
+      \end{center}
+    
+    \end{frame}
+  
 
   \end{darkframes}
 
