@@ -12,9 +12,7 @@
   knit_theme$set('camo')
   @
   <<include=F, cache=F>>=
-  library(readr)
-  library(car)
-  auto_mpg <- read_csv("../../data/auto_mpg.csv")
+  auto_mpg <- read.csv("../../data/auto_mpg.csv")
   par(fg='#fefefe', col.axis='#fefefe', col.lab='#fefefe', col.main="#fefefe", mar=c(5.1, 4.1, 1.1, 2.1))
   @
 
@@ -97,10 +95,10 @@
     \begin{frame}[fragile]{Addressing the linearity issue}
       %\fontsize{9}{9}\selectfont
       \begin{center}
-        If we could horizontally shift the data on the far right towards left, the plot would look ``more'' linear.
+        If we could horizontally shift the data on the far right towards the left, the plot would look more linear.
         \bigskip \pause
         
-        Predict the MPG of a car not from the horsepower, but from a ``transformation'' of the horsepower. \pause
+        So let's predict the MPG of a car not from the horsepower, but from a ``transformation'' of the horsepower. \pause
         \bigskip
         
         For example, the relation between MPG and HP is not linear, but the one between MPG and $\sqrt{\text{HP}}$ could be!
@@ -143,7 +141,7 @@
     \begin{frame}[fragile]{Addressing the linearity issue}
       \fontsize{9}{9}\selectfont
       <<>>=
-        model2<-lm(MPG ~ HP_sqrt, data=auto_mpg)
+        model2 <- lm(MPG ~ HP_sqrt, data=auto_mpg)
         summary(model2)
       @
     \end{frame}
@@ -170,11 +168,11 @@
         
         $e^2 = 7.389$ \bigskip \pause
         
-        $\log 7.389 = 2$ \bigskip \pause
+        $\log(e^2) = 2$ \bigskip \pause
         
         In general:
         
-        $y=e^x \rightarrow \log y = x$.
+        $y=e^x \qquad\longleftrightarrow\qquad \log y = x$.
       
       \end{center}
         
@@ -205,14 +203,13 @@
     \begin{frame}[fragile]
       \fontsize{9}{9}\selectfont
       <<>>=
-        model3<-lm(MPG ~ HP_ln, data=auto_mpg)
+        model3 <- lm(MPG ~ HP_ln, data=auto_mpg)
         summary(model3)
       @
     \end{frame}
     
     
     \begin{frame}[fragile]
-    \fontsize{9}{9}\selectfont
       <<fig.height=2.5>>=
         plot(model3$fitted.values, resid(model3), col='green')
       @
@@ -236,24 +233,45 @@
     
     \end{frame}
     
-    
-    
+    \begin{frame}{Transforming a Predictor}
+      <<echo=F>>=
+      options(digits=2)
+      @
+      \begin{center}
+        \begin{tabular}{lll}
+          \hline
+          $X$ & $\sqrt{X}$ & $\log X$ \\
+          \hline
+          1 & $\Sexpr{sqrt(1)}$ & $\Sexpr{log(1)}$ \\
+          10 & $\Sexpr{sqrt(10)}$ & $\Sexpr{log(10)}$ \\
+          100 & $\Sexpr{sqrt(100)}$ & $\Sexpr{log(100)}$ \\
+          1000 & $\Sexpr{sqrt(1000)}$ & $\Sexpr{log(1000)}$ \\
+          10000 & $\Sexpr{sqrt(10000)}$ & $\Sexpr{log(10000)}$ \\
+          100000 & $\Sexpr{sqrt(100000)}$ & $\Sexpr{log(100000)}$ \\
+          \hline
+        \end{tabular}
+      \end{center}
+    \end{frame}
     
     
     \begin{frame}[fragile]{Addressing the equal variance issue}
-      \begin{center} 
-        The (unexplained) variance in the response is higher in some regions. \bigskip \pause
-        
-        Remember how log-transformation shrinks larger numbers more than it shrinks smaller numbers. \bigskip \pause
-      
-        Log-transformation of the response often helps with fixing heteroscedasticity (and non-normality)!
-      
-      \end{center}
+      \begin{columns}[onlytextwidth]
+        \column{.5\textwidth}
+          \begin{itemize}[<+->]
+            \item The (unexplained) variance in the response is higher in some regions.
+            \item Remember how log-transformation shrinks larger numbers more than it shrinks smaller numbers.
+            \item Log-transformation of the response often helps with fixing heteroscedasticity (and non-normality)!
+          \end{itemize}
+        \column{.5\textwidth}
+          <<echo=F, fig.width=2.5>>=
+            plot(model3$fitted.values, resid(model3), col='green')
+          @
+      \end{columns}
     \end{frame}
   
   
   
-    \begin{frame}[fragile]{Addressing the equal variance issue}
+    \begin{frame}[fragile]
       \fontsize{9}{9}\selectfont
       <<>>=
         auto_mpg$MPG_ln <- log(auto_mpg$MPG)
@@ -274,13 +292,27 @@
     
     
     \begin{frame}[fragile]
-    \fontsize{9}{9}\selectfont
+      Beautiful!
       <<fig.height=2.5>>=
         plot(model4$fitted.values, resid(model4), col='green')
       @
-      Things look much nicer!
     \end{frame}
   
+    \begin{frame}{Look how awesome our models are getting}
+      <<echo=F>>=
+      options(digits=2)
+      @
+      \begin{center}
+        \begin{tabular}{llll}
+          Predictor ($X$) & Response ($Y$) & $R^2$ & Residual SE \\
+          \hline
+          $\text{HP}$ & $\text{MPG}$ & \Sexpr{summary(model)$r.squared} & \Sexpr{summary(model)$sigma} \\
+          $\sqrt{\text{HP}}$ & $\text{MPG}$ & \Sexpr{summary(model2)$r.squared}  & \Sexpr{summary(model2)$sigma} \\
+          $\log\text{HP}$ & $\text{MPG}$ & \Sexpr{summary(model3)$r.squared} & \Sexpr{summary(model3)$sigma} \\
+          $\log\text{HP}$ & $\log\text{MPG}$ & \Sexpr{summary(model4)$r.squared} & \Sexpr{summary(model4)$sigma} \\
+        \end{tabular}
+      \end{center}
+    \end{frame}
   
   
   
@@ -290,13 +322,13 @@
       options(digits=2)
       @
       \begin{center} 
-        The model before the transformations was: \bigskip
+        The model before the transformations was:
         
         \[
-        \widehat{\text{MPG}} = \Sexpr{model$coefficients['(Intercept)']} 
-        - \Sexpr{abs(model$coefficients['HP'])} \cdot\text{HP}
-        
-        \] \bigskip \pause
+          \widehat{\text{MPG}} = \Sexpr{model$coefficients['(Intercept)']} - \Sexpr{abs(model$coefficients['HP'])} \cdot\text{HP}
+        \] 
+
+        \bigskip \pause
         
         The interpretation of $- \Sexpr{abs(model$coefficients['HP'])}$ is ``for each unit of increase in the horsepower, the MPG estimate reduces by $ \Sexpr{abs(model$coefficients['HP'])}$''.
         \bigskip \pause
@@ -317,8 +349,7 @@
         
         \[
         \widehat{\text{MPG}} = \Sexpr{model2$coefficients['(Intercept)']} 
-        - \Sexpr{abs(model2$coefficients['HP_sqrt'])} \cdot\sqrt{\text{HP}}
-        
+        - \Sexpr{abs(model2$coefficients['HP_sqrt'])} \cdot\sqrt{\text{HP}}        
         \] \bigskip \pause
         
         The interpretation of $- \Sexpr{abs(model2$coefficients['HP_sqrt'])}$ is ``for each unit of increase \alert{in the square root of the horsepower}, the MPG estimate reduces by $ \Sexpr{abs(model2$coefficients['HP_sqrt'])}$''.
@@ -340,7 +371,6 @@
         \[
         \widehat{\text{MPG}} = \Sexpr{model3$coefficients['(Intercept)']} 
         - \Sexpr{abs(model3$coefficients['HP_ln'])} \cdot\log{\text{HP}}
-        
         \] \bigskip \pause
         
         The interpretation of $- \Sexpr{abs(model3$coefficients['HP_ln'])}$ is ``for each unit of increase \alert{in the natural logarithm of the horsepower}, the MPG estimate reduces by $ \Sexpr{abs(model3$coefficients['HP_ln'])}$''.
@@ -350,26 +380,17 @@
       
       \end{center}
     \end{frame}
-  
-  
-  
-  
-  
-  
-  
+
   
   
   
     \begin{frame}[fragile]{Where to start}
-      \begin{center}
-        If the model has two or three of the equal variance, normality and linearity issues, transform $Y$. \bigskip \pause
-        
-        Transforming the response often fixes nonlinearity in addition to fixing normality and equal variance issues. \bigskip \pause
-        
-        After tansforming the response, if the nonlinearity is not fixed, try transforming the predictor(s) as well. \bigskip \pause
-        
-        Remember, the interpretations of the coefficients will change after you transform one or more variables!
-        
+      \begin{itemize}[<+->]
+        \item If the model has two or three of the equal variance, normality and linearity issues, try transforming $Y$.
+        \item Transforming the response often fixes nonlinearity in addition to fixing normality and equal variance issues.
+        \item After transforming the response, if the nonlinearity is not fixed, try transforming the predictor(s) as well.
+        \item There is no rule for which transformations will work in all cases; trial and error may be required.
+        \item Remember, the interpretations of the coefficients will change after you transform one or more variables!
       \end{center}
     
     \end{frame}

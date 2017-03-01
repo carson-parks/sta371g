@@ -173,10 +173,10 @@ F-statistic: 599.7 on 1 and 390 DF,  p-value: < 2.2e-16
     \begin{frame}[fragile]{Addressing the linearity issue}
       %\fontsize{9}{9}\selectfont
       \begin{center}
-        If we could horizontally shift the data on the far right towards left, the plot would look ``more'' linear.
+        If we could horizontally shift the data on the far right towards the left, the plot would look more linear.
         \bigskip \pause
         
-        Predict the MPG of a car not from the horsepower, but from a ``transformation'' of the horsepower. \pause
+        So let's predict the MPG of a car not from the horsepower, but from a ``transformation'' of the horsepower. \pause
         \bigskip
         
         For example, the relation between MPG and HP is not linear, but the one between MPG and $\sqrt{\text{HP}}$ could be!
@@ -233,7 +233,7 @@ F-statistic: 599.7 on 1 and 390 DF,  p-value: < 2.2e-16
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-  \hlstd{model2}\hlkwb{<-}\hlkwd{lm}\hlstd{(MPG} \hlopt{~} \hlstd{HP_sqrt,} \hlkwc{data}\hlstd{=auto_mpg)}
+  \hlstd{model2} \hlkwb{<-} \hlkwd{lm}\hlstd{(MPG} \hlopt{~} \hlstd{HP_sqrt,} \hlkwc{data}\hlstd{=auto_mpg)}
   \hlkwd{summary}\hlstd{(model2)}
 \end{alltt}
 \begin{verbatim}
@@ -288,11 +288,11 @@ F-statistic: 704.6 on 1 and 390 DF,  p-value: < 2.2e-16
         
         $e^2 = 7.389$ \bigskip \pause
         
-        $\log 7.389 = 2$ \bigskip \pause
+        $\log(e^2) = 2$ \bigskip \pause
         
         In general:
         
-        $y=e^x \rightarrow \log y = x$.
+        $y=e^x \qquad\longleftrightarrow\qquad \log y = x$.
       
       \end{center}
         
@@ -337,7 +337,7 @@ F-statistic: 704.6 on 1 and 390 DF,  p-value: < 2.2e-16
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-  \hlstd{model3}\hlkwb{<-}\hlkwd{lm}\hlstd{(MPG} \hlopt{~} \hlstd{HP_ln,} \hlkwc{data}\hlstd{=auto_mpg)}
+  \hlstd{model3} \hlkwb{<-} \hlkwd{lm}\hlstd{(MPG} \hlopt{~} \hlstd{HP_ln,} \hlkwc{data}\hlstd{=auto_mpg)}
   \hlkwd{summary}\hlstd{(model3)}
 \end{alltt}
 \begin{verbatim}
@@ -366,7 +366,6 @@ F-statistic: 785.9 on 1 and 390 DF,  p-value: < 2.2e-16
     
     
     \begin{frame}[fragile]
-    \fontsize{9}{9}\selectfont
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
@@ -396,24 +395,45 @@ F-statistic: 785.9 on 1 and 390 DF,  p-value: < 2.2e-16
     
     \end{frame}
     
-    
-    
+    \begin{frame}{Transforming a Predictor}
+
+      \begin{center}
+        \begin{tabular}{lll}
+          \hline
+          $X$ & $\sqrt{X}$ & $\log X$ \\
+          \hline
+          1 & $1$ & $0$ \\
+          10 & $3.16$ & $2.3$ \\
+          100 & $10$ & $4.61$ \\
+          1000 & $31.62$ & $6.91$ \\
+          10000 & $100$ & $9.21$ \\
+          100000 & $316.23$ & $11.51$ \\
+          \hline
+        \end{tabular}
+      \end{center}
+    \end{frame}
     
     
     \begin{frame}[fragile]{Addressing the equal variance issue}
-      \begin{center} 
-        The (unexplained) variance in the response is higher in some regions. \bigskip \pause
-        
-        Remember how log-transformation shrinks larger numbers more than it shrinks smaller numbers. \bigskip \pause
-      
-        Log-transformation of the response often helps with fixing heteroscedasticity (and non-normality)!
-      
-      \end{center}
+      \begin{columns}[onlytextwidth]
+        \column{.5\textwidth}
+          \begin{itemize}[<+->]
+            \item The (unexplained) variance in the response is higher in some regions.
+            \item Remember how log-transformation shrinks larger numbers more than it shrinks smaller numbers.
+            \item Log-transformation of the response often helps with fixing heteroscedasticity (and non-normality)!
+          \end{itemize}
+        \column{.5\textwidth}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}
+\input{/tmp/figures/unnamed-chunk-14-1.tikz}
+
+\end{knitrout}
+      \end{columns}
     \end{frame}
   
   
   
-    \begin{frame}[fragile]{Addressing the equal variance issue}
+    \begin{frame}[fragile]
       \fontsize{9}{9}\selectfont
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
@@ -428,19 +448,19 @@ Call:
 lm(formula = MPG_ln ~ HP_ln, data = auto_mpg)
 
 Residuals:
-     Min       1Q   Median       3Q      Max 
--0.65230 -0.12176  0.00788  0.11631  0.63730 
+    Min      1Q  Median      3Q     Max 
+-0.6523 -0.1218  0.0079  0.1163  0.6373 
 
 Coefficients:
             Estimate Std. Error t value Pr(>|t|)    
-(Intercept)  6.96065    0.12149   57.30   <2e-16 ***
-HP_ln       -0.84185    0.02641  -31.88   <2e-16 ***
+(Intercept)   6.9606     0.1215    57.3   <2e-16 ***
+HP_ln        -0.8418     0.0264   -31.9   <2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 0.1793 on 390 degrees of freedom
-Multiple R-squared:  0.7227,	Adjusted R-squared:  0.722 
-F-statistic:  1016 on 1 and 390 DF,  p-value: < 2.2e-16
+Residual standard error: 0.18 on 390 degrees of freedom
+Multiple R-squared:  0.723,	Adjusted R-squared:  0.722 
+F-statistic: 1.02e+03 on 1 and 390 DF,  p-value: <2e-16
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -457,26 +477,38 @@ F-statistic:  1016 on 1 and 390 DF,  p-value: < 2.2e-16
   \hlkwd{abline}\hlstd{(model4,} \hlkwc{col}\hlstd{=}\hlstr{'cyan'}\hlstd{,} \hlkwc{lwd}\hlstd{=}\hlnum{3}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\input{/tmp/figures/unnamed-chunk-14-1.tikz}
+\input{/tmp/figures/unnamed-chunk-16-1.tikz}
 
 \end{knitrout}
     \end{frame}
     
     
     \begin{frame}[fragile]
-    \fontsize{9}{9}\selectfont
+      Beautiful!
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
   \hlkwd{plot}\hlstd{(model4}\hlopt{$}\hlstd{fitted.values,} \hlkwd{resid}\hlstd{(model4),} \hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\input{/tmp/figures/unnamed-chunk-15-1.tikz}
+\input{/tmp/figures/unnamed-chunk-17-1.tikz}
 
 \end{knitrout}
-      Things look much nicer!
     \end{frame}
   
+    \begin{frame}{Look how awesome our models are getting}
+
+      \begin{center}
+        \begin{tabular}{llll}
+          Predictor ($X$) & Response ($Y$) & $R^2$ & Residual SE \\
+          \hline
+          $\text{HP}$ & $\text{MPG}$ & 0.61 & 4.91 \\
+          $\sqrt{\text{HP}}$ & $\text{MPG}$ & 0.64  & 4.66 \\
+          $\log\text{HP}$ & $\text{MPG}$ & 0.67 & 4.5 \\
+          $\log\text{HP}$ & $\log\text{MPG}$ & 0.72 & 0.18 \\
+        \end{tabular}
+      \end{center}
+    \end{frame}
   
   
   
@@ -484,13 +516,13 @@ F-statistic:  1016 on 1 and 390 DF,  p-value: < 2.2e-16
     \begin{frame}[fragile]{Interpretation of $\beta$ values}
 
       \begin{center} 
-        The model before the transformations was: \bigskip
+        The model before the transformations was:
         
         \[
-        \widehat{\text{MPG}} = 39.94 
-        - 0.16 \cdot\text{HP}
-        
-        \] \bigskip \pause
+          \widehat{\text{MPG}} = 39.94 - 0.16 \cdot\text{HP}
+        \] 
+
+        \bigskip \pause
         
         The interpretation of $- 0.16$ is ``for each unit of increase in the horsepower, the MPG estimate reduces by $ 0.16$''.
         \bigskip \pause
@@ -509,8 +541,7 @@ F-statistic:  1016 on 1 and 390 DF,  p-value: < 2.2e-16
         
         \[
         \widehat{\text{MPG}} = 58.71 
-        - 3.5 \cdot\sqrt{\text{HP}}
-        
+        - 3.5 \cdot\sqrt{\text{HP}}        
         \] \bigskip \pause
         
         The interpretation of $- 3.5$ is ``for each unit of increase \alert{in the square root of the horsepower}, the MPG estimate reduces by $ 3.5$''.
@@ -530,7 +561,6 @@ F-statistic:  1016 on 1 and 390 DF,  p-value: < 2.2e-16
         \[
         \widehat{\text{MPG}} = 108.7 
         - 18.58 \cdot\log{\text{HP}}
-        
         \] \bigskip \pause
         
         The interpretation of $- 18.58$ is ``for each unit of increase \alert{in the natural logarithm of the horsepower}, the MPG estimate reduces by $ 18.58$''.
@@ -540,26 +570,17 @@ F-statistic:  1016 on 1 and 390 DF,  p-value: < 2.2e-16
       
       \end{center}
     \end{frame}
-  
-  
-  
-  
-  
-  
-  
+
   
   
   
     \begin{frame}[fragile]{Where to start}
-      \begin{center}
-        If the model has two or three of the equal variance, normality and linearity issues, transform $Y$. \bigskip \pause
-        
-        Transforming the response often fixes nonlinearity in addition to fixing normality and equal variance issues. \bigskip \pause
-        
-        After tansforming the response, if the nonlinearity is not fixed, try transforming the predictor(s) as well. \bigskip \pause
-        
-        Remember, the interpretations of the coefficients will change after you transform one or more variables!
-        
+      \begin{itemize}[<+->]
+        \item If the model has two or three of the equal variance, normality and linearity issues, try transforming $Y$.
+        \item Transforming the response often fixes nonlinearity in addition to fixing normality and equal variance issues.
+        \item After transforming the response, if the nonlinearity is not fixed, try transforming the predictor(s) as well.
+        \item There is no rule for which transformations will work in all cases; trial and error may be required.
+        \item Remember, the interpretations of the coefficients will change after you transform one or more variables!
       \end{center}
     
     \end{frame}
