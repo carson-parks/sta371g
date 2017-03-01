@@ -102,7 +102,7 @@
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-  \hlstd{model}\hlkwb{<-}\hlkwd{lm}\hlstd{(MPG} \hlopt{~} \hlstd{HP,} \hlkwc{data}\hlstd{=auto_mpg)}
+  \hlstd{model} \hlkwb{<-} \hlkwd{lm}\hlstd{(MPG} \hlopt{~} \hlstd{HP,} \hlkwc{data}\hlstd{=auto_mpg)}
   \hlkwd{summary}\hlstd{(model)}
 \end{alltt}
 \begin{verbatim}
@@ -439,7 +439,7 @@ F-statistic: 785.9 on 1 and 390 DF,  p-value: < 2.2e-16
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
   \hlstd{auto_mpg}\hlopt{$}\hlstd{MPG_ln} \hlkwb{<-} \hlkwd{log}\hlstd{(auto_mpg}\hlopt{$}\hlstd{MPG)}
-  \hlstd{model4}\hlkwb{<-}\hlkwd{lm}\hlstd{(MPG_ln} \hlopt{~} \hlstd{HP_ln,} \hlkwc{data}\hlstd{=auto_mpg)}
+  \hlstd{model4} \hlkwb{<-} \hlkwd{lm}\hlstd{(MPG_ln} \hlopt{~} \hlstd{HP_ln,} \hlkwc{data}\hlstd{=auto_mpg)}
   \hlkwd{summary}\hlstd{(model4)}
 \end{alltt}
 \begin{verbatim}
@@ -574,15 +574,14 @@ F-statistic: 1.02e+03 on 1 and 390 DF,  p-value: <2e-16
   
   
   
-    \begin{frame}[fragile]{Where to start}
+    \begin{frame}[fragile]{Transformation strategy}
       \begin{itemize}[<+->]
         \item If the model has two or three of the equal variance, normality and linearity issues, try transforming $Y$.
         \item Transforming the response often fixes nonlinearity in addition to fixing normality and equal variance issues.
         \item After transforming the response, if the nonlinearity is not fixed, try transforming the predictor(s) as well.
         \item There is no rule for which transformations will work in all cases; trial and error may be required.
         \item Remember, the interpretations of the coefficients will change after you transform one or more variables!
-      \end{center}
-    
+      \end{itemize}
     \end{frame}
   
 
