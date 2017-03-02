@@ -159,10 +159,10 @@
       
       <<>>=
       mclean$MngrRating[is.na(mclean$MngrRating)] <- 
-        mean(mclean$MngrRating, na.rm=TRUE)
+        mean(mclean$MngrRating, na.rm=T)
         
       mclean$YearsExp[is.na(mclean$YearsExp)] <- 
-        mean(mclean$YearsExp, na.rm=TRUE)
+        mean(mclean$YearsExp, na.rm=T)
       @
 
       \pause \bigskip
@@ -224,7 +224,7 @@
     \begin{frame}[fragile]%{Exploring the data: Multicollinearity}  
       \fontsize{9}{9}\selectfont
       <<fig.height=3>>=
-      pairs(MngrRating ~ YearsExp + YrsSinceGrad, data=mclean)
+      pairs(~ MngrRating + YearsExp + YrsSinceGrad, data=mclean)
       @
     \end{frame}
     
