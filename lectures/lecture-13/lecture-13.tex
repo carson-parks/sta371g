@@ -84,10 +84,11 @@
           \begin{itemize}
             \item Salary (response)
             \item Manager Rating
+            \item Years of Experience
           \end{itemize}
         \column{.5\textwidth}
           \begin{itemize}
-            \item Years of Experience
+            \item NUmber of years since graduation
             \item Origin (internal or external hire)
           \end{itemize}
       \end{columns}
@@ -115,7 +116,7 @@
             \item Violation of LINE assumptions
           \end{itemize}} \bigskip \pause
           
-          It is almost always necessary to explore the data before doing the modeling
+          It is almost always necessary to explore and clean the data before doing the modeling
           
       \end{center}
       
@@ -169,7 +170,7 @@
 \end{kframe}
 \end{knitrout}
       \pause
-      These are probably an incorrect entries. \pause
+      These are probably just incorrect entries. \pause
       
       Try to correct the data whenever you can. 
       If not possible, we will omit them.
@@ -252,7 +253,7 @@
         \pause
         This should not come a surprise, because it is very common to have missing entries in your data.
         
-        *If you are not seeing the last entry, it is because you imported the file via ``Import Dataset'' button and na.strings is set to NA.
+        *If you are not seeing the last entry, it is because na.strings is set to NA (it should be empty in RStudio, and na.strings='' should be used while in read.csv command).
       
     \end{frame}
     
@@ -304,6 +305,7 @@
     \begin{frame}[fragile]{Exploring the data: Missing entries}
       \fontsize{8}{8}\selectfont
       What about the missing categorical variables? \pause
+      
       Let's choose the easy way and omit them.
       
 \begin{knitrout}
@@ -314,7 +316,7 @@
 \end{kframe}
 \end{knitrout}
       \pause
-      This removes all the rows that contain missing entries (only the Origin in this case.) \pause \bigskip
+      This removes all the rows that contain missing entries (only the Origin column has missing entries in this case.) \pause \bigskip
       
       There are also ways of predicting the missing entries in a categorical variable.  \pause \bigskip
       
@@ -471,31 +473,29 @@ F-statistic: 57.42 on 4 and 149 DF,  p-value: < 2.2e-16
 \begin{alltt}
   \hlstd{model2}\hlkwb{<-} \hlkwd{lm}\hlstd{(Salary} \hlopt{~} \hlstd{MngrRating} \hlopt{+} \hlstd{YearsExp}
                     \hlopt{+} \hlstd{Origin,} \hlkwc{data}\hlstd{=mclean)}
-  \hlkwd{summary}\hlstd{(model)}
+  \hlkwd{summary}\hlstd{(model2)}
 \end{alltt}
 \begin{verbatim}
 
 Call:
-lm(formula = Salary ~ MngrRating + YearsExp + YrsSinceGrad + 
-    Origin, data = mclean)
+lm(formula = Salary ~ MngrRating + YearsExp + Origin, data = mclean)
 
 Residuals:
      Min       1Q   Median       3Q      Max 
--19.7766  -4.2842  -0.2906   3.3266  28.2773 
+-19.8115  -4.3474  -0.3964   3.3358  28.1801 
 
 Coefficients:
                Estimate Std. Error t value Pr(>|t|)    
-(Intercept)     54.1521     2.6071  20.771  < 2e-16 ***
-MngrRating       4.5147     0.3997  11.296  < 2e-16 ***
-YearsExp        -1.5262     1.3790  -1.107 0.270203    
-YrsSinceGrad     0.7692     1.3833   0.556 0.578976    
-OriginInternal  -4.7314     1.3878  -3.409 0.000838 ***
+(Intercept)     54.1080     2.5999  20.812  < 2e-16 ***
+MngrRating       4.5309     0.3977  11.394  < 2e-16 ***
+YearsExp        -0.7651     0.1687  -4.534 1.18e-05 ***
+OriginInternal  -4.6467     1.3762  -3.376 0.000935 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 6.838 on 149 degrees of freedom
-Multiple R-squared:  0.6065,	Adjusted R-squared:  0.596 
-F-statistic: 57.42 on 4 and 149 DF,  p-value: < 2.2e-16
+Residual standard error: 6.823 on 150 degrees of freedom
+Multiple R-squared:  0.6057,	Adjusted R-squared:  0.5978 
+F-statistic: 76.82 on 3 and 150 DF,  p-value: < 2.2e-16
 \end{verbatim}
 \end{kframe}
 \end{knitrout}

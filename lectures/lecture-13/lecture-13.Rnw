@@ -44,10 +44,11 @@
           \begin{itemize}
             \item Salary (response)
             \item Manager Rating
+            \item Years of Experience
           \end{itemize}
         \column{.5\textwidth}
           \begin{itemize}
-            \item Years of Experience
+            \item NUmber of years since graduation
             \item Origin (internal or external hire)
           \end{itemize}
       \end{columns}
@@ -75,7 +76,7 @@
             \item Violation of LINE assumptions
           \end{itemize}} \bigskip \pause
           
-          It is almost always necessary to explore the data before doing the modeling
+          It is almost always necessary to explore and clean the data before doing the modeling
           
       \end{center}
       
@@ -105,7 +106,7 @@
         manager[manager$Salary<0,]
       @
       \pause
-      These are probably an incorrect entries. \pause
+      These are probably just incorrect entries. \pause
       
       Try to correct the data whenever you can. 
       If not possible, we will omit them.
@@ -161,7 +162,7 @@
         \pause
         This should not come a surprise, because it is very common to have missing entries in your data.
         
-        *If you are not seeing the last entry, it is because you imported the file via ``Import Dataset'' button and na.strings is set to NA.
+        *If you are not seeing the last entry, it is because na.strings is set to NA (it should be empty in RStudio, and na.strings='' should be used while in read.csv command).
       
     \end{frame}
     
@@ -209,13 +210,14 @@
     \begin{frame}[fragile]{Exploring the data: Missing entries}
       \fontsize{8}{8}\selectfont
       What about the missing categorical variables? \pause
+      
       Let's choose the easy way and omit them.
       
       <<>>=
         mclean <- na.omit(mclean)
       @
       \pause
-      This removes all the rows that contain missing entries (only the Origin in this case.) \pause \bigskip
+      This removes all the rows that contain missing entries (only the Origin column has missing entries in this case.) \pause \bigskip
       
       There are also ways of predicting the missing entries in a categorical variable.  \pause \bigskip
       
@@ -315,7 +317,7 @@
       <<>>=
         model2<- lm(Salary ~ MngrRating + YearsExp 
                           + Origin, data=mclean)
-        summary(model)
+        summary(model2)
       @
       
     \end{frame}
