@@ -8,13 +8,12 @@
   <<setup, include=F, cache=F>>=
   opts_knit$set(global.par=T)
   knit_hooks$set(crop=hook_pdfcrop)
-  opts_chunk$set(dev='tikz', external=F, fig.path='C:/tmp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, tidy=F)
+  opts_chunk$set(dev='tikz', external=F, fig.path='/tmp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, tidy=F)
   knit_theme$set('camo')
   @
   <<include=F, cache=F>>=
-  library(readr)
   library(car)
-  manager <- read_csv("../../data/manager.csv")
+  manager <- read.csv("../../data/manager.csv", na.strings="")
   par(fg='#fefefe', col.axis='#fefefe', col.lab='#fefefe', col.main="#fefefe", mar=c(5.1, 4.1, 1.1, 2.1))
   @
 
@@ -32,9 +31,7 @@
   \begin{darkframes}
     
     
-    \begin{frame}
-      \fontsize{8}{8}\selectfont
-      Newly hired manager salaries
+    \begin{frame}{Salaries of newly hired managers}
       \begin{center}
         \includegraphics[width=2.8in]{manager} \\
       \end{center} \pause
@@ -43,143 +40,112 @@
         \column{.5\textwidth}
           \begin{itemize}
             \item Salary (response)
-            \item Manager Rating
-            \item Years of Experience
+            \item Manager rating
+            \item Years of experience
           \end{itemize}
         \column{.5\textwidth}
           \begin{itemize}
-            \item NUmber of years since graduation
+            \item Years since graduation
             \item Origin (internal or external hire)
           \end{itemize}
       \end{columns}
     \end{frame}
-      
    
-   
-   
-   \begin{frame}[fragile]{Data issues}
-    \fontsize{8}{8}\selectfont
+    \begin{frame}[fragile]{Data issues}
       \begin{center}
-          It is extremely rare that the data could be used right away without any clean up. \bigskip \pause
-          
-          Data scients report that they spend \alert{70\% of their time on getting and cleaning the data}. Only 30\% is for statistical analysis.\bigskip \pause
-          
-          Most common issues are:
-          
-          
+        Data scientists report that they spend \alert{70\% of their time on obtaining and cleaning the data}. Only 30\% is for statistical analysis.\bigskip \pause
         
-          \parbox{.43\textwidth}{
-          \begin{itemize}[<+->]
-            \item Outliers (e.g. incorrect entries, anomalies)
-            \item Missing data
-            \item Multicollinearity
-            \item Violation of LINE assumptions
-          \end{itemize}} \bigskip \pause
-          
-          It is almost always necessary to explore and clean the data before doing the modeling
-          
+        Never run a regression without exploring and cleaning the data first!
       \end{center}
-      
+    \end{frame}
+
+    \begin{frame}
+      The most common issues:
+      \tableofcontents
     \end{frame}
     
+    \section{Outliers}
     
-    
-    
-    \begin{frame}[fragile]%{Exploring the data: Outliers}
-      \fontsize{8}{8}\selectfont
-      Boxplots are commonly used to detect the outliers. \pause
+    \begin{frame}[fragile]{Exploring the data: Outliers}
+      Boxplots are commonly used to detect outliers. Let's start by looking at the Salary column. \pause
       
-      Let's start with looking into the salary column. \pause
-      
-      <<fig.height=2.5>>=
-        boxplot(manager$Salary, ylab='Salary')
+      <<fig.height=2>>=
+      boxplot(manager$Salary, xlab='Salary', horizontal=T)
       @
-      There is a negative entry, and a very large one. We need to investigate these.
      \end{frame}
     
     
     
     \begin{frame}[fragile]{Exploring the data: Outliers}
-      \fontsize{8}{8}\selectfont
-    <<>>=
-        manager[manager$Salary>200,]
-        manager[manager$Salary<0,]
+      <<>>=
+      manager[manager$Salary>200,]
+      manager[manager$Salary<0,]
       @
       \pause
-      These are probably just incorrect entries. \pause
-      
-      Try to correct the data whenever you can. 
-      If not possible, we will omit them.
-    
+
+      We can deal with outliers in two ways.
+      \begin{itemize}[<+->]
+        \item If the result of \textbf{errors in the data}, we can try to correct or omit them.
+        \item If not, omit them from your regression but report on them separately.
+      \end{itemize}
     \end{frame}
     
     
     
     \begin{frame}[fragile]{Exploring the data: Outliers}
-      \fontsize{8}{8}\selectfont
-    <<>>=
-       mclean <- manager[manager$Salary>0 & manager$Salary<200,]
+      Let's omit the outliers by creating a new data set \texttt{mclean} that consists of the subset of the data where the salary is between \$0 and \$200,000. 
+      <<>>=
+      mclean <- manager[manager$Salary>0 & 
+                        manager$Salary<200,]
       @
       \pause
-      Select the subset of the data where the salary is between 0 and 200K. 
+      
       \lc
     \end{frame}
     
     
-      \begin{frame}[fragile]{Exploring the data: Outliers}
-        \fontsize{8}{8}\selectfont
+    \begin{frame}[fragile]{Exploring the data: Outliers}
       <<fig.height=2.5>>=
-       boxplot(mclean$YearsExp, ylab='Years of Experience')
-      @
-      
+      boxplot(mclean$YearsExp, xlab='Years of Experience', 
+        horizontal=T)
+      @      
     \end{frame}
     
     
     \begin{frame}[fragile]{Exploring the data: Outliers}
-      \fontsize{8}{8}\selectfont
-        Assume we somehow know that 99 is a code for missing entry in the Years of Experience data. \pause 
-        
-        Let's propoerly label all 99s as ``NA'' (Not Available). \pause
-        <<>>=
-       mclean$YearsExp[mclean$YearsExp==99] <- NA
+      99 must be a code for missing entry in the Years of Experience variable!   
+
+      \bigskip\pause 
+      
+      Let's label all 99s as \texttt{NA} (Not Available --- R's code for missing data). \pause
+      <<>>=
+      mclean$YearsExp[mclean$YearsExp == 99] <- NA
       @
-        \pause
-        
-        Now, what? We have missing entries our data! \pause 
-        
-        Great.
-      
     \end{frame}
     
-    
+    \section{Missing data}
     
     \begin{frame}[fragile]{Exploring the data: Missing entries}
-      \fontsize{8}{8}\selectfont
-        Let's see if we have other missing data. \pause
-        <<>>=
-          mclean[!complete.cases(mclean),]
-        @
-        \pause
-        This should not come a surprise, because it is very common to have missing entries in your data.
-        
-        *If you are not seeing the last entry, it is because na.strings is set to NA (it should be empty in RStudio, and na.strings='' should be used while in read.csv command).
-      
+      Let's see if we have other missing data. \pause
+      <<>>=
+        mclean[!complete.cases(mclean),]
+      @
+      \pause
+      This isn't surprising---it is very common to have missing entries in your data.
     \end{frame}
     
   
   
   
     \begin{frame}[fragile]{Exploring the data: Missing entries}
-      \fontsize{8}{8}\selectfont
-      There are two ways of dealing with missing data. \pause
-      \begin{itemize}
+      There are two ways of dealing with missing data:
+      \begin{itemize}[<+->]
         \item Omit the rows that have missing entries in it.
-        \item Try to predict values to fill the missing entries.      \end{itemize}
-    \pause \bigskip
-    Omiting data is the easiest, but often \alert{not the best way; because you lose all the other information available in the same row}. \pause \bigskip
-    
-    Let's try to fill in some estimates.
+        \item Try to predict values to fill the missing entries.      
+      \end{itemize}
+      Omiting data is the easiest, but often \alert{not the best way, because you lose all the other information available in the same row}. \pause \bigskip
       
+      Let's try to fill in some estimates.  
     \end{frame}
     
     
@@ -187,220 +153,161 @@
     
     
     \begin{frame}[fragile]{Exploring the data: Missing entries}
-      \fontsize{8}{8}\selectfont
-      What should we replace the ``NA''s in the Manager Rating and Years of Experience columns with? \pause \bigskip
+      What should we replace the \texttt{NA}s in the Manager Rating and Years of Experience columns with? \pause \bigskip
     
       The simplest way would be to use the averages in the respective columns.
       
       <<>>=
-        average_MngrRating <- mean(mclean$MngrRating, na.rm=TRUE)
-        mclean$MngrRating[is.na(mclean$MngrRating)] <- average_MngrRating
-          
-        average_YearsExp <- mean(mclean$YearsExp, na.rm=TRUE)
-        mclean$YearsExp[is.na(mclean$YearsExp)] <- average_YearsExp
+      mclean$MngrRating[is.na(mclean$MngrRating)] <- 
+        mean(mclean$MngrRating, na.rm=TRUE)
+        
+      mclean$YearsExp[is.na(mclean$YearsExp)] <- 
+        mean(mclean$YearsExp, na.rm=TRUE)
       @
+
       \pause \bigskip
-      A smarter and more advanced way is to predict, e.g., what the Manager Rating would be for a person with \$75K salary, 8 years of experience and who is an internal hire.
-      
+      A smarter and more advanced way is to predict the missing data from the other data (using regression!).      
     \end{frame}
     
     
     
     
     \begin{frame}[fragile]{Exploring the data: Missing entries}
-      \fontsize{8}{8}\selectfont
-      What about the missing categorical variables? \pause
-      
+      What about the missing data for categorical variables? \pause
       Let's choose the easy way and omit them.
       
       <<>>=
-        mclean <- na.omit(mclean)
+      mclean <- na.omit(mclean)
       @
       \pause
       This removes all the rows that contain missing entries (only the Origin column has missing entries in this case.) \pause \bigskip
       
-      There are also ways of predicting the missing entries in a categorical variable.  \pause \bigskip
-      
-      Or we could have treated the missing entries as a seperate level (e.g. "Unknown").
-      
-      
+      We could also predict the missing entries, or treat the missing entries as a seperate level (e.g. ``Unknown'').
     \end{frame}
   
   
   
     \begin{frame}[fragile]{Exploring the data: Missing entries}
-      \fontsize{8}{8}\selectfont
       \alert{Important things to consider:}
       \begin{itemize}[<+->]
-        \item While dealing with the missing data, the assumption is that the data is ``Missing Completely at Random'' (MCAR).
-        \item If this assumption does not hold (e.g. if the missing data mostly belongs to external hires), the model will  be biased.
-        
-        \item Making predictions for missing data based on available data enforces the already existing relationships between variables, therefore impacts the standard error.
-        
+        \item While dealing with the missing data, we assume that the data is ``Missing Completely at Random'' (MCAR).
+        \item If this assumption does not hold (e.g. if the missing data mostly belongs to external hires), the model will  be biased.        
+        \item Making predictions for missing data based on available data reinforces the existing relationships between variables, so impacts the standard error.
         \item If a lot of data is missing (e.g. more than 5\%) for a particular variable, you may have to discard the whole column. 
-      
       \end{itemize}
-      
     \end{frame}
     
+    \section{Multicollinearity}
     
     \begin{frame}[fragile]{Exploring the data: Multicollinearity}
-      \fontsize{8}{8}\selectfont
-      In multiple regression models, multicollinearity exists whenever two or more of the predictors in a regression model are moderately or highly correlated. \pause \bigskip
-      
-      It is a problem, because:
+      Multicollinearity exists whenever 2+ predictors in a regression model are moderately or highly correlated. \pause
       \begin{itemize}[<+->]
-        \item Any conclusions based on the p-values, coeffients and confidence intervals of the highly correlated variables will be unreliable.
+        \item Any conclusions based on the p-values, coefficients, and confidence intervals of the highly correlated variables will be unreliable.
         \item These statistics will not be stable: adding new data or predictors to the model could drastically change them.
       \end{itemize}
   
+      Correlation between the response and the predictors is good, but correlation between the predictors is not!
     \end{frame}
     
     
     
     \begin{frame}[fragile]%{Exploring the data: Multicollinearity}  
-    \fontsize{8}{8}\selectfont
+      \fontsize{8}{8}\selectfont
       <<>>=
-        model<- lm(Salary ~ MngrRating + YearsExp 
-                          + YrsSinceGrad + Origin, data=mclean)
-        summary(model)
-      @
-      
+      model <- lm(Salary ~ MngrRating + YearsExp + YrsSinceGrad + Origin, 
+                 data=mclean)
+      summary(model)
+      @      
     \end{frame}
     
     
     \begin{frame}[fragile]%{Exploring the data: Multicollinearity}  
-    \fontsize{8}{8}\selectfont
+      \fontsize{9}{9}\selectfont
       <<fig.height=3>>=
-        pairs(~ MngrRating+YearsExp+YrsSinceGrad, data=mclean)
+      pairs(MngrRating ~ YearsExp + YrsSinceGrad, data=mclean)
       @
-      
-    \end{frame}
-    
-    
-    \begin{frame}[fragile]%{Exploring the data: Multicollinearity}  
-    \fontsize{8}{8}\selectfont
-      <<fig.height=3>>=
-        pairs(~ MngrRating+YearsExp+YrsSinceGrad, data=mclean)
-      @
-      
     \end{frame}
     
     
     
     \begin{frame}[fragile]{Exploring the data: Multicollinearity}  
-    \fontsize{8}{8}\selectfont
-    If you check the correlation between the two:
-    <<>>=
-        cor(mclean$YearsExp,mclean$YrsSinceGrad)
-      @
-    \pause
-    Any correlation beyond 0.95 is definitely a problem. \pause
-    \bigskip
-    
-    A better way to check multicollinearity:
+      If you check the correlation between the two:
       <<>>=
-        library(car)
-        vif(model)
+      cor(mclean$YearsExp, mclean$YrsSinceGrad)
       @
-    Drop one of the predictors that has a \alert{VIF higher than 5}.
-    \pause  \bigskip
-    
-    \alert{Remember:} Multicollinearity could exist between more than two predictors (e.g. having seperate columns with binary values for Spring, Summer, Autumn, Winter).  
+      \pause
+      Any correlation $\geq 0.95$ is definitely a problem, but smaller correlations could be problematic too.
+    \end{frame}
+
+    \begin{frame}[fragile]{Exploring the data: Multicollinearity}      
+      A better way to check multicollinearity is using Variance Inflation Factors (VIF):
+      <<>>=
+      library(car)
+      vif(model)
+      @
+      Drop any predictor that has $\text{VIF} > 5$.
+      \pause  \bigskip
+      
+      \alert{Remember:} Multicollinearity could exist between more than two predictors (this is why there are only $n-1$ dummy variables for a categorical variable with $n$ values).  
    \end{frame}
     
-    
-    
-    
-     \begin{frame}[fragile]%{Exploring the data: Multicollinearity}  
-    \fontsize{8}{8}\selectfont
+    \begin{frame}[fragile]%{Exploring the data: Multicollinearity}  
+      \fontsize{9}{9}\selectfont
       <<>>=
-        model2<- lm(Salary ~ MngrRating + YearsExp 
-                          + Origin, data=mclean)
-        summary(model2)
+      model2 <- lm(Salary ~ MngrRating + YearsExp + Origin, data=mclean)
+      summary(model2)
+      @      
+    \end{frame}
+    
+    \section{Assumption violations}
+    
+    \begin{frame}[fragile]
+      \fontsize{9}{9}\selectfont
+      <<echo=F>>=
+      par(mfrow=c(2,2))
       @
-      
-    \end{frame}
-    
-    
-    
-    \begin{frame}[fragile]{Checking on LINE assumptions}  
-    \fontsize{8}{8}\selectfont
-      We always need to check on LINE assumptions. \pause
-      
-      To do it at one shot, use \bold{plot()} function.
-      
-      \begin{itemize}[<+->]
-        \item Look for a horizontal red line in the Residuals-Fitted plot for linearity.
-        \item Look for a horizontal red line in the Scale-Location plot for equal variance.
-        \item Look for a straight line in the Normal Q-Q plot for normality.
-      \end{itemize}
-      
-    \end{frame}
-    
-    
-    
-
-    \begin{frame}[fragile]%{Checking on LINE Assumptions}  
-    \fontsize{8}{8}\selectfont
-      <<>>=
-        par(mfrow=c(2,2)) # Change the panel layout to 2 x 2
-        plot(model2)
-        par(mfrow=c(1,1)) # Change back to 1 x 1
+      <<fig.width=4.5>>=
+      plot(model2)
       @
+      <<echo=F>>=
+      par(mfrow=c(1,1))
+      @
+    \end{frame}
+    
+    \section{High-leverage points}
+    
+    \begin{frame}[fragile]{Outliers among the residuals}  
+      The data with index 157 seems to be hanging out by itself. \pause \bigskip
       
+      We can display the indices of all of the outliers among the residuals.
+      <<fig.keep='none'>>=
+      boxplot(resid(model2))$out
+      @
+      \pause
+      These cases are not predicted well by the model.
     \end{frame}
     
-    
-    
-        \begin{frame}[fragile]{Outliers among the residuals}  
-        \fontsize{8}{8}\selectfont
-        The data with index 154 seems to be hanging out by itself. It is worth investigating.\pause \bigskip
-        
-        We can display the indices of all of the outliers among the residuals.
-        << fig.keep='none'>>=
-          boxplot(resid(model2))$out
-        @
-        \pause
-        Basically, the model is not able to explain these cases very well. \pause \bigskip
-        Let's also see them on the plot.
-    \end{frame}
-    
-    
-     \begin{frame}[fragile]{Outliers among the residuals}  
-        \fontsize{8}{8}\selectfont
-        <<fig.height=2.5>>=
-        boxplot(resid(model2))
-        @
-    \end{frame}
     
     
     \begin{frame}[fragile]{Outliers among the residuals}  
-        \fontsize{8}{8}\selectfont
-        <<fig.height=2.5>>=
-          mclean[154,] # 154th row and all columns
-        @
-      Someone with only 1 year of experience and poor rating is hired as manager at \$95K! \pause \bigskip
+      Let's look at row 157:
+      <<fig.height=2.5>>=
+      manager[157,]
+      @
+      Someone with only 1 year of experience and a poor rating is hired as manager at \$95K! \pause \bigskip
       
-      If you decide that this is an anomaly (e.g. CEO's son promoted!) that you don't want to include in your analysis, omit that row and report it in your conclusions.
-    
+      If you decide that this is an anomaly (e.g. the CEO's son was promoted!) that you don't want to include in your analysis, omit that row and report on it separately in your conclusions.
     \end{frame}
     
     
     \begin{frame}[fragile]{Influential cases}  
-     \fontsize{8}{8}\selectfont
-    The Residuals vs Leverage plot tells about \alert{influential cases.} \pause \bigskip
-    
-    An influential case is the one that could change your $\beta$ values significantly when excluded from your analysis. \pause \bigskip
-    
-    In other words, they do not follow the overall trend. \pause \bigskip
-    
-    Look for the cases on the upper/lower right corners (beyond the dashed curves).
-        
-    
+      \begin{itemize}[<+->]
+        \item The Residuals vs Leverage plot tells about \alert{influential cases}.
+        \item A \textbf{high-leverage case} is one that has an unusual combination of predictor values. 
+        \item An \textbf{influential case} is a high-leverage case that also has a high residual: it could change your $\beta$ values significantly when excluded from your analysis, i.e., it does not follow the overall trend. 
+        \item Look for the cases on the upper/lower right corners (beyond the dashed curves).
+      \end{itemize}
     \end{frame}
-    
-    
     
 
   \end{darkframes}
