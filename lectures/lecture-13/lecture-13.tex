@@ -70,8 +70,6 @@
   %%%%%%% Slides start here %%%%%%%
 
   \begin{darkframes}
-    
-    
     \begin{frame}{Salaries of newly hired managers}
       \begin{center}
         \includegraphics[width=2.8in]{manager} \\
@@ -146,9 +144,10 @@
 
       We can deal with outliers in two ways.
       \begin{itemize}[<+->]
-        \item If the result of \textbf{errors in the data}, we can try to correct or omit them.
-        \item If not, omit them from your regression but report on them separately.
+        \item If the result of \textbf{errors in the data}, we can try to correct or omit.
+        \item If not, consider omitting, but report on them separately.
       \end{itemize}
+      \lc
     \end{frame}
     
     
@@ -247,10 +246,10 @@
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
 \hlstd{mclean}\hlopt{$}\hlstd{MngrRating[}\hlkwd{is.na}\hlstd{(mclean}\hlopt{$}\hlstd{MngrRating)]} \hlkwb{<-}
-  \hlkwd{mean}\hlstd{(mclean}\hlopt{$}\hlstd{MngrRating,} \hlkwc{na.rm}\hlstd{=}\hlnum{TRUE}\hlstd{)}
+  \hlkwd{mean}\hlstd{(mclean}\hlopt{$}\hlstd{MngrRating,} \hlkwc{na.rm}\hlstd{=T)}
 
 \hlstd{mclean}\hlopt{$}\hlstd{YearsExp[}\hlkwd{is.na}\hlstd{(mclean}\hlopt{$}\hlstd{YearsExp)]} \hlkwb{<-}
-  \hlkwd{mean}\hlstd{(mclean}\hlopt{$}\hlstd{YearsExp,} \hlkwc{na.rm}\hlstd{=}\hlnum{TRUE}\hlstd{)}
+  \hlkwd{mean}\hlstd{(mclean}\hlopt{$}\hlstd{YearsExp,} \hlkwc{na.rm}\hlstd{=T)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -426,6 +425,8 @@ F-statistic: 76.82 on 3 and 150 DF,  p-value: < 2.2e-16
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
+
+      \lc
     \end{frame}
     
     \section{Assumption violations}

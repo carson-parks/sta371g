@@ -29,8 +29,6 @@
   %%%%%%% Slides start here %%%%%%%
 
   \begin{darkframes}
-    
-    
     \begin{frame}{Salaries of newly hired managers}
       \begin{center}
         \includegraphics[width=2.8in]{manager} \\
@@ -85,9 +83,10 @@
 
       We can deal with outliers in two ways.
       \begin{itemize}[<+->]
-        \item If the result of \textbf{errors in the data}, we can try to correct or omit them.
-        \item If not, omit them from your regression but report on them separately.
+        \item If the result of \textbf{errors in the data}, we can try to correct or omit.
+        \item If not, consider omitting, but report on them separately.
       \end{itemize}
+      \lc
     \end{frame}
     
     
@@ -257,6 +256,8 @@
       model2 <- lm(Salary ~ MngrRating + YearsExp + Origin, data=mclean)
       summary(model2)
       @      
+
+      \lc
     \end{frame}
     
     \section{Assumption violations}
