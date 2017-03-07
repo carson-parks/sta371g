@@ -1,0 +1,122 @@
+\documentclass{beamer}
+\usepackage{../371g-slides}
+\title{Model Building}
+\subtitle{Lecture 14}
+\author{STA 371G}
+
+\begin{document}
+  <<setup, include=F, cache=F>>=
+  opts_knit$set(global.par=T)
+  knit_hooks$set(crop=hook_pdfcrop)
+  opts_chunk$set(dev='tikz', external=F, fig.path='/tmp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, tidy=F)
+  knit_theme$set('camo')
+  @
+  <<include=F, cache=F>>=
+  library(car)
+  counties <- read.csv("../../data/counties.csv", na.strings="")
+  par(fg='#fefefe', col.axis='#fefefe', col.lab='#fefefe', col.main="#fefefe", mar=c(5.1, 4.1, 1.1, 2.1))
+  @
+
+  \frame{\maketitle}
+
+  % Show outline at beginning of each section
+  \AtBeginSection[]{ 
+    \begin{frame}<beamer>
+      \tableofcontents[currentsection]
+    \end{frame}
+  }
+
+  %%%%%%% Slides start here %%%%%%%
+
+  \begin{darkframes}
+    
+    
+    \begin{frame}{There is a Primary Care Physician Shortage in Texas!}
+      \begin{center}
+        \includegraphics[width=3.8in]{DocShortage} \\
+      \end{center} \pause
+
+      \begin{center}
+        {What might explain this? There are many potential predictors!}
+      \end{center} 
+
+      \begin{columns}[onlytextwidth]
+        \column{.5\textwidth} 
+          \begin{itemize}
+            \item Small counties
+            \item Poverty
+            \item Health insurance
+          \end{itemize}
+        \column{.5\textwidth}
+          \begin{itemize}
+            \item Unemployment
+            \item Large rural areas
+            \item Something else?
+          \end{itemize}
+      \end{columns}
+      
+      \lc {smallest population}
+    \end{frame}
+
+    \begin{frame}[fragile]{What to do if there a lot of potential predictors}
+      \begin{itemize}[<+->]
+        \item Previously, we assumed that the explanatory variables were either from a small set or chosen in advance.
+        \item However, selecting the explanatory variables, or figuring out what predicts the number of physicians that a county has, is a large part of the analysis in this case.
+        \item This type of analysis is an exploratory study.
+      \end{itemize} 
+    \end{frame}
+
+    \begin{frame}[fragile]{An exploratory study of the Texas physician shortage}
+      \begin{itemize}[<+->]
+        \item Exploratory studies are observational studies, in that the variables are observed rather than controlled, which is different from an experiment.
+        \item Multicollinearity is much more likely in an exploratory study than in an experiment or a confirmatory study.
+        \item Exploratory studies require the most in terms of model selection. Automated tools are helpful, but judgement is still needed!
+      \end{itemize} 
+    \end{frame}
+
+    \begin{frame}[fragile]{Population as a predictor of number of physicians}
+          
+      <<>>=
+      plot(counties$Population, counties$Physicians)
+      popmodel <- lm(counties$Physicians ~ counties$Population)
+      abline(popmodel)
+      @
+
+      \lc {What is R2  If we predict}
+    \end{frame}
+
+    \begin{frame}[fragile]{Transform and Subset the data}
+
+        <<>>=
+
+        # Transform Physians
+        counties$PhysiciansPer10000 <- (counties$Physicians / counties$Population) * 10000
+
+        # Remove the very small and very large counties
+        mcounties <- counties[counties$Population < 500000 & counties$Population > 10000,]
+
+        # Show medium counties with no physicians
+        mcounties[mcounties$Physicians == 0, c(1,5,12)]
+        @
+
+        \lc {Why would we want to remove}
+    \end{frame}
+
+    \begin{frame}[fragile]{The 10 potential x variables}
+          \begin{itemize}
+            \item LandArea
+            \item PctRural
+            \item MedianIncome
+            \item Population
+            \item PctUnder18
+            \item PctOver65
+            \item PctPoverty
+            \item PctUninsured
+            \item PctSomeCollege
+            \item PctUnemployed 
+          \end{itemize}
+    \end{frame}
+
+  
+  \end{darkframes}
+\end{document}
