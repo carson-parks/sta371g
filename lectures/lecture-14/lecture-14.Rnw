@@ -13,6 +13,7 @@
   @
   <<include=F, cache=F>>=
   library(car)
+  library(stats)
   counties <- read.csv("../../data/counties.csv", na.strings="")
   par(fg='#fefefe', col.axis='#fefefe', col.lab='#fefefe', col.main="#fefefe", mar=c(5.1, 4.1, 1.1, 2.1))
   @
@@ -90,10 +91,12 @@
         <<>>=
 
         # Transform Physians
-        counties$PhysiciansPer10000 <- (counties$Physicians / counties$Population) * 10000
+        counties$PhysiciansPer10000 <- 
+             (counties$Physicians/counties$Population)*10000
 
         # Remove the very small and very large counties
-        mcounties <- counties[counties$Population < 500000 & counties$Population > 10000,]
+        mcounties <- counties[counties$Population < 500000 & 
+                              counties$Population > 10000,]
 
         # Show medium counties with no physicians
         mcounties[mcounties$Physicians == 0, c(1,5,12)]
@@ -104,19 +107,177 @@
 
     \begin{frame}[fragile]{The 10 potential x variables}
           \begin{itemize}
-            \item LandArea
-            \item PctRural
-            \item MedianIncome
-            \item Population
-            \item PctUnder18
-            \item PctOver65
-            \item PctPoverty
-            \item PctUninsured
-            \item PctSomeCollege
-            \item PctUnemployed 
+            \item LandArea:       Area in quare miles
+            \item PctRural:       Percentage rural land
+            \item MedianIncome:   Median household income
+            \item Population:     Population
+            \item PctUnder18:     Percent children
+            \item PctOver65:      Percent seniors
+            \item PctPoverty:     Percent below the poverty line
+            \item PctUninsured:   Percent without health insurance
+            \item PctSomeCollege: Percent with some higher education
+            \item PctUnemployed:  Percent unemployed
           \end{itemize}
     \end{frame}
 
+    \begin{frame}[fragile]{Building all of the possible models}
+      \begin{itemize}[<+->]
+        \item Previously, we built the full model and eliminated the variables in order of largest p-value (or smallest t-score). This is what the reading assignment calls backward stepwise regression.
+        \item This method is not guaranteed to find to the best model!
+        \item If there are n candidate predictor variables, there are $2^n$ possible models, and we need to look at ALL of them to be sure that we have found the best model.
+        \item This is where R's automated model building tools help.
+      \end{itemize} 
+    \end{frame}
+
+    \begin{frame}[fragile]{How to decide which model is best}
+      \begin{itemize}[<+->]
+        \item We have used $R^2$ and Adjusted-$R^2$ to select the best models
+        \item But $R^2$ is not good for comparing models with differnet numbers of variables because it tends to increase a little bit with each additional variable just due to randomness.
+        \item Adjusted-$R^2$ is better because it multiplies $R^2$ by a penalty that depends on the number of variables, but the penalty is somewhat arbitrary and increases as the number of variables increases.
+      \end{itemize} 
+    \end{frame}
+
+
+    \begin{frame}[fragile]{There are many ways to decide which model is best}
+      \begin{itemize}[<+->]
+        \item All model measuring criteria try to find a balance between the predictive power of the model and the number of variables.
+        \item No method is ideal in all situations, so it is generally best to use multiple methods and look at the results.
+        \item AIC (Akaike’s Information Criterion) and the very similar BIC (your reading calls it SBC) are other widely used criterion that often gives different results than Adjusted-$R^2$.
+      \end{itemize} 
+
+      \lc  
+    \end{frame}  
+
+    \begin{frame}[fragile]{Stepping forwards}
+
+       The step() function uses the AIC criterion to compare models. You must build the null and the full models first.
+
+      <<>>=
+
+      null <- lm(PhysiciansPer10000~1, data=mcounties)
+
+      full <- lm(PhysiciansPer10000 ~ LandArea+PctRural+
+                 MedianIncome+Population+PctUnder18+
+                 PctOver65+PctPoverty+PctUninsured+
+                 PctSomeCollege+PctUnemployed, data=mcounties)
+
+      stepforward.out <- step(null, scope=list(lower=null, upper=full), 
+                                    direction ="forward")
+
+      @
+
+      \lc 
+    \end{frame}
+
   
+    \begin{frame}[fragile]{Stepping backwards and both ways}
+
+    You can also step backward or on both directions
+
+    <<>>=
+
+    stepbackward.out <- 
+        step(null, scope=list(lower=null, upper=full), 
+             direction ="backward")
+
+    stepboth.out <- 
+        step(null, scope=list(lower=null, upper=full), 
+             direction ="both")
+
+      @
+
+      \lc
+    \end{frame}
+
+
+    \begin{frame}[fragile]{Check the LINE assumptions}
+      \fontsize{9}{9}\selectfont
+      <<echo=F>>=
+      par(mfrow=c(2,2)) # change the panel layout to 2x2
+      @
+      <<fig.width=4.5>>=
+      plot(stepforward.out)
+      @
+      <<echo=F>>=
+      par(mfrow=c(1,1)) # change the panel layout back
+      @
+    \end{frame}
+
+
+    \begin{frame}[fragile]{Check for multicollinearity}
+     This model looks pretty good, but is it the best that can be done?
+
+     <<>>=
+
+     # Check the model for multicollinearity
+
+     vif(stepforward.out)
+
+     @
+
+    \end{frame}
+
+
+    \begin{frame}[fragile]{Best Subsets Regression}
+     Step only uses AIC criterion for comparing models. regsubsets is more flexible about criteria and calculates all possible subsets. 
+
+     <<>>=
+     library(leaps)
+     regsubsets.out <- regsubsets(PhysiciansPer10000 ~ LandArea+PctRural+
+                 MedianIncome+Population+PctUnder18+
+                 PctOver65+PctPoverty+PctUninsured+
+                 PctSomeCollege+PctUnemployed, data=mcounties)
+
+     @
+
+    \end{frame}
+
+
+    \begin{frame}[fragile]{Best Subsets Regression}
+     Step only uses AIC criterion for comparing models. regsubsets is more flexible about criteria and calculates all possible subsets. 
+
+     <<>>=
+     # Set the plot window up so you can examine the output side by side
+     layout(matrix(1:2, ncol=2))
+     #plot(regsubsets.out, scale="adjr2")  # use adjusted R^2
+     #plot(regsubsets.out, scale="bic")    # use SBC
+
+     # Don’t forget to reset the plot window!
+     layout(matrix(1:1, ncol=1))
+     @
+
+    \end{frame}
+
+    \begin{frame}{Look at this interesting plot}
+      \begin{center}
+        \includegraphics[width=3.8in]{bestsubsets} \\
+      \end{center} 
+
+      \begin{center}
+        {Black indicates that a variable is included in the model, while white indicates that it is not.}
+      \end{center} 
+      
+    \end{frame}
+
+
+    \begin{frame}[fragile]{Putting things together}
+      \begin{itemize}[<+->]
+        \item Look at multiple statistics. They generally say similar things.
+        \item Find the middle ground between an underspecified model and extraneous variables.
+        \item Fine tune the model to get a correctly specified model - you may need to transform predictors and/or add interactions.
+        \item Think about logical reasons why certain predictors might be useful, don't just focus on p-values.
+      \end{itemize} 
+    \end{frame}
+
+
+    \begin{frame}[fragile]{Be careful of getting to crazy}
+      \begin{itemize}[<+->]
+        \item A general guideline is that you should not even consider more than one variable for every 10 to 15 cases in your dataset. 
+        \item Otherwise, you can select the ones that happen to fit the data the best and essentially create a spurious correlation!
+        \item Rember to check for multicolliearity and the LINE assumptions!
+      \end{itemize} 
+    \end{frame}
+
+
   \end{darkframes}
 \end{document}
