@@ -73,6 +73,7 @@
     
     
     \begin{frame}{There is a Primary Care Physician Shortage in Texas!}
+      \fontsize{8}{8}\selectfont
       \begin{center}
         \includegraphics[width=3.8in]{DocShortage} \\
       \end{center} \pause
@@ -96,10 +97,11 @@
           \end{itemize}
       \end{columns}
       
-      \lc {smallest population}
+      \lc %{smallest population}
     \end{frame}
 
     \begin{frame}[fragile]{What to do if there a lot of potential predictors}
+    \fontsize{8}{8}\selectfont
       \begin{itemize}[<+->]
         \item Previously, we assumed that the explanatory variables were either from a small set or chosen in advance.
         \item However, selecting the explanatory variables, or figuring out what predicts the number of physicians that a county has, is a large part of the analysis in this case.
@@ -116,7 +118,7 @@
     \end{frame}
 
     \begin{frame}[fragile]{Population as a predictor of number of physicians}
-          
+      \fontsize{8}{8}\selectfont    
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
@@ -125,7 +127,7 @@
 \hlkwd{abline}\hlstd{(popmodel)}
 \end{alltt}
 \end{kframe}
-\input{/tmp/figures/unnamed-chunk-2-1.tikz}
+\input{c:/tmp/figures/unnamed-chunk-2-1.tikz}
 
 \end{knitrout}
 
@@ -133,13 +135,12 @@
     \end{frame}
 
     \begin{frame}[fragile]{Transform and Subset the data}
-
+      \fontsize{8}{8}\selectfont
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
 \hlcom{# Transform Physians}
-\hlstd{counties}\hlopt{$}\hlstd{PhysiciansPer10000} \hlkwb{<-}
-     \hlstd{(counties}\hlopt{$}\hlstd{Physicians}\hlopt{/}\hlstd{counties}\hlopt{$}\hlstd{Population)}\hlopt{*}\hlnum{10000}
+\hlstd{counties}\hlopt{$}\hlstd{PhysiciansPer10000} \hlkwb{<-}  \hlstd{(counties}\hlopt{$}\hlstd{Physicians}\hlopt{/}\hlstd{counties}\hlopt{$}\hlstd{Population)}\hlopt{*}\hlnum{10000}
 
 \hlcom{# Remove the very small and very large counties}
 \hlstd{mcounties} \hlkwb{<-} \hlstd{counties[counties}\hlopt{$}\hlstd{Population} \hlopt{<} \hlnum{500000} \hlopt{&}
@@ -149,17 +150,18 @@
 \hlstd{mcounties[mcounties}\hlopt{$}\hlstd{Physicians} \hlopt{==} \hlnum{0}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{5}\hlstd{,}\hlnum{12}\hlstd{)]}
 \end{alltt}
 \begin{verbatim}
-      X MedianIncome PctUnemployed
-157 157        51481           3.5
-159 159        35069           5.5
+      County Population Physicians
+157 Live Oak      12091          0
+159    Duval      11533          0
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
-        \lc {Why would we want to remove}
+        \lc %{Why would we want to remove}
     \end{frame}
 
     \begin{frame}[fragile]{The 10 potential x variables}
+    \fontsize{8}{8}\selectfont
           \begin{itemize}
             \item LandArea:       Area in quare miles
             \item PctRural:       Percentage rural land
@@ -175,6 +177,7 @@
     \end{frame}
 
     \begin{frame}[fragile]{Building all of the possible models}
+    \fontsize{8}{8}\selectfont
       \begin{itemize}[<+->]
         \item Previously, we built the full model and eliminated the variables in order of largest p-value (or smallest t-score). This is what the reading assignment calls backward stepwise regression.
         \item This method is not guaranteed to find to the best model!
@@ -184,6 +187,7 @@
     \end{frame}
 
     \begin{frame}[fragile]{How to decide which model is best}
+    \fontsize{8}{8}\selectfont
       \begin{itemize}[<+->]
         \item We have used $R^2$ and Adjusted-$R^2$ to select the best models
         \item But $R^2$ is not good for comparing models with differnet numbers of variables because it tends to increase a little bit with each additional variable just due to randomness.
@@ -193,6 +197,7 @@
 
 
     \begin{frame}[fragile]{There are many ways to decide which model is best}
+    \fontsize{8}{8}\selectfont
       \begin{itemize}[<+->]
         \item All model measuring criteria try to find a balance between the predictive power of the model and the number of variables.
         \item No method is ideal in all situations, so it is generally best to use multiple methods and look at the results.
@@ -203,7 +208,7 @@
     \end{frame}  
 
     \begin{frame}[fragile]{Stepping forwards}
-
+      \fontsize{8}{8}\selectfont
        The step() function uses the AIC criterion to compare models. You must build the null and the full models first.
 
 \begin{knitrout}
@@ -211,13 +216,14 @@
 \begin{alltt}
 \hlstd{null} \hlkwb{<-} \hlkwd{lm}\hlstd{(PhysiciansPer10000}\hlopt{~}\hlnum{1}\hlstd{,} \hlkwc{data}\hlstd{=mcounties)}
 
-\hlstd{full} \hlkwb{<-} \hlkwd{lm}\hlstd{(PhysiciansPer10000} \hlopt{~} \hlstd{LandArea}\hlopt{+}\hlstd{PctRural}\hlopt{+}
-           \hlstd{MedianIncome}\hlopt{+}\hlstd{Population}\hlopt{+}\hlstd{PctUnder18}\hlopt{+}
-           \hlstd{PctOver65}\hlopt{+}\hlstd{PctPoverty}\hlopt{+}\hlstd{PctUninsured}\hlopt{+}
-           \hlstd{PctSomeCollege}\hlopt{+}\hlstd{PctUnemployed,} \hlkwc{data}\hlstd{=mcounties)}
+\hlstd{full} \hlkwb{<-} \hlkwd{lm}\hlstd{(PhysiciansPer10000} \hlopt{~} \hlstd{LandArea} \hlopt{+} \hlstd{PctRural} \hlopt{+} \hlstd{MedianIncome}
+                              \hlopt{+} \hlstd{Population} \hlopt{+} \hlstd{PctUnder18} \hlopt{+} \hlstd{PctOver65}
+                              \hlopt{+} \hlstd{PctPoverty} \hlopt{+} \hlstd{PctUninsured}
+                              \hlopt{+} \hlstd{PctSomeCollege} \hlopt{+} \hlstd{PctUnemployed,}
+                              \hlkwc{data}\hlstd{=mcounties)}
 
-\hlstd{stepforward.out} \hlkwb{<-} \hlkwd{step}\hlstd{(null,} \hlkwc{scope}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{lower}\hlstd{=null,} \hlkwc{upper}\hlstd{=full),}
-                              \hlkwc{direction} \hlstd{=}\hlstr{"forward"}\hlstd{)}
+\hlstd{stepforwardOut} \hlkwb{<-} \hlkwd{step}\hlstd{(null,} \hlkwc{scope}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{lower}\hlstd{=null,} \hlkwc{upper}\hlstd{=full),}
+                             \hlkwc{direction} \hlstd{=}\hlstr{"forward"}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
 Start:  AIC=238.65
@@ -322,24 +328,22 @@ PhysiciansPer10000 ~ PctSomeCollege + PctRural + PctOver65 +
 
   
     \begin{frame}[fragile]{Stepping backwards and both ways}
-
+    \fontsize{8}{8}\selectfont
     You can also step backward or on both directions
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{stepbackward.out} \hlkwb{<-}
-    \hlkwd{step}\hlstd{(null,} \hlkwc{scope}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{lower}\hlstd{=null,} \hlkwc{upper}\hlstd{=full),}
-         \hlkwc{direction} \hlstd{=}\hlstr{"backward"}\hlstd{)}
+\hlstd{stepbackwardOut}\hlkwb{<-} \hlkwd{step}\hlstd{(null,} \hlkwc{scope}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{lower}\hlstd{=null,} \hlkwc{upper}\hlstd{=full),}
+                  \hlkwc{direction} \hlstd{=}\hlstr{"backward"}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
 Start:  AIC=238.65
 PhysiciansPer10000 ~ 1
 \end{verbatim}
 \begin{alltt}
-\hlstd{stepboth.out} \hlkwb{<-}
-    \hlkwd{step}\hlstd{(null,} \hlkwc{scope}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{lower}\hlstd{=null,} \hlkwc{upper}\hlstd{=full),}
-         \hlkwc{direction} \hlstd{=}\hlstr{"both"}\hlstd{)}
+\hlstd{stepboth.out} \hlkwb{<-}   \hlkwd{step}\hlstd{(null,} \hlkwc{scope}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{lower}\hlstd{=null,} \hlkwc{upper}\hlstd{=full),}
+                  \hlkwc{direction} \hlstd{=}\hlstr{"both"}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
 Start:  AIC=238.65
@@ -465,15 +469,17 @@ PhysiciansPer10000 ~ PctSomeCollege + PctRural + PctOver65 +
 
 
     \begin{frame}[fragile]{Check the LINE assumptions}
-      \fontsize{9}{9}\selectfont
+      \fontsize{8}{8}\selectfont
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlkwd{plot}\hlstd{(stepforward.out)}
+\hlkwd{plot}\hlstd{(stepbackwardOut)}
 \end{alltt}
-\end{kframe}
-\input{/tmp/figures/unnamed-chunk-7-1.tikz}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{hat values (leverages) are all = 0.006369427\\ and there are no factor predictors; no plot no. 5}}\end{kframe}
+\input{c:/tmp/figures/unnamed-chunk-7-1.tikz}
 
 \end{knitrout}
 
@@ -482,13 +488,13 @@ PhysiciansPer10000 ~ PctSomeCollege + PctRural + PctOver65 +
 
     \begin{frame}[fragile]{Check for multicollinearity}
      This model looks pretty good, but is it the best that can be done?
-
+    \fontsize{8}{8}\selectfont
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
 \hlcom{# Check the model for multicollinearity}
 
-\hlkwd{vif}\hlstd{(stepforward.out)}
+\hlkwd{vif}\hlstd{(stepforwardOut)}
 \end{alltt}
 \begin{verbatim}
 PctSomeCollege       PctRural      PctOver65     Population  PctUnemployed 
@@ -503,16 +509,16 @@ PctSomeCollege       PctRural      PctOver65     Population  PctUnemployed
 
 
     \begin{frame}[fragile]{Best Subsets Regression}
+      \fontsize{8}{8}\selectfont
      Step only uses AIC criterion for comparing models. regsubsets is more flexible about criteria and calculates all possible subsets. 
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlkwd{library}\hlstd{(leaps)}
-\hlstd{regsubsets.out} \hlkwb{<-} \hlkwd{regsubsets}\hlstd{(PhysiciansPer10000} \hlopt{~} \hlstd{LandArea}\hlopt{+}\hlstd{PctRural}\hlopt{+}
-            \hlstd{MedianIncome}\hlopt{+}\hlstd{Population}\hlopt{+}\hlstd{PctUnder18}\hlopt{+}
-            \hlstd{PctOver65}\hlopt{+}\hlstd{PctPoverty}\hlopt{+}\hlstd{PctUninsured}\hlopt{+}
-            \hlstd{PctSomeCollege}\hlopt{+}\hlstd{PctUnemployed,} \hlkwc{data}\hlstd{=mcounties)}
+\hlstd{regsubsets.out} \hlkwb{<-} \hlkwd{regsubsets}\hlstd{(PhysiciansPer10000} \hlopt{~} \hlstd{LandArea} \hlopt{+} \hlstd{PctRural}
+                             \hlopt{+} \hlstd{MedianIncome} \hlopt{+} \hlstd{Population} \hlopt{+} \hlstd{PctUnder18}
+                             \hlopt{+} \hlstd{PctOver65} \hlopt{+} \hlstd{PctPoverty} \hlopt{+} \hlstd{PctUninsured}
+                             \hlopt{+} \hlstd{PctSomeCollege} \hlopt{+} \hlstd{PctUnemployed,} \hlkwc{data}\hlstd{=mcounties)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -521,8 +527,9 @@ PctSomeCollege       PctRural      PctOver65     Population  PctUnemployed
 
 
     \begin{frame}[fragile]{Best Subsets Regression}
+    \fontsize{8}{8}\selectfont
      Step only uses AIC criterion for comparing models. regsubsets is more flexible about criteria and calculates all possible subsets. 
-
+      
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
@@ -531,7 +538,7 @@ PctSomeCollege       PctRural      PctOver65     Population  PctUnemployed
 \hlcom{#plot(regsubsets.out, scale="adjr2")  # use adjusted R^2}
 \hlcom{#plot(regsubsets.out, scale="bic")    # use SBC}
 
-\hlcom{# Don’t forget to reset the plot window!}
+\hlcom{# Don't forget to reset the plot window!}
 \hlkwd{layout}\hlstd{(}\hlkwd{matrix}\hlstd{(}\hlnum{1}\hlopt{:}\hlnum{1}\hlstd{,} \hlkwc{ncol}\hlstd{=}\hlnum{1}\hlstd{))}
 \end{alltt}
 \end{kframe}
@@ -540,6 +547,7 @@ PctSomeCollege       PctRural      PctOver65     Population  PctUnemployed
     \end{frame}
 
     \begin{frame}{Look at this interesting plot}
+    \fontsize{8}{8}\selectfont
       \begin{center}
         \includegraphics[width=3.8in]{bestsubsets} \\
       \end{center} 
@@ -552,6 +560,7 @@ PctSomeCollege       PctRural      PctOver65     Population  PctUnemployed
 
 
     \begin{frame}[fragile]{Putting things together}
+    \fontsize{8}{8}\selectfont
       \begin{itemize}[<+->]
         \item Look at multiple statistics. They generally say similar things.
         \item Find the middle ground between an underspecified model and extraneous variables.
@@ -562,6 +571,7 @@ PctSomeCollege       PctRural      PctOver65     Population  PctUnemployed
 
 
     \begin{frame}[fragile]{Be careful of getting to crazy}
+    \fontsize{8}{8}\selectfont
       \begin{itemize}[<+->]
         \item A general guideline is that you should not even consider more than one variable for every 10 to 15 cases in your dataset. 
         \item Otherwise, you can select the ones that happen to fit the data the best and essentially create a spurious correlation!

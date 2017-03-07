@@ -8,12 +8,13 @@
   <<setup, include=F, cache=F>>=
   opts_knit$set(global.par=T)
   knit_hooks$set(crop=hook_pdfcrop)
-  opts_chunk$set(dev='tikz', external=F, fig.path='/tmp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, tidy=F)
+  opts_chunk$set(dev='tikz', external=F, fig.path='c:/tmp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, tidy=F)
   knit_theme$set('camo')
   @
   <<include=F, cache=F>>=
   library(car)
   library(stats)
+  library(leaps)
   counties <- read.csv("../../data/counties.csv", na.strings="")
   par(fg='#fefefe', col.axis='#fefefe', col.lab='#fefefe', col.main="#fefefe", mar=c(5.1, 4.1, 1.1, 2.1))
   @
@@ -33,6 +34,7 @@
     
     
     \begin{frame}{There is a Primary Care Physician Shortage in Texas!}
+      \fontsize{8}{8}\selectfont
       \begin{center}
         \includegraphics[width=3.8in]{DocShortage} \\
       \end{center} \pause
@@ -56,10 +58,11 @@
           \end{itemize}
       \end{columns}
       
-      \lc {smallest population}
+      \lc %{smallest population}
     \end{frame}
 
     \begin{frame}[fragile]{What to do if there a lot of potential predictors}
+    \fontsize{8}{8}\selectfont
       \begin{itemize}[<+->]
         \item Previously, we assumed that the explanatory variables were either from a small set or chosen in advance.
         \item However, selecting the explanatory variables, or figuring out what predicts the number of physicians that a county has, is a large part of the analysis in this case.
@@ -76,7 +79,7 @@
     \end{frame}
 
     \begin{frame}[fragile]{Population as a predictor of number of physicians}
-          
+      \fontsize{8}{8}\selectfont    
       <<>>=
       plot(counties$Population, counties$Physicians)
       popmodel <- lm(counties$Physicians ~ counties$Population)
@@ -87,12 +90,11 @@
     \end{frame}
 
     \begin{frame}[fragile]{Transform and Subset the data}
-
+      \fontsize{8}{8}\selectfont
         <<>>=
 
         # Transform Physians
-        counties$PhysiciansPer10000 <- 
-             (counties$Physicians/counties$Population)*10000
+        counties$PhysiciansPer10000 <-  (counties$Physicians/counties$Population)*10000
 
         # Remove the very small and very large counties
         mcounties <- counties[counties$Population < 500000 & 
@@ -102,10 +104,11 @@
         mcounties[mcounties$Physicians == 0, c(1,5,12)]
         @
 
-        \lc {Why would we want to remove}
+        \lc %{Why would we want to remove}
     \end{frame}
 
     \begin{frame}[fragile]{The 10 potential x variables}
+    \fontsize{8}{8}\selectfont
           \begin{itemize}
             \item LandArea:       Area in quare miles
             \item PctRural:       Percentage rural land
@@ -121,6 +124,7 @@
     \end{frame}
 
     \begin{frame}[fragile]{Building all of the possible models}
+    \fontsize{8}{8}\selectfont
       \begin{itemize}[<+->]
         \item Previously, we built the full model and eliminated the variables in order of largest p-value (or smallest t-score). This is what the reading assignment calls backward stepwise regression.
         \item This method is not guaranteed to find to the best model!
@@ -130,6 +134,7 @@
     \end{frame}
 
     \begin{frame}[fragile]{How to decide which model is best}
+    \fontsize{8}{8}\selectfont
       \begin{itemize}[<+->]
         \item We have used $R^2$ and Adjusted-$R^2$ to select the best models
         \item But $R^2$ is not good for comparing models with differnet numbers of variables because it tends to increase a little bit with each additional variable just due to randomness.
@@ -139,6 +144,7 @@
 
 
     \begin{frame}[fragile]{There are many ways to decide which model is best}
+    \fontsize{8}{8}\selectfont
       \begin{itemize}[<+->]
         \item All model measuring criteria try to find a balance between the predictive power of the model and the number of variables.
         \item No method is ideal in all situations, so it is generally best to use multiple methods and look at the results.
@@ -149,20 +155,21 @@
     \end{frame}  
 
     \begin{frame}[fragile]{Stepping forwards}
-
+      \fontsize{8}{8}\selectfont
        The step() function uses the AIC criterion to compare models. You must build the null and the full models first.
 
       <<>>=
 
       null <- lm(PhysiciansPer10000~1, data=mcounties)
 
-      full <- lm(PhysiciansPer10000 ~ LandArea+PctRural+
-                 MedianIncome+Population+PctUnder18+
-                 PctOver65+PctPoverty+PctUninsured+
-                 PctSomeCollege+PctUnemployed, data=mcounties)
+      full <- lm(PhysiciansPer10000 ~ LandArea + PctRural + MedianIncome
+                                    + Population + PctUnder18 + PctOver65
+                                    + PctPoverty + PctUninsured 
+                                    + PctSomeCollege + PctUnemployed, 
+                                    data=mcounties)
 
-      stepforward.out <- step(null, scope=list(lower=null, upper=full), 
-                                    direction ="forward")
+      stepforwardOut <- step(null, scope=list(lower=null, upper=full), 
+                                   direction ="forward")
 
       @
 
@@ -171,18 +178,17 @@
 
   
     \begin{frame}[fragile]{Stepping backwards and both ways}
-
+    \fontsize{8}{8}\selectfont
     You can also step backward or on both directions
 
-    <<>>=
+      <<>>=
 
-    stepbackward.out <- 
-        step(null, scope=list(lower=null, upper=full), 
-             direction ="backward")
+    
+      stepbackwardOut<- step(null, scope=list(lower=null, upper=full), 
+                        direction ="backward")
 
-    stepboth.out <- 
-        step(null, scope=list(lower=null, upper=full), 
-             direction ="both")
+      stepboth.out <-   step(null, scope=list(lower=null, upper=full), 
+                        direction ="both")
 
       @
 
@@ -191,12 +197,12 @@
 
 
     \begin{frame}[fragile]{Check the LINE assumptions}
-      \fontsize{9}{9}\selectfont
+      \fontsize{8}{8}\selectfont
       <<echo=F>>=
       par(mfrow=c(2,2)) # change the panel layout to 2x2
       @
       <<fig.width=4.5>>=
-      plot(stepforward.out)
+      plot(stepbackwardOut)
       @
       <<echo=F>>=
       par(mfrow=c(1,1)) # change the panel layout back
@@ -206,12 +212,12 @@
 
     \begin{frame}[fragile]{Check for multicollinearity}
      This model looks pretty good, but is it the best that can be done?
-
+    \fontsize{8}{8}\selectfont
      <<>>=
 
      # Check the model for multicollinearity
 
-     vif(stepforward.out)
+     vif(stepforwardOut)
 
      @
 
@@ -219,14 +225,15 @@
 
 
     \begin{frame}[fragile]{Best Subsets Regression}
+      \fontsize{8}{8}\selectfont
      Step only uses AIC criterion for comparing models. regsubsets is more flexible about criteria and calculates all possible subsets. 
 
      <<>>=
-     library(leaps)
-     regsubsets.out <- regsubsets(PhysiciansPer10000 ~ LandArea+PctRural+
-                 MedianIncome+Population+PctUnder18+
-                 PctOver65+PctPoverty+PctUninsured+
-                 PctSomeCollege+PctUnemployed, data=mcounties)
+     
+     regsubsets.out <- regsubsets(PhysiciansPer10000 ~ LandArea + PctRural 
+                                  + MedianIncome + Population + PctUnder18 
+                                  + PctOver65 + PctPoverty + PctUninsured
+                                  + PctSomeCollege + PctUnemployed, data=mcounties)
 
      @
 
@@ -234,21 +241,23 @@
 
 
     \begin{frame}[fragile]{Best Subsets Regression}
+    \fontsize{8}{8}\selectfont
      Step only uses AIC criterion for comparing models. regsubsets is more flexible about criteria and calculates all possible subsets. 
-
+      
      <<>>=
      # Set the plot window up so you can examine the output side by side
      layout(matrix(1:2, ncol=2))
      #plot(regsubsets.out, scale="adjr2")  # use adjusted R^2
      #plot(regsubsets.out, scale="bic")    # use SBC
 
-     # Don’t forget to reset the plot window!
+     # Don't forget to reset the plot window!
      layout(matrix(1:1, ncol=1))
      @
 
     \end{frame}
 
     \begin{frame}{Look at this interesting plot}
+    \fontsize{8}{8}\selectfont
       \begin{center}
         \includegraphics[width=3.8in]{bestsubsets} \\
       \end{center} 
@@ -261,6 +270,7 @@
 
 
     \begin{frame}[fragile]{Putting things together}
+    \fontsize{8}{8}\selectfont
       \begin{itemize}[<+->]
         \item Look at multiple statistics. They generally say similar things.
         \item Find the middle ground between an underspecified model and extraneous variables.
@@ -271,6 +281,7 @@
 
 
     \begin{frame}[fragile]{Be careful of getting to crazy}
+    \fontsize{8}{8}\selectfont
       \begin{itemize}[<+->]
         \item A general guideline is that you should not even consider more than one variable for every 10 to 15 cases in your dataset. 
         \item Otherwise, you can select the ones that happen to fit the data the best and essentially create a spurious correlation!
