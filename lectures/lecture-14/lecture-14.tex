@@ -69,9 +69,7 @@
 
   %%%%%%% Slides start here %%%%%%%
 
-  \begin{darkframes}
-    
-    
+  \begin{darkframes}    
     \begin{frame}
       \fullpagepicture{DocShortage}
     \end{frame}
@@ -98,14 +96,14 @@
     \begin{frame}[fragile]{What to do if there a lot of potential predictors}
       \begin{itemize}[<+->]
         \item Previously, we assumed that the explanatory variables were either from a small set or chosen in advance.
-        \item However, selecting the explanatory variables, or figuring out what predicts the number of physicians that a county has, is a large part of the analysis in this case.
+        \item However, figuring out what variables to use to predict the number of physicians that a county has, is a critical portion of the analysis in this case.
         \item This type of analysis is an \textbf{exploratory study}.
       \end{itemize} 
     \end{frame}
 
     \begin{frame}[fragile]{An exploratory study of the Texas physician shortage}
       \begin{itemize}[<+->]
-        \item Exploratory studies are observational studies, in that the variables are observed rather than controlled, which is different from an experiment.
+        \item Exploratory studies are observational studies, in that the variables are observed rather than controlled.
         \item Multicollinearity is much more likely in an exploratory study than in an experiment or a confirmatory study.
         \item Exploratory studies require the most in terms of model selection. Automated tools are helpful, but judgement is still needed!
       \end{itemize} 
@@ -124,7 +122,7 @@
 
 \end{knitrout}
 
-      \lc %{What is R2  If we predict}
+      \lc %{What is R2 if we predict physicians from population?}
     \end{frame}
 
     \begin{frame}[fragile]{Transform and Subset the data}
@@ -168,7 +166,7 @@
       \end{itemize}
     \end{frame}
 
-    \begin{frame}[fragile]{Building all of the possible models}
+    \begin{frame}{Building all of the possible models}
       \begin{itemize}[<+->]
         \item Previously, we built the full model and eliminated the variables in order of largest 
         $p$-value (or smallest $t$-score). This is called \textbf{backward stepwise regression}.
@@ -178,7 +176,7 @@
       \end{itemize} 
     \end{frame}
 
-    \begin{frame}[fragile]{How to decide which model is best}
+    \begin{frame}{How to decide which model is best}
       \begin{itemize}[<+->]
         \item We have used $R^2$ and Adjusted-$R^2$ to select the best models
         \item But $R^2$ is not good for comparing models with different numbers of variables because it tends to increase a little bit with each additional variable, just due to randomness.
@@ -187,15 +185,15 @@
     \end{frame}
 
 
-    \begin{frame}[fragile]{There are many ways to decide which model is best}
+    \begin{frame}{There are many ways to decide which model is best}
       \begin{itemize}[<+->]
         \item All model selection criteria try to find a balance between the \alert{predictive power of the model} and the \alert{complexity of the model} (number of variables).
         \item No method is ideal in all situations, so it is generally best to use multiple methods and look at the results.
-        \item AIC (Akaike’s Information Criterion) and the very similar BIC (your reading calls it SBC) are other widely used criterion that often gives different results than Adjusted-$R^2$.
+        \item AIC (Akaike's Information Criterion) and the very similar BIC (your reading calls it SBC) are other widely used criterion that often gives different results than Adjusted-$R^2$.
+        \item There are other selection criteria too (but we won't get into them in this course).
       \end{itemize} 
-
-      \lc  
-    \end{frame}  
+      \lc  %{If there are 5 candidate predictor variables}
+    \end{frame}
 
     \begin{frame}[fragile]{Stepping forwards}
        The \texttt{step} function uses the AIC criterion to compare models. First we'll build a ``null model'' with no variables, and a ``full model'' with all variables:
@@ -219,7 +217,7 @@
 \end{kframe}
 \end{knitrout}
 
-      \lc 
+      \lc %{Examine stepforwardOut. Which variable is the most significant}
     \end{frame}
 
   
