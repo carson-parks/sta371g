@@ -34,7 +34,7 @@
     
     
     \begin{frame}{There is a Primary Care Physician Shortage in Texas!}
-      \fontsize{8}{8}\selectfont
+      \fontsize{10}{10}\selectfont
       \begin{center}
         \includegraphics[width=3.8in]{DocShortage} \\
       \end{center} \pause
@@ -62,17 +62,16 @@
     \end{frame}
 
     \begin{frame}[fragile]{What to do if there a lot of potential predictors}
-    \fontsize{8}{8}\selectfont
       \begin{itemize}[<+->]
         \item Previously, we assumed that the explanatory variables were either from a small set or chosen in advance.
-        \item However, selecting the explanatory variables, or figuring out what predicts the number of physicians that a county has, is a large part of the analysis in this case.
+        \item However, figuring out what variables to use to predict the number of physicians that a county has, is a critical portion of the analysis in this case.
         \item This type of analysis is an exploratory study.
       \end{itemize} 
     \end{frame}
 
     \begin{frame}[fragile]{An exploratory study of the Texas physician shortage}
       \begin{itemize}[<+->]
-        \item Exploratory studies are observational studies, in that the variables are observed rather than controlled, which is different from an experiment.
+        \item Exploratory studies are observational studies, in that the variables are observed rather than controlled.
         \item Multicollinearity is much more likely in an exploratory study than in an experiment or a confirmatory study.
         \item Exploratory studies require the most in terms of model selection. Automated tools are helpful, but judgement is still needed!
       \end{itemize} 
@@ -86,7 +85,7 @@
       abline(popmodel)
       @
 
-      \lc {What is R2  If we predict}
+      \lc %{What is R2 if we predict physicians from population?}
     \end{frame}
 
     \begin{frame}[fragile]{Transform and Subset the data}
@@ -94,7 +93,8 @@
         <<>>=
 
         # Transform Physians
-        counties$PhysiciansPer10000 <-  (counties$Physicians/counties$Population)*10000
+        counties$PhysiciansPer10000 <- 
+                      (counties$Physicians/counties$Population)*10000
 
         # Remove the very small and very large counties
         mcounties <- counties[counties$Population < 500000 & 
@@ -104,13 +104,13 @@
         mcounties[mcounties$Physicians == 0, c(1,5,12)]
         @
 
-        \lc %{Why would we want to remove}
+        \lc %{Why would we want to remove large counties}
     \end{frame}
 
     \begin{frame}[fragile]{The 10 potential x variables}
-    \fontsize{8}{8}\selectfont
+    \fontsize{10}{10}\selectfont
           \begin{itemize}
-            \item LandArea:       Area in quare miles
+            \item LandArea:       Area in square miles
             \item PctRural:       Percentage rural land
             \item MedianIncome:   Median household income
             \item Population:     Population
@@ -124,39 +124,43 @@
     \end{frame}
 
     \begin{frame}[fragile]{Building all of the possible models}
-    \fontsize{8}{8}\selectfont
       \begin{itemize}[<+->]
-        \item Previously, we built the full model and eliminated the variables in order of largest p-value (or smallest t-score). This is what the reading assignment calls backward stepwise regression.
-        \item This method is not guaranteed to find to the best model!
+        \item Previously, we built the full model and eliminated the variables in order of largest p-value (or smallest t-score). 
+        \item This is what the reading assignment calls backward stepwise regression.
+        \item This method is good, but it is not guaranteed to find to the best model!
         \item If there are n candidate predictor variables, there are $2^n$ possible models, and we need to look at ALL of them to be sure that we have found the best model.
         \item This is where R's automated model building tools help.
       \end{itemize} 
-    \end{frame}
 
-    \begin{frame}[fragile]{How to decide which model is best}
-    \fontsize{8}{8}\selectfont
-      \begin{itemize}[<+->]
-        \item We have used $R^2$ and Adjusted-$R^2$ to select the best models
-        \item But $R^2$ is not good for comparing models with differnet numbers of variables because it tends to increase a little bit with each additional variable just due to randomness.
-        \item Adjusted-$R^2$ is better because it multiplies $R^2$ by a penalty that depends on the number of variables, but the penalty is somewhat arbitrary and increases as the number of variables increases.
-      \end{itemize} 
+      \lc  %{If there are 5 candidate predictor variables}
     \end{frame}
 
 
-    \begin{frame}[fragile]{There are many ways to decide which model is best}
-    \fontsize{8}{8}\selectfont
+    \begin{frame}[fragile]{How do you decide which model is best?}
       \begin{itemize}[<+->]
         \item All model measuring criteria try to find a balance between the predictive power of the model and the number of variables.
-        \item No method is ideal in all situations, so it is generally best to use multiple methods and look at the results.
-        \item AIC (Akaike’s Information Criterion) and the very similar BIC (your reading calls it SBC) are other widely used criterion that often gives different results than Adjusted-$R^2$.
-      \end{itemize} 
+        \item No method is ideal in all situations, so it is generally best to use multiple methods and compare the results.
+       \end{itemize} 
 
-      \lc  
     \end{frame}  
 
+
+    \begin{frame}[fragile]{What are the criteria for comparing models?}
+      \begin{itemize}[<+->]
+        \item We have used $R^2$ and Adjusted-$R^2$ before.
+        \item $R^2$ is not good for comparing models with different numbers of variables because it tends to increase a little with each additional variable just due to randomness.
+        \item Adjusted-$R^2$ is better because it multiplies $R^2$ by a penalty that depends on the number of variables. However, the penalty is somewhat arbitrary.
+        \item AIC (Akaike’s Information Criterion) and the very similar BIC (your reading calls it SBC) are other widely used criteria.
+        \item There more, but we won't go into them.
+ 
+      \end{itemize} 
+    \end{frame}
+
+
     \begin{frame}[fragile]{Stepping forwards}
-      \fontsize{8}{8}\selectfont
        The step() function uses the AIC criterion to compare models. You must build the null and the full models first.
+
+      \fontsize{8}{8}\selectfont
 
       <<>>=
 
@@ -173,36 +177,18 @@
 
       @
 
-      \lc 
+      \lc %{Examine stepforwardOut. Which variable is the most significant}
     \end{frame}
 
   
-    \begin{frame}[fragile]{Stepping backwards and both ways}
-    \fontsize{8}{8}\selectfont
-    You can also step backward or on both directions
-
-      <<>>=
-
-    
-      stepbackwardOut<- step(null, scope=list(lower=null, upper=full), 
-                        direction ="backward")
-
-      stepboth.out <-   step(null, scope=list(lower=null, upper=full), 
-                        direction ="both")
-
-      @
-
-      \lc
-    \end{frame}
-
-
     \begin{frame}[fragile]{Check the LINE assumptions}
+      model stepforwardOut's residuals look ok
       \fontsize{8}{8}\selectfont
       <<echo=F>>=
       par(mfrow=c(2,2)) # change the panel layout to 2x2
       @
       <<fig.width=4.5>>=
-      plot(stepbackwardOut)
+      plot(stepforwardOut)
       @
       <<echo=F>>=
       par(mfrow=c(1,1)) # change the panel layout back
@@ -210,26 +196,50 @@
     \end{frame}
 
 
-    \begin{frame}[fragile]{Check for multicollinearity}
-     This model looks pretty good, but is it the best that can be done?
+    \begin{frame}[fragile]{Examine stepforwardOut}
     \fontsize{8}{8}\selectfont
      <<>>=
+     # check the summary
+     #summary(stepforwardOut)
 
-     # Check the model for multicollinearity
-
+     # Check stepForwardOut for multicollinearity
      vif(stepforwardOut)
 
      @
 
+     \lc %{Examine stepbforwardOut}
+    \end{frame}
+
+
+    \begin{frame}[fragile]{Stepping backwards and both ways}
+     This model looks pretty good, but is it the best?
+     You can also step backward or on both directions.
+
+    \fontsize{8}{8}\selectfont
+
+      <<>>=
+
+      stepbackwardOut <- step(null, scope=list(lower=null, upper=full), 
+                              direction ="backward")
+
+      stepbothOut <- step(null, scope=list(lower=null, upper=full), 
+                          direction ="both")
+
+      @
+
+      \lc %{Take a look at stepbackwardOut}
     \end{frame}
 
 
     \begin{frame}[fragile]{Best Subsets Regression}
-      \fontsize{8}{8}\selectfont
+     
      Step only uses AIC criterion for comparing models. regsubsets is more flexible about criteria and calculates all possible subsets. 
 
+    \fontsize{8}{8}\selectfont
      <<>>=
      
+     library(leaps)
+
      regsubsets.out <- regsubsets(PhysiciansPer10000 ~ LandArea + PctRural 
                                   + MedianIncome + Population + PctUnder18 
                                   + PctOver65 + PctPoverty + PctUninsured
@@ -270,18 +280,16 @@
 
 
     \begin{frame}[fragile]{Putting things together}
-    \fontsize{8}{8}\selectfont
       \begin{itemize}[<+->]
         \item Look at multiple statistics. They generally say similar things.
         \item Find the middle ground between an underspecified model and extraneous variables.
-        \item Fine tune the model to get a correctly specified model - you may need to transform predictors and/or add interactions.
+        \item Fine tune the model to get a correctly specified model; you may need to transform predictors and/or add interactions.
         \item Think about logical reasons why certain predictors might be useful, don't just focus on p-values.
       \end{itemize} 
     \end{frame}
 
 
-    \begin{frame}[fragile]{Be careful of getting to crazy}
-    \fontsize{8}{8}\selectfont
+    \begin{frame}[fragile]{Be careful of getting too crazy}
       \begin{itemize}[<+->]
         \item A general guideline is that you should not even consider more than one variable for every 10 to 15 cases in your dataset. 
         \item Otherwise, you can select the ones that happen to fit the data the best and essentially create a spurious correlation!
