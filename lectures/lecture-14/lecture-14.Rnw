@@ -118,9 +118,10 @@
         \item Previously, we built the full model and eliminated the variables in order of largest 
         $p$-value (or smallest $t$-score). This is called \textbf{backward stepwise regression}.
         \item This method is not guaranteed to find to the best model!
-        \item If there are $n$ candidate predictor variables, there are $2^n$ possible models, and we would need to look at every one of them to be sure that we have found the best model.
+        \item If there are $n$ candidate predictor variables, there are $2^n-1$ possible models, and we would need to look at every one of them to be sure that we have found the best model.
         \item This is where R's automated model building tools help.
       \end{itemize} 
+      \lc  %{If there are 5 candidate predictor variables}
     \end{frame}
 
     \begin{frame}{How to decide which model is best}
@@ -136,10 +137,9 @@
       \begin{itemize}[<+->]
         \item All model selection criteria try to find a balance between the \alert{predictive power of the model} and the \alert{complexity of the model} (number of variables).
         \item No method is ideal in all situations, so it is generally best to use multiple methods and look at the results.
-        \item AIC (Akaike's Information Criterion) and the very similar BIC (your reading calls it SBC) are other widely used criterion that often gives different results than Adjusted-$R^2$.
+        \item AIC (Akaike's Information Criterion) and the very similar BIC (the reading calls it SBC) are other widely used criterion that have a similar intent as Adjusted-$R^2$ but may give different results.
         \item There are other selection criteria too (but we won't get into them in this course).
       \end{itemize} 
-      \lc  %{If there are 5 candidate predictor variables}
     \end{frame}
 
     \begin{frame}[fragile]{Stepping forwards}
