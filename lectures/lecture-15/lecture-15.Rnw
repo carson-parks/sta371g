@@ -1,6 +1,6 @@
 \documentclass{beamer}
 \usepackage{../371g-slides}
-\title{Model Building - Part 2}
+\title{Model Building 2}
 \subtitle{Lecture 15}
 \author{STA 371G}
 
@@ -8,7 +8,7 @@
   <<setup, include=F, cache=F>>=
   opts_knit$set(global.par=T)
   knit_hooks$set(crop=hook_pdfcrop)
-  opts_chunk$set(dev='tikz', external=F, fig.path='c:/tmp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, tidy=F)
+  opts_chunk$set(dev='tikz', external=F, fig.path='/tmp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, tidy=F)
   knit_theme$set('camo')
   @
   <<include=F, cache=F>>=
@@ -34,72 +34,67 @@
   \begin{darkframes}
     
     %{slide 1}
-    \begin{frame}{Predicting Baseball Player Batting Averages}
-      \fontsize{10}{10}\selectfont
-      \begin{center}
-        \includegraphics[width=1.6in]{TyCobb.png} \\
-      \end{center}
+    \begin{frame}{Let's model the batting averages of baseball players}
+      \begin{columns}[onlytextwidth]
+        \column{.4\textwidth}
+          \includegraphics[width=1.6in]{TyCobb.png}
+        
+        \column{.6\textwidth}
+          \begin{itemize}
+            \item All of the data here came from \url{http://seanlahman.com/baseball-archive/statistics/}
+            \item Some data cleaning was done, mostly to calculate averages
+            \item We are going to explore this dataset with best subsets regression
+          \end{itemize}
+      \end{columns}
+    \end{frame}
 
+    \begin{frame}{The response variable}
       \begin{itemize}
-        \item load baseball.csv
-        \item install the packages car, leaps, and corrplot if you haven't already
+        \item \textbf{AVG}: Batting average
       \end{itemize}
-      
-      \lc %{smallest population}
     \end{frame}
-
-
-    %{slide 2}
-    \begin{frame}[fragile]{What predicts a player's batting average}
-      \begin{itemize}[<+->]
-        \item All of the data here came from http://seanlahman.com/baseball-archive/statistics/
-        \item Some data cleaning, to calculate averages mostly, was done.
-        \item We are going to explore this dataset with best subsets regression
-        \end{itemize} 
-    \end{frame}
-
 
     %{slide 3}
-    \begin{frame}[fragile]{The 10 potential x variables}
-    \fontsize{10}{10}\selectfont
-          \begin{itemize}
-            \item YEAR:    Year this entry calculated for 
-            \item LG:      League, either NL or AL
-            \item AVG:     Batting average
-            \item OBP:     On base percentage
-            \item SLG:     Slugging average
-            \item EXP:     Years of experience
-            \item PAYR:    Plate appearances per year
-            \item MLAVG:   Batting average for the leauge for the year
-            \item MLOBP:   On base percentage for the leaugue for the year
-            \item MLSLG:   Slugging percentage for the leaugue for the year
-            \item AVGcumLag1:   Player's cumulative batting average for previous years
-            \item OBPcumLag1:   Player's cumulative on base percentage for previous years
-            \item SLGcumLag1:   Player's cumulative slugging percentage for previous years
-            \item G:       Games played (must have been at least 98)
-            \item YRINDEX: Number of years since 1958
-          \end{itemize}
+    \begin{frame}[fragile]{The potential predictors}
+      \fontsize{10}{10}\selectfont
+      \begin{itemize}
+        \item \textbf{YEAR}:         Year this entry calculated for 
+        \item \textbf{LG}:           League, either NL or AL
+        \item \textbf{OBP}:          On base percentage
+        \item \textbf{SLG}:          Slugging average
+        \item \textbf{EXP}:          Years of experience
+        \item \textbf{PAYR}:         Plate appearances per year
+        \item \textbf{MLAVG}:        Batting average for the leauge for the year
+        \item \textbf{MLOBP}:        On base percentage for the leaugue for the year
+        \item \textbf{MLSLG}:        Slugging percentage for the leaugue for the year
+        \item \textbf{AVGcumLag1}:   Player's cumulative batting average for previous years
+        \item \textbf{OBPcumLag1}:   Player's cumulative on base percentage for previous years
+        \item \textbf{SLGcumLag1}:   Player's cumulative slugging percentage for previous years
+        \item \textbf{G}:            Games played (must have been at least 98)
+        \item \textbf{YRINDEX}:      Number of years since 1958
+      \end{itemize}
 
-        \lc %{Why predict batting average instead of hits?}
+      \lc %{Why predict batting average instead of hits?}
     \end{frame}
 
 
     %{slide 4}
     \begin{frame}[fragile]{Build model full and check for multicollinearity}
-      \fontsize{8}{8}\selectfont  
-
+      \fontsize{9}{9}\selectfont
+      <<echo=F>>=
+      options(digits=3)
+      @
       <<>>=
-
       full <- lm(AVG ~ OBP + SLG + EXP + PAYR + MLAVG 
-      + MLOBP + MLSLG + AVGcumLag1 + OBPcumLag1 
-      + SLGcumLag1 + G + YRINDEX, data=baseball)
-      
-      round(vif(full),2)
+                        + MLOBP + MLSLG + AVGcumLag1 + OBPcumLag1 
+                        + SLGcumLag1 + G + YRINDEX, data=baseball)
 
+      vif(full)
       @
       
       \pause
-      \fontsize{10}{10}\selectfont{Uh oh. Houston, we have a problem!}
+      \fontsize{10}{10}\selectfont
+      Uh oh. Houston, we have a problem!
 
       \lc %{What is the R2 of model full?}
     \end{frame}
@@ -107,20 +102,11 @@
 
     %{slide #5}
     \begin{frame}[fragile]{Look at the correlations to find the problem}
-      \fontsize{8}{8}\selectfont  
+      Columns 8-19 in the data set are numeric. Let's pull those out and look at the correlation matrix.
 
-      {This matrix is hard to read}
-      <<>>=
-
-      numericpredictors <- baseball[,8:19]
-      M <- round(cor(numericpredictors),2) # calculate correlations
-
-      # print M by just typing M
-
-      # This table is confusing!
-      # There is a much better way to see this using corrplot
-      # So make the library available
-      library(corrplot)
+      <<results='hide'>>=
+      numeric.predictors <- baseball[,8:19]
+      cor(numeric.predictors)
       @
       
       \lc %{What is the correlation between OBP and SLG?}
@@ -128,30 +114,27 @@
 
 
     %{slide #6}
-    \begin{frame}[fragile]{Plot the correlations to better see the problem}
-      \fontsize{8}{8}\selectfont  
-
-      <<>>=
-      corrplot(M, method = "circle") #plot matrix
+    \begin{frame}[fragile]{A correlation plot is easier to read!}
+      \fontsize{9}{9}\selectfont 
+      <<fig.height=2.4>>=
+      library(corrplot)
+      corrplot(cor(numeric.predictors))
       @
     \end{frame}
 
     %{slide 7}
     \begin{frame}[fragile]{Reduce multicollinearity by dropping variables}
-      \fontsize{8}{8}\selectfont 
-      \begin{itemize}
-        \item The Major League averages are highly correlated with each other
-        \item Let's keep just MLAVG and drop MLOBP and MLSLG
-        \end{itemize} 
+      The Major League averages are highly correlated with each other; 
+      let's keep just MLAVG and drop MLOBP and MLSLG. (This choice depends on our preference of which
+      variable would make the most sense to keep.)
 
+      \fontsize{9}{9}\selectfont
       <<>>=
-
       full <- lm(AVG ~ OBP + SLG + EXP + PAYR + MLAVG 
-      + AVGcumLag1 + OBPcumLag1 
-      + SLGcumLag1 + G + YRINDEX, data=baseball)
+                        + AVGcumLag1 + OBPcumLag1 
+                        + SLGcumLag1 + G + YRINDEX, data=baseball)
       
-      round(vif(full), 2)
-
+      vif(full)
       @
 
       {Much better!}
@@ -159,118 +142,68 @@
 
 
     %{slide 8}
-    \begin{frame}[fragile]{Run resubsets to get a sense of the best predictors}
-    \fontsize{8}{8}\selectfont  
+    \begin{frame}[fragile]{Use best-subsets regression to get a sense of the best predictors}
+      \fontsize{9}{9}\selectfont 
       <<>>=
-
-      library(leaps)
+      <<fig.keep='none'>>=
       bestsubsets <- regsubsets(AVG ~ OBP + SLG + EXP + PAYR + MLAVG 
-      + AVGcumLag1 + OBPcumLag1 
-      + SLGcumLag1 + G + YRINDEX, data=baseball)
-
+        + AVGcumLag1 + OBPcumLag1 + SLGcumLag1 + G + YRINDEX, data=baseball)
+      plot(bestsubsets, scale="adjr2")
       @
 
-      {Now let's plot and identify the important predictors}
+      \vspace{-1in}
+
+      <<echo=F, fig.height=3.5>>=
+      plot(bestsubsets, scale="adjr2", col='orange')
+      @
     \end{frame}
 
 
     %{slide 9}
-    \begin{frame}[fragile]{Use Adj $R^2$ to compare models}
-      \fontsize{8}{8}\selectfont  
-      <<>>=
-
-      plot(bestsubsets, scale="adjr2")  # use adjusted R^2
-
+    \begin{frame}[fragile]{Use best-subsets regression to get a sense of the best predictors}
+      \fontsize{9}{9}\selectfont
+      <<fig.keep='none'>>=
+      plot(bestsubsets, scale="bic")
       @
 
+      \vspace{-1in}
+
+      <<echo=F, fig.height=3.5>>=
+      plot(bestsubsets, scale="bic", col='orange')
+      @
+      \lc %{What are the best predictors}
     \end{frame}     
 
 
-   %{slide 10}
-    \begin{frame}[fragile]{Use BIC to compare models}
-      \fontsize{8}{8}\selectfont  
-      <<>>=
-
-      plot(bestsubsets, scale="bic")  # use BIC
-
-      @
-
-    \lc %{What are the best predictors}
-    \end{frame}
-
     %{slide 11}
     \begin{frame}[fragile]{Generate the best candidate model}
-    \fontsize{6}{6}\selectfont 
-
-      <<>>=
-
-      model <- lm(AVG ~ OBP + SLG + AVGcumLag1 + OBPcumLag1 
-      + SLGcumLag1, data=baseball)
-
+      \fontsize{8}{8}\selectfont 
+      <<echo=F>>=
+      model <- lm(AVG ~ OBP + SLG + AVGcumLag1 + OBPcumLag1 + SLGcumLag1, data=baseball)
       summary(model)
-
       @
-
     \end{frame}
-
-
-    %{slide 12}
-    \begin{frame}[fragile]{Does the National League's Designated Hitter Rule matter?}
-    \fontsize{8}{8}\selectfont  
-
-      <<>>=
-
-      #Add a the categorical variable LG and find out!
-
-      model <- lm(AVG ~ OBP + SLG + AVGcumLag1 + OBPcumLag1 
-      + SLGcumLag1 + LG, data=baseball)
-
-      @
-
-    \end{frame}
-
 
     %{slide 13}
     \begin{frame}[fragile]{Does the National League's Designated Hitter Rule Matter?}
-    \fontsize{8}{8}\selectfont  
-    
+      Let's first look at only the cases where LG is either NL or AL, to simplify the analysis (other rows correspond to a player that switched teams during the season). Then we'll add LG to the model.
+
       <<>>=
-
-      # Find the rows in baseball where LG is not either NL or AL
-      # and remove them so we can focus on the difference
-      # between NL and AL
-
-      base1 <- baseball[baseball$LG == "NL" | baseball$LG == "AL",]
-
-      modelLG <- lm(AVG ~ OBP + SLG + AVGcumLag1 + OBPcumLag1 
-      + SLGcumLag1 + LG, data=base1)
-
-      # Look at the summary, LG is not statistically significant
-
+      base1 <- baseball[baseball$LG == "NL" | 
+                        baseball$LG == "AL",]
+      modelLG <- lm(AVG ~ OBP + SLG + AVGcumLag1 + OBPcumLag1
+                            + SLGcumLag1 + LG, data=base1)
       @
+    \end{frame}
 
+    \begin{frame}[fragile]
+      \fontsize{8}{8}\selectfont
+      <<>>=
+      summary(modelLG)
+      @
       \lc %{What is the p-value of league?}
       \lc %{Does the designated hitter rule predict}
     \end{frame}
-
-
-    %{slide 14}
-    \begin{frame}[fragile]{Check for linear relationships}
-    \fontsize{8}{8}\selectfont  
-
-     <<>>=
-
-     # Depending on your computer, this command may run slowly
-     #pairs(~ AVG + OBP + SLG + AVGcumLag1 + OBPcumLag1 + SLGcumLag1, data=baseball)
-
-     @
-
-      \begin{center}
-        \includegraphics[width=3.4in]{PairsPLot.png} \\
-      \end{center}
-
-    \end{frame}
-
 
     %{slide 15}
     \begin{frame}[fragile]{Is this model really useful?}
@@ -278,86 +211,32 @@
         \item Automated regression model selection methods cannot make something out of nothing. 
         \item If you omit some important variables or fail to use data transformations when they are needed, or if the assumption of linear or linearizable relationships is simply wrong, the model is a bad one, no matter what the $R^2$.  
         \item Use your own judgment and intuition about your data to try to fine-tune whatever the computer comes up with.
-
-        \end{itemize} 
+      \end{itemize} 
     \end{frame}
 
-
-   %{slide 16}
-    \begin{frame}[fragile]{A challenge}
-    \fontsize{8}{8}\selectfont  
-
-     <<>>=
-
-     # Load the dataset challenge and run the following regression
-
-     model <- lm(y ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 
-          + x8 + x9 + x10 + x11 + x12, data=challenge)
-
-    # Generate a summary and examine R^2
-    # 0.21 of the variance is explained    
-
-     @
-
-    \end{frame}
-
-
-  %{slide 17}
     \begin{frame}[fragile]{Surprise!}
-    \fontsize{8}{8}\selectfont  
+      This data is all random numbers! Here's how it was generated:
 
-     <<>>=
-
-     # I created this data with a random number generator
-     # You may have to run it a couple of times to get significance
-
+      <<>>=
       y <- rnorm(100)
       x1 <- rnorm(100)
       x2 <- rnorm(100)
-      x3 <- rnorm(100)
-      x4 <- rnorm(100)
-      x5 <- rnorm(100)
-      x6 <- rnorm(100)
-      x7 <- rnorm(100)
-      x8 <- rnorm(100)
-      x9 <- rnorm(100)
-      x10 <- rnorm(100)
-      x11 <- rnorm(100)
-      x12 <- rnorm(100)
-      summary(lm(y ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 
-      + x8 + x9 + x10 + x11 + x12))
+      # etc
+      @
 
-    # 0.21 of the variance is explained by random numbers!   
-
-     @
-
-     \lc %{What did I do wrong?}
+      $R^2=0.21$, so 21\% of the variance in $Y$ is explained by random numbers!  
+      \lc %{What did I do wrong?}
     \end{frame}
 
-
-    %{slide 18}
     \begin{frame}[fragile]{Be careful of spurious correlations and overfitting!}
-      \begin{itemize}[<+->]
-        \item If you have more than 1 predictor for 10-15 y values, you are likely to see spurious correlations.
-        \item If you fit models with meaningless variables, you are fitting noise and will end up with an overfitted model that is not predictive going forward. 
-        \item You could even end up int he American Statistical Association's Hall of Shame!
-        \end{itemize} 
-    \end{frame}
-
-
-    %{slide 19}
-    \begin{frame}{www.tylervigen.com/spurious-correlations}
-      \fontsize{10}{10}\selectfont
-      \begin{center}
-        \includegraphics[width=3.4in]{SociologyDoctorates.png} \\
-      \end{center}
-
       \begin{itemize}
-        \item Don't fall for these!
-        \item Have a great spring break!
-      \end{itemize}
-      
+        \item If you have more than 1 predictor for 10-15 cases, you are likely to see spurious correlations.
+        \item If you fit models with meaningless variables, you are fitting noise and will end up with an \alert{overfit} model that is not predictive on new data. 
+      \end{itemize} 
     \end{frame}
 
+    \begin{frame}
+      \fullpagepicture{spurious-correlation}
+    \end{frame}
   \end{darkframes}
 \end{document}

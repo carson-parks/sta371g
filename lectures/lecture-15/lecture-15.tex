@@ -50,7 +50,7 @@
 
 \usepackage{alltt}
 \usepackage{../371g-slides}
-\title{Model Building - Part 2}
+\title{Model Building 2}
 \subtitle{Lecture 15}
 \author{STA 371G}
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -72,68 +72,62 @@
   \begin{darkframes}
     
     %{slide 1}
-    \begin{frame}{Predicting Baseball Player Batting Averages}
-      \fontsize{10}{10}\selectfont
-      \begin{center}
-        \includegraphics[width=1.6in]{TyCobb.png} \\
-      \end{center}
+    \begin{frame}{Let's model the batting averages of baseball players}
+      \begin{columns}[onlytextwidth]
+        \column{.4\textwidth}
+          \includegraphics[width=1.6in]{TyCobb.png}
+        
+        \column{.6\textwidth}
+          \begin{itemize}
+            \item All of the data here came from \url{http://seanlahman.com/baseball-archive/statistics/}
+            \item Some data cleaning was done, mostly to calculate averages
+            \item We are going to explore this dataset with best subsets regression
+          \end{itemize}
+      \end{columns}
+    \end{frame}
 
+    \begin{frame}{The response variable}
       \begin{itemize}
-        \item load baseball.csv
-        \item install the packages car, leaps, and corrplot if you haven't already
+        \item \textbf{AVG}: Batting average
       \end{itemize}
-      
-      \lc %{smallest population}
     \end{frame}
-
-
-    %{slide 2}
-    \begin{frame}[fragile]{What predicts a player's batting average}
-      \begin{itemize}[<+->]
-        \item All of the data here came from http://seanlahman.com/baseball-archive/statistics/
-        \item Some data cleaning, to calculate averages mostly, was done.
-        \item We are going to explore this dataset with best subsets regression
-        \end{itemize} 
-    \end{frame}
-
 
     %{slide 3}
-    \begin{frame}[fragile]{The 10 potential x variables}
-    \fontsize{10}{10}\selectfont
-          \begin{itemize}
-            \item YEAR:    Year this entry calculated for 
-            \item LG:      League, either NL or AL
-            \item AVG:     Batting average
-            \item OBP:     On base percentage
-            \item SLG:     Slugging average
-            \item EXP:     Years of experience
-            \item PAYR:    Plate appearances per year
-            \item MLAVG:   Batting average for the leauge for the year
-            \item MLOBP:   On base percentage for the leaugue for the year
-            \item MLSLG:   Slugging percentage for the leaugue for the year
-            \item AVGcumLag1:   Player's cumulative batting average for previous years
-            \item OBPcumLag1:   Player's cumulative on base percentage for previous years
-            \item SLGcumLag1:   Player's cumulative slugging percentage for previous years
-            \item G:       Games played (must have been at least 98)
-            \item YRINDEX: Number of years since 1958
-          \end{itemize}
+    \begin{frame}[fragile]{The potential predictors}
+      \fontsize{10}{10}\selectfont
+      \begin{itemize}
+        \item \textbf{YEAR}:         Year this entry calculated for 
+        \item \textbf{LG}:           League, either NL or AL
+        \item \textbf{OBP}:          On base percentage
+        \item \textbf{SLG}:          Slugging average
+        \item \textbf{EXP}:          Years of experience
+        \item \textbf{PAYR}:         Plate appearances per year
+        \item \textbf{MLAVG}:        Batting average for the leauge for the year
+        \item \textbf{MLOBP}:        On base percentage for the leaugue for the year
+        \item \textbf{MLSLG}:        Slugging percentage for the leaugue for the year
+        \item \textbf{AVGcumLag1}:   Player's cumulative batting average for previous years
+        \item \textbf{OBPcumLag1}:   Player's cumulative on base percentage for previous years
+        \item \textbf{SLGcumLag1}:   Player's cumulative slugging percentage for previous years
+        \item \textbf{G}:            Games played (must have been at least 98)
+        \item \textbf{YRINDEX}:      Number of years since 1958
+      \end{itemize}
 
-        \lc %{Why predict batting average instead of hits?}
+      \lc %{Why predict batting average instead of hits?}
     \end{frame}
 
 
     %{slide 4}
     \begin{frame}[fragile]{Build model full and check for multicollinearity}
-      \fontsize{8}{8}\selectfont  
+      \fontsize{9}{9}\selectfont
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
 \hlstd{full} \hlkwb{<-} \hlkwd{lm}\hlstd{(AVG} \hlopt{~} \hlstd{OBP} \hlopt{+} \hlstd{SLG} \hlopt{+} \hlstd{EXP} \hlopt{+} \hlstd{PAYR} \hlopt{+} \hlstd{MLAVG}
-\hlopt{+} \hlstd{MLOBP} \hlopt{+} \hlstd{MLSLG} \hlopt{+} \hlstd{AVGcumLag1} \hlopt{+} \hlstd{OBPcumLag1}
-\hlopt{+} \hlstd{SLGcumLag1} \hlopt{+} \hlstd{G} \hlopt{+} \hlstd{YRINDEX,} \hlkwc{data}\hlstd{=baseball)}
+                  \hlopt{+} \hlstd{MLOBP} \hlopt{+} \hlstd{MLSLG} \hlopt{+} \hlstd{AVGcumLag1} \hlopt{+} \hlstd{OBPcumLag1}
+                  \hlopt{+} \hlstd{SLGcumLag1} \hlopt{+} \hlstd{G} \hlopt{+} \hlstd{YRINDEX,} \hlkwc{data}\hlstd{=baseball)}
 
-\hlkwd{round}\hlstd{(}\hlkwd{vif}\hlstd{(full),}\hlnum{2}\hlstd{)}
+\hlkwd{vif}\hlstd{(full)}
 \end{alltt}
 \begin{verbatim}
        OBP        SLG        EXP       PAYR      MLAVG      MLOBP 
@@ -145,7 +139,8 @@
 \end{knitrout}
       
       \pause
-      \fontsize{10}{10}\selectfont{Uh oh. Houston, we have a problem!}
+      \fontsize{10}{10}\selectfont
+      Uh oh. Houston, we have a problem!
 
       \lc %{What is the R2 of model full?}
     \end{frame}
@@ -153,21 +148,13 @@
 
     %{slide #5}
     \begin{frame}[fragile]{Look at the correlations to find the problem}
-      \fontsize{8}{8}\selectfont  
+      Columns 8-19 in the data set are numeric. Let's pull those out and look at the correlation matrix.
 
-      {This matrix is hard to read}
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{numericpredictors} \hlkwb{<-} \hlstd{baseball[,}\hlnum{8}\hlopt{:}\hlnum{19}\hlstd{]}
-\hlstd{M} \hlkwb{<-} \hlkwd{round}\hlstd{(}\hlkwd{cor}\hlstd{(numericpredictors),}\hlnum{2}\hlstd{)} \hlcom{# calculate correlations}
-
-\hlcom{# print M by just typing M}
-
-\hlcom{# This table is confusing!}
-\hlcom{# There is a much better way to see this using corrplot}
-\hlcom{# So make the library available}
-\hlkwd{library}\hlstd{(corrplot)}
+\hlstd{numeric.predictors} \hlkwb{<-} \hlstd{baseball[,}\hlnum{8}\hlopt{:}\hlnum{19}\hlstd{]}
+\hlkwd{cor}\hlstd{(numeric.predictors)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -177,36 +164,35 @@
 
 
     %{slide #6}
-    \begin{frame}[fragile]{Plot the correlations to better see the problem}
-      \fontsize{8}{8}\selectfont  
-
+    \begin{frame}[fragile]{A correlation plot is easier to read!}
+      \fontsize{9}{9}\selectfont 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlkwd{corrplot}\hlstd{(M,} \hlkwc{method} \hlstd{=} \hlstr{"circle"}\hlstd{)} \hlcom{#plot matrix}
+\hlkwd{library}\hlstd{(corrplot)}
+\hlkwd{corrplot}\hlstd{(}\hlkwd{cor}\hlstd{(numeric.predictors))}
 \end{alltt}
 \end{kframe}
-\input{c:/tmp/figures/unnamed-chunk-4-1.tikz}
+\input{/tmp/figures/unnamed-chunk-5-1.tikz}
 
 \end{knitrout}
     \end{frame}
 
     %{slide 7}
     \begin{frame}[fragile]{Reduce multicollinearity by dropping variables}
-      \fontsize{8}{8}\selectfont 
-      \begin{itemize}
-        \item The Major League averages are highly correlated with each other
-        \item Let's keep just MLAVG and drop MLOBP and MLSLG
-        \end{itemize} 
+      The Major League averages are highly correlated with each other; 
+      let's keep just MLAVG and drop MLOBP and MLSLG. (This choice depends on our preference of which
+      variable would make the most sense to keep.)
 
+      \fontsize{9}{9}\selectfont
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
 \hlstd{full} \hlkwb{<-} \hlkwd{lm}\hlstd{(AVG} \hlopt{~} \hlstd{OBP} \hlopt{+} \hlstd{SLG} \hlopt{+} \hlstd{EXP} \hlopt{+} \hlstd{PAYR} \hlopt{+} \hlstd{MLAVG}
-\hlopt{+} \hlstd{AVGcumLag1} \hlopt{+} \hlstd{OBPcumLag1}
-\hlopt{+} \hlstd{SLGcumLag1} \hlopt{+} \hlstd{G} \hlopt{+} \hlstd{YRINDEX,} \hlkwc{data}\hlstd{=baseball)}
+                  \hlopt{+} \hlstd{AVGcumLag1} \hlopt{+} \hlstd{OBPcumLag1}
+                  \hlopt{+} \hlstd{SLGcumLag1} \hlopt{+} \hlstd{G} \hlopt{+} \hlstd{YRINDEX,} \hlkwc{data}\hlstd{=baseball)}
 
-\hlkwd{round}\hlstd{(}\hlkwd{vif}\hlstd{(full),} \hlnum{2}\hlstd{)}
+\hlkwd{vif}\hlstd{(full)}
 \end{alltt}
 \begin{verbatim}
        OBP        SLG        EXP       PAYR      MLAVG AVGcumLag1 
@@ -222,67 +208,56 @@ OBPcumLag1 SLGcumLag1          G    YRINDEX
 
 
     %{slide 8}
-    \begin{frame}[fragile]{Run resubsets to get a sense of the best predictors}
-    \fontsize{8}{8}\selectfont  
+    \begin{frame}[fragile]{Use best-subsets regression to get a sense of the best predictors}
+      \fontsize{9}{9}\selectfont 
+
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlkwd{library}\hlstd{(leaps)}
 \hlstd{bestsubsets} \hlkwb{<-} \hlkwd{regsubsets}\hlstd{(AVG} \hlopt{~} \hlstd{OBP} \hlopt{+} \hlstd{SLG} \hlopt{+} \hlstd{EXP} \hlopt{+} \hlstd{PAYR} \hlopt{+} \hlstd{MLAVG}
-\hlopt{+} \hlstd{AVGcumLag1} \hlopt{+} \hlstd{OBPcumLag1}
-\hlopt{+} \hlstd{SLGcumLag1} \hlopt{+} \hlstd{G} \hlopt{+} \hlstd{YRINDEX,} \hlkwc{data}\hlstd{=baseball)}
+  \hlopt{+} \hlstd{AVGcumLag1} \hlopt{+} \hlstd{OBPcumLag1} \hlopt{+} \hlstd{SLGcumLag1} \hlopt{+} \hlstd{G} \hlopt{+} \hlstd{YRINDEX,} \hlkwc{data}\hlstd{=baseball)}
+\hlkwd{plot}\hlstd{(bestsubsets,} \hlkwc{scale}\hlstd{=}\hlstr{"adjr2"}\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
-      {Now let's plot and identify the important predictors}
+      \vspace{-1in}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}
+\input{/tmp/figures/unnamed-chunk-9-1.tikz}
+
+\end{knitrout}
     \end{frame}
 
 
     %{slide 9}
-    \begin{frame}[fragile]{Use Adj $R^2$ to compare models}
-      \fontsize{8}{8}\selectfont  
+    \begin{frame}[fragile]{Use best-subsets regression to get a sense of the best predictors}
+      \fontsize{9}{9}\selectfont
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlkwd{plot}\hlstd{(bestsubsets,} \hlkwc{scale}\hlstd{=}\hlstr{"adjr2"}\hlstd{)}  \hlcom{# use adjusted R^2}
+\hlkwd{plot}\hlstd{(bestsubsets,} \hlkwc{scale}\hlstd{=}\hlstr{"bic"}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\input{c:/tmp/figures/unnamed-chunk-7-1.tikz}
-
 \end{knitrout}
 
+      \vspace{-1in}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}
+\input{/tmp/figures/unnamed-chunk-11-1.tikz}
+
+\end{knitrout}
+      \lc %{What are the best predictors}
     \end{frame}     
 
 
-   %{slide 10}
-    \begin{frame}[fragile]{Use BIC to compare models}
-      \fontsize{8}{8}\selectfont  
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
-\begin{alltt}
-\hlkwd{plot}\hlstd{(bestsubsets,} \hlkwc{scale}\hlstd{=}\hlstr{"bic"}\hlstd{)}  \hlcom{# use BIC}
-\end{alltt}
-\end{kframe}
-\input{c:/tmp/figures/unnamed-chunk-8-1.tikz}
-
-\end{knitrout}
-
-    \lc %{What are the best predictors}
-    \end{frame}
-
     %{slide 11}
     \begin{frame}[fragile]{Generate the best candidate model}
-    \fontsize{6}{6}\selectfont 
-
+      \fontsize{8}{8}\selectfont 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
-\begin{alltt}
-\hlstd{model} \hlkwb{<-} \hlkwd{lm}\hlstd{(AVG} \hlopt{~} \hlstd{OBP} \hlopt{+} \hlstd{SLG} \hlopt{+} \hlstd{AVGcumLag1} \hlopt{+} \hlstd{OBPcumLag1}
-\hlopt{+} \hlstd{SLGcumLag1,} \hlkwc{data}\hlstd{=baseball)}
-
-\hlkwd{summary}\hlstd{(model)}
-\end{alltt}
 \begin{verbatim}
 
 Call:
@@ -290,93 +265,82 @@ lm(formula = AVG ~ OBP + SLG + AVGcumLag1 + OBPcumLag1 + SLGcumLag1,
     data = baseball)
 
 Residuals:
-      Min        1Q    Median        3Q       Max 
--0.056014 -0.007723  0.000263  0.008180  0.040508 
+     Min       1Q   Median       3Q      Max 
+-0.05601 -0.00772  0.00026  0.00818  0.04051 
 
 Coefficients:
-             Estimate Std. Error t value Pr(>|t|)    
-(Intercept)  0.027871   0.002497   11.16   <2e-16 ***
-OBP          0.498209   0.009089   54.81   <2e-16 ***
-SLG          0.160826   0.004697   34.24   <2e-16 ***
-AVGcumLag1   0.880348   0.011950   73.67   <2e-16 ***
-OBPcumLag1  -0.476261   0.012105  -39.34   <2e-16 ***
-SLGcumLag1  -0.171831   0.005547  -30.98   <2e-16 ***
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  0.02787    0.00250    11.2   <2e-16 ***
+OBP          0.49821    0.00909    54.8   <2e-16 ***
+SLG          0.16083    0.00470    34.2   <2e-16 ***
+AVGcumLag1   0.88035    0.01195    73.7   <2e-16 ***
+OBPcumLag1  -0.47626    0.01211   -39.3   <2e-16 ***
+SLGcumLag1  -0.17183    0.00555   -31.0   <2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 0.01213 on 4529 degrees of freedom
-Multiple R-squared:  0.821,	Adjusted R-squared:  0.8208 
-F-statistic:  4154 on 5 and 4529 DF,  p-value: < 2.2e-16
+Residual standard error: 0.0121 on 4529 degrees of freedom
+Multiple R-squared:  0.821,	Adjusted R-squared:  0.821 
+F-statistic: 4.15e+03 on 5 and 4529 DF,  p-value: <2e-16
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-
     \end{frame}
-
-
-    %{slide 12}
-    \begin{frame}[fragile]{Does the National League's Designated Hitter Rule matter?}
-    \fontsize{8}{8}\selectfont  
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
-\begin{alltt}
-\hlcom{#Add a the categorical variable LG and find out!}
-
-\hlstd{model} \hlkwb{<-} \hlkwd{lm}\hlstd{(AVG} \hlopt{~} \hlstd{OBP} \hlopt{+} \hlstd{SLG} \hlopt{+} \hlstd{AVGcumLag1} \hlopt{+} \hlstd{OBPcumLag1}
-\hlopt{+} \hlstd{SLGcumLag1} \hlopt{+} \hlstd{LG,} \hlkwc{data}\hlstd{=baseball)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-
-    \end{frame}
-
 
     %{slide 13}
     \begin{frame}[fragile]{Does the National League's Designated Hitter Rule Matter?}
-    \fontsize{8}{8}\selectfont  
-    
+      Let's first look at only the cases where LG is either NL or AL, to simplify the analysis (other rows correspond to a player that switched teams during the season). Then we'll add LG to the model.
+
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlcom{# Find the rows in baseball where LG is not either NL or AL}
-\hlcom{# and remove them so we can focus on the difference}
-\hlcom{# between NL and AL}
-
-\hlstd{base1} \hlkwb{<-} \hlstd{baseball[baseball}\hlopt{$}\hlstd{LG} \hlopt{==} \hlstr{"NL"} \hlopt{|} \hlstd{baseball}\hlopt{$}\hlstd{LG} \hlopt{==} \hlstr{"AL"}\hlstd{,]}
-
+\hlstd{base1} \hlkwb{<-} \hlstd{baseball[baseball}\hlopt{$}\hlstd{LG} \hlopt{==} \hlstr{"NL"} \hlopt{|}
+                  \hlstd{baseball}\hlopt{$}\hlstd{LG} \hlopt{==} \hlstr{"AL"}\hlstd{,]}
 \hlstd{modelLG} \hlkwb{<-} \hlkwd{lm}\hlstd{(AVG} \hlopt{~} \hlstd{OBP} \hlopt{+} \hlstd{SLG} \hlopt{+} \hlstd{AVGcumLag1} \hlopt{+} \hlstd{OBPcumLag1}
-\hlopt{+} \hlstd{SLGcumLag1} \hlopt{+} \hlstd{LG,} \hlkwc{data}\hlstd{=base1)}
-
-\hlcom{# Look at the summary, LG is not statistically significant}
+                      \hlopt{+} \hlstd{SLGcumLag1} \hlopt{+} \hlstd{LG,} \hlkwc{data}\hlstd{=base1)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
+    \end{frame}
 
+    \begin{frame}[fragile]
+      \fontsize{8}{8}\selectfont
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+\hlkwd{summary}\hlstd{(modelLG)}
+\end{alltt}
+\begin{verbatim}
+
+Call:
+lm(formula = AVG ~ OBP + SLG + AVGcumLag1 + OBPcumLag1 + SLGcumLag1 + 
+    LG, data = base1)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.05583 -0.00782  0.00026  0.00822  0.04022 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  0.028177   0.002559   11.01   <2e-16 ***
+OBP          0.499326   0.009356   53.37   <2e-16 ***
+SLG          0.159058   0.004830   32.93   <2e-16 ***
+AVGcumLag1   0.877759   0.012311   71.30   <2e-16 ***
+OBPcumLag1  -0.476465   0.012464  -38.23   <2e-16 ***
+SLGcumLag1  -0.170083   0.005708  -29.80   <2e-16 ***
+LGNL         0.000303   0.000372    0.81     0.42    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.0122 on 4306 degrees of freedom
+Multiple R-squared:  0.821,	Adjusted R-squared:  0.821 
+F-statistic: 3.29e+03 on 6 and 4306 DF,  p-value: <2e-16
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
       \lc %{What is the p-value of league?}
       \lc %{Does the designated hitter rule predict}
     \end{frame}
-
-
-    %{slide 14}
-    \begin{frame}[fragile]{Check for linear relationships}
-    \fontsize{8}{8}\selectfont  
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
-\begin{alltt}
-\hlcom{# Depending on your computer, this command may run slowly}
-\hlcom{#pairs(~ AVG + OBP + SLG + AVGcumLag1 + OBPcumLag1 + SLGcumLag1, data=baseball)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-
-      \begin{center}
-        \includegraphics[width=3.4in]{PairsPLot.png} \\
-      \end{center}
-
-    \end{frame}
-
 
     %{slide 15}
     \begin{frame}[fragile]{Is this model really useful?}
@@ -384,123 +348,36 @@ F-statistic:  4154 on 5 and 4529 DF,  p-value: < 2.2e-16
         \item Automated regression model selection methods cannot make something out of nothing. 
         \item If you omit some important variables or fail to use data transformations when they are needed, or if the assumption of linear or linearizable relationships is simply wrong, the model is a bad one, no matter what the $R^2$.  
         \item Use your own judgment and intuition about your data to try to fine-tune whatever the computer comes up with.
-
-        \end{itemize} 
+      \end{itemize} 
     \end{frame}
 
-
-   %{slide 16}
-    \begin{frame}[fragile]{A challenge}
-    \fontsize{8}{8}\selectfont  
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
-\begin{alltt}
-\hlcom{# Load the dataset challenge and run the following regression}
-
-\hlstd{model} \hlkwb{<-} \hlkwd{lm}\hlstd{(y} \hlopt{~} \hlstd{x1} \hlopt{+} \hlstd{x2} \hlopt{+} \hlstd{x3} \hlopt{+} \hlstd{x4} \hlopt{+} \hlstd{x5} \hlopt{+} \hlstd{x6} \hlopt{+} \hlstd{x7}
-     \hlopt{+} \hlstd{x8} \hlopt{+} \hlstd{x9} \hlopt{+} \hlstd{x10} \hlopt{+} \hlstd{x11} \hlopt{+} \hlstd{x12,} \hlkwc{data}\hlstd{=challenge)}
-
-    \hlcom{# Generate a summary and examine R^2}
-    \hlcom{# 0.21 of the variance is explained    }
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-
-    \end{frame}
-
-
-  %{slide 17}
     \begin{frame}[fragile]{Surprise!}
-    \fontsize{8}{8}\selectfont  
+      This data is all random numbers! Here's how it was generated:
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlcom{# I created this data with a random number generator}
-\hlcom{# You may have to run it a couple of times to get significance}
-
- \hlstd{y} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{100}\hlstd{)}
- \hlstd{x1} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{100}\hlstd{)}
- \hlstd{x2} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{100}\hlstd{)}
- \hlstd{x3} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{100}\hlstd{)}
- \hlstd{x4} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{100}\hlstd{)}
- \hlstd{x5} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{100}\hlstd{)}
- \hlstd{x6} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{100}\hlstd{)}
- \hlstd{x7} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{100}\hlstd{)}
- \hlstd{x8} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{100}\hlstd{)}
- \hlstd{x9} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{100}\hlstd{)}
- \hlstd{x10} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{100}\hlstd{)}
- \hlstd{x11} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{100}\hlstd{)}
- \hlstd{x12} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{100}\hlstd{)}
- \hlkwd{summary}\hlstd{(}\hlkwd{lm}\hlstd{(y} \hlopt{~} \hlstd{x1} \hlopt{+} \hlstd{x2} \hlopt{+} \hlstd{x3} \hlopt{+} \hlstd{x4} \hlopt{+} \hlstd{x5} \hlopt{+} \hlstd{x6} \hlopt{+} \hlstd{x7}
- \hlopt{+} \hlstd{x8} \hlopt{+} \hlstd{x9} \hlopt{+} \hlstd{x10} \hlopt{+} \hlstd{x11} \hlopt{+} \hlstd{x12))}
-\end{alltt}
-\begin{verbatim}
-
-Call:
-lm(formula = y ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + 
-    x10 + x11 + x12)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--2.06821 -0.58499  0.03505  0.60516  2.13938 
-
-Coefficients:
-             Estimate Std. Error t value Pr(>|t|)  
-(Intercept)  0.162527   0.096608   1.682   0.0961 .
-x1           0.092399   0.090793   1.018   0.3116  
-x2           0.063201   0.107415   0.588   0.5578  
-x3          -0.060678   0.098623  -0.615   0.5400  
-x4          -0.083326   0.097662  -0.853   0.3959  
-x5           0.025192   0.107542   0.234   0.8153  
-x6           0.043019   0.098163   0.438   0.6623  
-x7           0.138090   0.119123   1.159   0.2495  
-x8           0.131719   0.108639   1.212   0.2286  
-x9           0.005395   0.105470   0.051   0.9593  
-x10          0.198551   0.110800   1.792   0.0766 .
-x11         -0.128420   0.105479  -1.217   0.2267  
-x12         -0.015154   0.108004  -0.140   0.8887  
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.9543 on 87 degrees of freedom
-Multiple R-squared:  0.07369,	Adjusted R-squared:  -0.05408 
-F-statistic: 0.5767 on 12 and 87 DF,  p-value: 0.8553
-\end{verbatim}
-\begin{alltt}
-    \hlcom{# 0.21 of the variance is explained by random numbers!   }
+\hlstd{y} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{100}\hlstd{)}
+\hlstd{x1} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{100}\hlstd{)}
+\hlstd{x2} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{100}\hlstd{)}
+\hlcom{# etc}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
-     \lc %{What did I do wrong?}
+      $R^2=0.21$, so 21\% of the variance in $Y$ is explained by random numbers!  
+      \lc %{What did I do wrong?}
     \end{frame}
 
-
-    %{slide 18}
     \begin{frame}[fragile]{Be careful of spurious correlations and overfitting!}
-      \begin{itemize}[<+->]
-        \item If you have more than 1 predictor for 10-15 y values, you are likely to see spurious correlations.
-        \item If you fit models with meaningless variables, you are fitting noise and will end up with an overfitted model that is not predictive going forward. 
-        \item You could even end up int he American Statistical Association's Hall of Shame!
-        \end{itemize} 
-    \end{frame}
-
-
-    %{slide 19}
-    \begin{frame}{www.tylervigen.com/spurious-correlations}
-      \fontsize{10}{10}\selectfont
-      \begin{center}
-        \includegraphics[width=3.4in]{SociologyDoctorates.png} \\
-      \end{center}
-
       \begin{itemize}
-        \item Don't fall for these!
-        \item Have a great spring break!
-      \end{itemize}
-      
+        \item If you have more than 1 predictor for 10-15 cases, you are likely to see spurious correlations.
+        \item If you fit models with meaningless variables, you are fitting noise and will end up with an \alert{overfit} model that is not predictive on new data. 
+      \end{itemize} 
     \end{frame}
 
+    \begin{frame}
+      \fullpagepicture{spurious-correlation}
+    \end{frame}
   \end{darkframes}
 \end{document}
