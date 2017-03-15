@@ -149,11 +149,11 @@
     \end{frame}
 
     \begin{frame}[fragile]{Making predictions}
-      We can use \texttt{predict.glm} to automate the process of plugging into the equation:
+      We can use \texttt{predict} to automate the process of plugging into the equation:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlkwd{predict.glm}\hlstd{(model,} \hlkwd{data.frame}\hlstd{(}\hlkwc{fare}\hlstd{=}\hlnum{50}\hlstd{),} \hlkwc{type}\hlstd{=}\hlstr{"response"}\hlstd{)}
+\hlkwd{predict}\hlstd{(model,} \hlkwd{data.frame}\hlstd{(}\hlkwc{fare}\hlstd{=}\hlnum{50}\hlstd{),} \hlkwc{type}\hlstd{=}\hlstr{"response"}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
     1 
@@ -230,16 +230,16 @@
       \pause
       Now we can compute the fraction of people whose survival we correctly predicted:
 
-      \fontsize{10}{10}\selectfont
+      \fontsize{9}{9}\selectfont
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{predicted.survival} \hlkwb{<-} \hlstd{(}\hlkwd{predict.glm}\hlstd{(model)} \hlopt{>=} \hlnum{0.5}\hlstd{)}
+\hlstd{predicted.survival} \hlkwb{<-} \hlstd{(}\hlkwd{predict}\hlstd{(model,} \hlkwc{type}\hlstd{=}\hlstr{'response'}\hlstd{)} \hlopt{>=} \hlnum{0.5}\hlstd{)}
 \hlstd{actual.survival} \hlkwb{<-} \hlstd{(titanic}\hlopt{$}\hlstd{survived} \hlopt{==} \hlnum{1}\hlstd{)}
 \hlkwd{sum}\hlstd{(predicted.survival} \hlopt{==} \hlstd{actual.survival)} \hlopt{/} \hlkwd{nrow}\hlstd{(titanic)}
 \end{alltt}
 \begin{verbatim}
-[1] 0.624
+[1] 0.644
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -247,12 +247,12 @@
     \end{frame}
 
     \begin{frame}[fragile]{Take 1: How many cases did we accurately predict?}
-      62.4\% sounds pretty good---what should we compare it against?
+      64.4\% sounds pretty good---what should we compare it against?
 
       \bigskip
       \pause
 
-      We should compare 62.4\% against what we would have gotten if we just predicted the most common outcome (not surviving) for everyone, without using any other information:
+      We should compare 64.4\% against what we would have gotten if we just predicted the most common outcome (not surviving) for everyone, without using any other information:
       \pause
       
 \begin{knitrout}

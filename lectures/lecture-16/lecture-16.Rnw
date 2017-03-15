@@ -101,12 +101,12 @@
     \end{frame}
 
     \begin{frame}[fragile]{Making predictions}
-      We can use \texttt{predict.glm} to automate the process of plugging into the equation:
+      We can use \texttt{predict} to automate the process of plugging into the equation:
       <<>>=
-      predict.glm(model, data.frame(fare=50), type="response")
+      predict(model, data.frame(fare=50), type="response")
       @
       <<include=F>>=
-      prediction <- predict.glm(model, data.frame(fare=50), type="response")
+      prediction <- predict(model, data.frame(fare=50), type="response")
       @
       \[
         \frac{e^{\Sexpr{b0} + \Sexpr{b1}\cdot 50}}{1 + e^{\Sexpr{b0} + \Sexpr{b1}\cdot 50}} = \Sexpr{prediction}
@@ -175,9 +175,9 @@
       \pause
       Now we can compute the fraction of people whose survival we correctly predicted:
 
-      \fontsize{10}{10}\selectfont
+      \fontsize{9}{9}\selectfont
       <<>>=
-      predicted.survival <- (predict.glm(model) >= 0.5)
+      predicted.survival <- (predict(model, type='response') >= 0.5)
       actual.survival <- (titanic$survived == 1)
       sum(predicted.survival == actual.survival) / nrow(titanic)
       @
