@@ -125,14 +125,14 @@
                             + gender, data=pot, family=binomial)
       @
       <<echo=F>>=
-      round(summary(model2)$coefficients, 2)
+      round(summary(model2)$coefficients, 3)
       @
     \end{frame}
 
     \begin{frame}[fragile]{Interpreting the coefficients}
       \fontsize{9}{9}\selectfont
       <<echo=F>>=
-      round(summary(model2)$coefficients, 2)
+      round(summary(model2)$coefficients, 3)
       options(digits=3)
       @   
       \fontsize{11}{11}\selectfont
