@@ -131,7 +131,7 @@
       Let's start with some basic, but not particularly useful, interpretations:
       \begin{itemize}[<+->]
         \item When $\text{fare}=0$, we predict that the log odds will be $\Sexpr{b0}$ \pause, so the probability or survival is predicted to be $0.29$.
-        \item When fare increases by \pounds 1, we predict that the log odds will decrease by $\Sexpr{abs(b1)}$.
+        \item When fare increases by \pounds 1, we predict that the log odds will increase by $\Sexpr{b1}$.
       \end{itemize}
       \note{LC question in the middle}
     \end{frame}
