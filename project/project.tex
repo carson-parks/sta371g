@@ -1,0 +1,125 @@
+\documentclass[12pt]{article}
+\newcommand{\doctitle}{Team Project}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{fancyhdr,fancybox}
+
+\usepackage{termcal}
+\usepackage{sectsty}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{fancyhdr,fancybox}
+\usepackage{paralist}
+
+\setlength{\parindent}{0in}
+\setlength{\textwidth}{7in}
+\setlength{\evensidemargin}{-0.25in}
+\setlength{\oddsidemargin}{-0.25in}
+\setlength{\parskip}{.5\baselineskip}
+\setlength{\topmargin}{-0.5in}
+\setlength{\textheight}{9in}
+
+\sectionfont{\large}
+
+\rhead{\textsc{Page \thepage}}
+\chead{\textbf{\doctitle}}
+\cfoot{}
+\lhead{\textsc{STA 371G, Spring 2017}}
+
+\begin{document}
+\pagestyle{fancy}
+\thispagestyle{empty}
+
+\begin{center}
+\textbf{\Large\doctitle}
+
+\textsc{\large Regression Data Analysis Project}
+\end{center}
+
+\section{Background}
+In this project you will analyze a data set of your choice using multiple regression.  Regression is applicable to a wide range of data sets, so you can select data that answers questions that you are interested in!
+
+\section{Selecting the data set}
+
+You can select any publicly available data set (many are available online) that meets the requirements below.  You can also combine data from multiple sources to create your data set for analysis.
+
+Your data set must:
+\begin{itemize}
+  \item Have at least 100 cases. Recall that for a given effect size in the population, the $p$-value will tend to decrease as as the sample size increases.  As a result, your project will be stronger if you have a larger sample.  However, beware: when the sample size is very large, you will see statistically significant results that may not be practically significant.
+    \item Have at least 8 predictor variables.
+    \item Have at least one quantitative and one categorical variable.
+\end{itemize}
+
+You may not use any of the following types of data sets for your project:
+\begin{itemize}
+  \item A data set for which an existing analysis is published online.
+  \item A data set that is built in to R or from the R \texttt{dataset} package.
+  \item A data set that is more than 10 years old, or a data set for which more current data is readily available. 
+\end{itemize}
+
+I can make exceptions on a case-by-case basis if you have a data set that you are very interested in using but that does not meet all of these requirements.
+
+\section{Proposal}
+
+A brief proposal is due on \textbf{Monday, April 10, at 11:59 PM} and must describe the following. There is no specific format required for the proposal. You will receive rapid feedback on your proposal so we can help you steer away from questions or data sets that will be too complex or time-consuming to work with. Your proposal is graded all-or-nothing; if your proposal is not accepted then you will receive no credit on the proposal but will have the opportunity to resubmit within one week of receiving the initial feedback so your group can receive full credit.
+
+The proposal should include the following:
+\begin{enumerate}
+  \item The research questions you want to answer (i.e., what you are trying to predict, and what variables you think might be helpful in making that prediction).
+  \item A description of the data set and its source (provide a URL to the data set if found online).
+  \item The data set you have chosen to address these questions, in CSV format.
+\end{enumerate}
+
+\section{Report}
+
+A full report of your findings is due at \textbf{11:59 PM on May 5}.  \textbf{The paper can be no more than 1500 words.}  This is a hard limit: the TA may stop grading after 1500 words!  It will be submitted in Canvas and can be in Microsoft Word, PDF, or \LaTeX.  The rubric below outlines the required sections of your report and what each section should contain.  Your report should be accompanied by an R script file and a CSV file of your data set that together reproduce all of the results in your report and presentation. \textbf{One} member of your team should submit the report and supplementary files in Canvas.  
+
+\section{Grading Rubric}
+
+This rubric will be used to arrive at your team's project grade.  Each member of the team will receive the same grade, unless a member of the team is not participating fully in the work.
+
+Note that no credit is awarded based on the statistical or practical significance of your model, but rather the correct application of the analytical process.
+
+\begin{enumerate}
+\item Proposal (5 pts)
+
+Full credit is awarded for an accepted proposal; no credit is given if the proposal is not accepted. If a proposal is not accepted, your group has one week from getting the proposal back to revise and resubmit for full credit.
+
+\item Report (30 pts)
+  \begin{enumerate}
+    \item Background (7 pts)
+      \begin{enumerate}
+      \item[(2 pts)] Report introduces topic to the reader
+      \item[(2 pts)] Report describes the data set, including the source of the data and how it was collected
+      \item[(1 pt)] Report indicates what variable is to be predicted and what variables will be considered as predictors
+      \item[(2 pts)] Report poses one or more questions that can be answered by the data set selected
+      \end{enumerate}
+
+    \item Methods (10 pts)
+      \begin{enumerate}
+        \item[(2 pts)] Report describes the regression model used and the process for arriving at the final model
+        \item[(2 pts)] Data cleaning process is described, and any outliers reported on
+        \item[(2 pts)] Report verifies that all regression assumptions have been met; transformations are described and applied if necessary
+        \item[(2 pts)] The regression model addresses the questions described in the Background section
+        \item[(2 pts)] Explanations are clear and make it easy to reproduce the regression results
+      \end{enumerate}
+
+    \item Results (8 pts)
+      \begin{enumerate}
+        \item[(1 pt)] Report includes descriptive statistics (e.g., means, SDs) and basic graphs (e.g., boxplots or histograms) are of each variable used in the regression model
+        \item[(1 pt)] Report includes graphs (e.g., boxplots or scatterplots) showing the relationship between the response variable and each predictor variable
+        \item[(2 pts)] Report interprets the individual coefficients of the final regression model, along with the confidence intervals and statistical significance of each
+        \item[(2 pt)] Report interprets $R^2$ and the residual standard error
+        \item[(1 pt)] Report considers and interprets the overall $p$-value of the model
+        \item[(1 pt)] The tables and graphs are clear, selected appropriately, and professionally formatted
+      \end{enumerate}
+
+    \item Conclusions (5 pts)
+      \begin{enumerate}
+        \item[(3 pts)] Report ties back specific results about the coefficients and $R^2$ to the questions described in the Background section
+        \item[(1 pt)] Report considers the limitations of this data set and of its conclusions
+        \item[(1 pt)] Report considers future work that might be an appropriate extension of this study
+      \end{enumerate}
+  \end{enumerate}
+\end{enumerate}
+
+\end{document}
