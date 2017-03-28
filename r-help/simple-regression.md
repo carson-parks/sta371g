@@ -1,6 +1,6 @@
 # Simple regression
 
-Let's replicate the stock beta analysis from class. First, we'll load the data. If you have the CSV saved on your computer, use the **Import Dataset **button in RStudio. We'll load it straight from GitHub into a variable called `stock_market_returns`:
+Let's replicate the stock beta analysis from class. First, we'll load the data. If you have the CSV saved on your computer, use the **Import Dataset** button in RStudio. We'll load it straight from GitHub into a variable called `stock_market_returns`:
 
 	stock_market_returns <- read.csv("https://raw.githubusercontent.com/brianlukoff/sta371g/master/data/stock_market_returns.csv", header=T)
 
