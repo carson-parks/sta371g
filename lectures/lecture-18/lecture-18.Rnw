@@ -1,0 +1,422 @@
+\documentclass{beamer}
+\usepackage{../371g-slides}
+\title{Time Series: Autocorrelation}
+\subtitle{Lecture 18}
+\author{STA 371G}
+
+\begin{document}
+  <<setup, include=F, cache=F>>=
+  opts_knit$set(global.par=T)
+  knit_hooks$set(crop=hook_pdfcrop)
+  opts_chunk$set(dev='tikz', external=F, fig.path='/tmp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, tidy=F)
+  knit_theme$set('camo')
+  oil <- read.csv('../../data/oil.csv')
+  microsoft <- read.csv('../../data/microsoft.csv')
+  @
+  <<include=F, cache=F>>=
+  par(fg='#fefefe', col.axis='#fefefe', col.lab='#fefefe', col.main="#fefefe", mar=c(5.1, 4.1, 1.1, 2.1))
+  @
+
+  \frame{\maketitle}
+
+  % Show outline at beginning of each section
+  \AtBeginSection[]{ 
+    \begin{frame}<beamer>
+      \tableofcontents[currentsection]
+    \end{frame}
+  }
+
+  %%%%%%% Slides start here %%%%%%%
+
+  \begin{darkframes}
+    
+    \begin{frame}{Predicting oil prices}
+      \fontsize{8}{8}\selectfont
+      \begin{center}
+        \includegraphics[width=2.8in]{pumpjack} \\
+      \end{center} 
+      
+      
+      \begin{columns}[onlytextwidth]
+        \column{.3\textwidth}
+            \begin{center}
+              \begin{tabular}{ll}
+              \hline
+                 & Oil price (\$) \\
+              \hline
+              1/1/2013 & 112.98  \\
+              1/1/2014 & 107.94 \\
+              1/1/2015 & 55.38 \\
+              1/1/2016 & 36.85 \\
+              1/1/2017 & 55.05 \\
+              1/1/2018 & ? \\
+              \hline 
+            \end{tabular}
+          \end{center} \pause
+              
+        \column{.7\textwidth}
+          \begin{itemize}
+            \item You think it is more likely to be around \$50-\$70 than \$100-\$120? \pause
+            \item Otherwise would be too much of an increase?  \pause
+            \item Then next year's price depends on this year's?
+          \end{itemize}
+      \end{columns}
+    \end{frame}
+    
+    
+    
+    
+    \begin{frame}{Time series}
+      \fontsize{9}{9}\selectfont
+        In a \alert{time series,} data are not necessarily independent. (Often it is not!) \pause
+        \bigskip
+        
+        Time series:
+        \begin{itemize}
+          \item A sequence of measurements of the same variable collected over time.
+          \item The measurements are made at regular time intervals
+          
+          \item Most common time series: weekly, monthly, quarterly and yearly
+          \item The variances are not necessarily constant over time either.
+        \end{itemize}
+    
+    \end{frame}
+    
+    
+    
+    \begin{frame}{Time series - some examples}
+      \fontsize{9}{9}\selectfont
+      \begin{itemize}
+        \item S\&P 500 index (or any other stock price)
+        \item iPhone sales worldwide
+        \item U.S. unemployment rate
+        \item U.S. inflation rate
+        \item Crime rate in Austin
+      \end{itemize} \pause
+      \bigskip
+      Any of these could be measured at weekly, monthly, yearly etc. intervals; and each would be a separate time series.
+    \end{frame}
+  
+  
+    \begin{frame}[fragile]{Oil Prices 1979-2004}
+      \fontsize{8}{8}\selectfont
+      <<fig.height=2.5>>=
+      # Convert the data into a time series object    
+      price <- ts(oil$price, start=1979, frequency = 1)
+      # Frequency: # of data points per year
+      plot(price)
+      @  
+    \end{frame}
+  
+    
+    
+    \begin{frame}[fragile]{Oil Prices 1979-2004}
+     \fontsize{9}{9}\selectfont
+      We argued that oil prices are not independent year-over-year. \pause
+      
+      In order to predict the oil price in a given year, can we use the previous year's price? \pause
+      \bigskip
+      
+      \begin{center}
+      $y_t$: The oil price at the end of the year $t$ \pause
+      \end{center}
+      \bigskip
+      
+      \begin{center}
+          \begin{tabular}{lll}
+          \hline
+            $t$ & $y_t$ &  $y_{t-1}$\\
+          \hline
+          \ldots & \ldots & \ldots \\
+          1999	& 16.56 & 11.91 \\
+          2000 &	27.39 & 16.56  \\
+          2001	& 23 & 27.39 \\
+          2002	& 22.81 & 23 \\
+          \ldots & \ldots & \ldots \\
+          \hline 
+        \end{tabular}
+      \end{center}
+      \pause
+      
+      $y_{t-1}$ column is obtained by shifting $y_t$ by 1. \pause
+      
+      The \alert{lag} between $y_t$ and $y_{t-1}$ is one time-step.
+    
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]{Compute one-lag time series}
+     \fontsize{8}{8}\selectfont
+      <<>>=
+      # Create lag 1 time series.
+      priceL1 <- lag(price, k=-1)
+      # Put them together
+      price_all <- cbind(price=price, priceL1=priceL1)
+      price_all[1:5,]
+      @   
+      \pause
+      \bigskip
+      
+        priceL1 in the first row is NA because we did not have data from 1978 to put under $y_{t-1}$ column of 1979.
+    \end{frame}
+    
+    
+    
+    
+    \begin{frame}{Linear regression model}
+      The simple linear regression model is:
+      
+      \begin{center} 
+        \[
+          y_t = \beta_0 + \beta_1 y_{t-1} + \epsilon_t
+        \] 
+      \end{center} \pause
+      \bigskip
+      
+      Note that we obtained our predictor from the response itself!
+    
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]%{Linear regression model}
+      \fontsize{8}{8}\selectfont
+      When we use such a model, we expect to see a linear relation between the predictor and the response. Let's see if there is such a relation! \pause
+      <<fig.height=2.5>>=
+      plot(price ~ priceL1, xy.labels=F, xy.lines=F, col='green')
+      @   
+      \pause
+      Indeed, the oil prices seem to be correlated with its first lag! \pause This is called \alert{autocorrelation.}
+      
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]%{Linear regression model}
+      \fontsize{8}{8}\selectfont
+      <<>>=
+        model <- lm(price ~ priceL1, data=price_all)
+        summary(model)  
+      @  
+      \pause
+      The predictor is statistically significant! 
+      
+      What we have is an first-order autoregressive, \alert{AR(1)}, model.
+    \end{frame}
+      
+      
+    \begin{frame}[fragile]{AR(2) model}
+      \fontsize{8}{8}\selectfont
+      Let's try to add one more lag.
+      <<>>=
+      # Create lag 2 time series.
+      priceL2 <- lag(price, k=-2)
+      # Put them together
+      price_all <- cbind(price=price, priceL1=priceL1, priceL2=priceL2)
+      price_all[1:5,]
+      @  
+      \pause
+      The model then becomes:
+      $$
+        y_t = \beta_0 + \beta_1 y_{t-1} + \beta_2 y_{t-2} + \epsilon_t
+      $$
+    \end{frame}
+	
+	
+	
+    \begin{frame}[fragile]{AR(2) model}
+      \fontsize{8}{8}\selectfont
+      <<>>=
+        model <- lm(price ~ priceL1 + priceL2, data=price_all)
+        summary(model)  
+      @  
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Autocorrelation Function}  
+      \fontsize{8}{8}\selectfont
+      priceL2 is not statistically significant. \pause
+      
+      Can we determine the number of lags to include in the model without trying one by one?
+      \pause
+      
+      The \alert{Autocorrelation Function (ACF)} plots the correlation between the series and each of its lags.
+      <<fig.height=2.5>>=
+      acf(price)
+      @  
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Stationarity assumption} 
+      \fontsize{8}{8}\selectfont
+      AR models (and many time series models) assume the stationarity of the series. \pause
+      \bigskip
+      
+      A time series is stationary if
+      \begin{itemize}
+        \item the mean, $E[y_t]$, is the same over time
+        \item the variance of $y_t$ is the same over time
+        \item the correlation between $y_{t}$ and $y_{t-h}$ is the same over time.
+      \end{itemize}
+    
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Stationarity assumption}
+    \fontsize{9}{9}\selectfont
+    To check on the stationarity of a time series, we use the Augmented Dickey-Fuller test. \pause
+    \bigskip
+      <<message=FALSE, warning=FALSE>>=
+      library('tseries')
+      adf.test(price)
+      @  
+      \pause
+      The null hypothesis is that the series is ``explosive'' (non-stationary). \pause
+      
+      Since the p-value is very high, we cannot reject the null hypothesis.
+    \end{frame}
+      
+    
+    
+    \begin{frame}[fragile]{Stationarity assumption}
+    \fontsize{9}{9}\selectfont
+      Trend and seasonality in a time series violate stationarity. \pause
+      \bigskip
+      
+      However, many time series have either trend or seasonality, and often both! \pause
+      \bigskip
+      
+      Let's look at Microsoft's revenue over years...
+      
+      
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Increasing trend of Microsoft}
+    \fontsize{8}{8}\selectfont
+      <<fig.height=2.5>>=
+      # Convert the data into a time series object    
+      revenue <- ts(microsoft$revenue, start=1995, frequency = 1)
+      # Frequency: # of data points per year
+      plot(revenue)
+      @  
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]{Increasing trend of Microsoft}
+    \fontsize{9}{9}\selectfont
+      Let's also verify the non-stationarity of the data through the ADF test. \pause
+    \bigskip
+      <<message=FALSE, warning=FALSE>>=
+      
+      adf.test(revenue)
+      @  
+      \pause
+      
+      Again, since the p-value is very high, we cannot reject the null hypothesis.
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]{Increasing trend of Microsoft}
+    \fontsize{9}{9}\selectfont
+      Microsoft's revenue is certainly increasing. But the amount of increase each year seems to be relatively constant.
+      <<>>=
+      # Create lag 1 time series.
+      revenueL1 <- lag(revenue, k=-1)
+      # Look at the increase (first difference) each year
+      revenue_increase <- revenue - revenueL1 
+      # Put them together
+      revenue_all <- cbind(revenue=revenue, revenueL1=revenueL1, 
+                           revenue_increase=revenue_increase)
+      revenue_all[1:8,]
+      @  
+    \end{frame}
+    
+    \begin{frame}[fragile]{Increasing trend of Microsoft}
+      \fontsize{9}{9}\selectfont
+      <<fig.height=2.5>>=
+      plot(revenue_increase, col='green', ylab='Increase in revenue')
+      @
+    
+    \pause
+    Still, slightly increaseing trend, but better.   
+    \end{frame}
+    
+    
+    
+    
+    \begin{frame}[fragile]{Increasing trend of Microsoft}
+    \fontsize{9}{9}\selectfont
+      Let's see what ADF test has to say. \pause
+    \bigskip
+      <<message=FALSE, warning=FALSE>>=
+      
+      adf.test(revenue_increase)
+      @  
+      \pause
+      
+      Still cannot reject the null hypothesis and further transformation is required. But let's move on to model the yearly increase in revenue.
+    \end{frame}
+    
+      
+    
+    
+    \begin{frame}[fragile]{Autocorrelation Function of the increase in revenue}  
+      \fontsize{8}{8}\selectfont
+      
+      <<fig.height=2.5>>=
+      acf(revenue_increase)
+      @  
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]{Autocorrelation Function of the increase in revenue}       \fontsize{9}{9}\selectfont
+      What should we expect?
+      \begin{itemize}
+        \item There does not seem to be a very strong autocorrelation in the revenue increase time series.
+        \item The autocorrelation with the second lag is higher than the first one.
+      \end{itemize}
+      
+    \end{frame}
+    
+    
+     \begin{frame}[fragile]
+     \fontsize{8}{8}\selectfont
+      <<>>=
+      revenue_increaseL1 <- lag(revenue_increase, k=-1)
+      revenue_increaseL2 <- lag(revenue_increase, k=-2)
+      rev_inc_all <- cbind(revenue_increase = revenue_increase,
+                           revenue_increaseL1 = revenue_increaseL1,
+                           revenue_increaseL2 = revenue_increaseL2)
+      rev_inc_all[1:5,]
+      @  
+    
+     \end{frame}
+     
+     
+     \begin{frame}[fragile]
+     \fontsize{8}{8}\selectfont
+      <<>>=
+      model_rev_inc <- lm(revenue_increase ~ revenue_increaseL1 
+                            + revenue_increaseL2, data=rev_inc_all)
+      summary(model_rev_inc)
+      @  
+     \end{frame}
+    
+    
+    \begin{frame}[fragile]
+     \fontsize{9}{9}\selectfont
+        This model could be used* to predict the increase in the revenue, instead of the revenue itself.
+        \bigskip
+        
+        The predicted increase could be added on top of the revenue at $t-1$ to predict the revenue in $t$.
+
+     \end{frame}
+
+
+
+    
+  \end{darkframes}
+\end{document}
