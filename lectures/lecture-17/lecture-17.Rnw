@@ -1,7 +1,7 @@
 \documentclass{beamer}
 \usepackage{../371g-slides}
 \title{Logistic Regression 2}
-\subtitle{Lecture 16}
+\subtitle{Lecture 17}
 \author{STA 371G}
 
 \begin{document}
