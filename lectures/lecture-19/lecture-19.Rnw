@@ -1,0 +1,378 @@
+\documentclass{beamer}
+\usepackage{../371g-slides}
+\title{Time Series: Smoothing \& Moving Average}
+\subtitle{Lecture 19}
+\author{STA 371G}
+
+\begin{document}
+  <<setup, include=F, cache=F>>=
+  opts_knit$set(global.par=T)
+  knit_hooks$set(crop=hook_pdfcrop)
+  opts_chunk$set(dev='tikz', external=F, fig.path='/tmp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, tidy=F)
+  knit_theme$set('camo')
+  air_passengers <- read.csv('../../data/air_passengers.csv')
+  @
+  <<include=F, cache=F>>=
+  par(fg='#fefefe', col.axis='#fefefe', col.lab='#fefefe', col.main="#fefefe", mar=c(5.1, 4.1, 1.1, 2.1))
+  @
+
+  \frame{\maketitle}
+
+  % Show outline at beginning of each section
+  \AtBeginSection[]{ 
+    \begin{frame}<beamer>
+      \tableofcontents[currentsection]
+    \end{frame}
+  }
+
+  %%%%%%% Slides start here %%%%%%%
+
+  \begin{darkframes}
+    
+    \begin{frame}{Trend \& Seasonality in Time Series}
+      \fontsize{9}{9 }\selectfont
+      \begin{center}
+        \includegraphics[width=2.8in]{nashville} \\
+      \end{center} 
+      
+      \begin{itemize}[<+->]
+        \item Although desired, most of the time series data are not stationary.
+        \item Two main factors that make data non-stationary: Trend and seasonality.
+        \item Sales, economic, activity etc. data often show strong seasonality.
+        \item E.g. Quarterly totals of international airline passengers, 1949 to 1960.
+      \end{itemize}
+      
+    \end{frame}
+    
+    
+ 
+    
+    
+    
+    \begin{frame}[fragile]{Airline Passengers 1949-1960}
+      \fontsize{8}{8}\selectfont
+      <<fig.height=2.5>>=
+      # Convert data into time series, starting from 1st quarter of 1949.
+      air <- ts(air_passengers$number, start=c(1949,1), frequency=4)
+      # Frequency: 4 data points per year (this is quarterly data)
+      plot(air, ylab="# of International Passengers ('000)")
+      @  
+    \end{frame}
+    
+    
+    \begin{frame}{What is seasonality, exactly?}
+      \fontsize{9}{9}\selectfont
+      
+      \begin{itemize}[<+->]
+        \item Seasonality: The presence of variations that occur at specific regular intervals in a season.
+        \item In this case, a season is a year.
+        \item The frequency, the number of observations in a season, is 4. 
+        \item The data behaves similarly in the same quarter of different years.
+        \item E.g. every year, the number of passengers peaks in the 3rd quarter. Similarly, it dips in the 4th quarter.
+      \end{itemize}
+      
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]{Exploring the data}
+      \fontsize{9}{9}\selectfont
+        \begin{itemize}[<+->]
+        \item Overall, there is an upward trend in the number of airline passengers between 1949-1960.
+        
+        \item The seasonality in the data makes it difficult to see how the trend changes over years.
+        
+        \item E.g. it is not clear wether the number is increasing at the same rate every year, or the rate varies in different years. 
+        
+        \item The trend in the data makes it difficult to see the impact of seasonality in the data. 
+        
+        \item E.g. it is not clear why the 2nd quarters are higher than the 1st quarters: Is it a more active traveling period of the year or is it just more people are using air travel as time goes by?
+        
+        \item Smoothing the data helps identifying the trend and seasonal effects in a clearer way.
+      \end{itemize}
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Smoothing the data: one-sided moving average}
+    \fontsize{9}{9}\selectfont
+        \alert{Moving average} is a weighted average of the observations around time $t$. 
+        \bigskip
+        
+        \alert{One-sided Moving average} is a simple average of all observations over the previous season (year).
+        
+        \begin{center}
+          $y_t:$ Number of passengers traveled at time $t$
+        \end{center}  
+        
+        One-sided moving average at time $t$:
+        
+        \begin{center}
+          $m_t = \frac{1}{4} y_{t-3} + \frac{1}{4} y_{t-2} + \frac{1}{4} y_{t-1} + \frac{1}{4} y_{t}$
+        \end{center}  
+        Each quarter has equal weight in the moving average.
+        
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Smoothing the data: one-sided moving average}
+      \fontsize{9}{9}\selectfont
+      \begin{center}
+          \begin{tabular}{llllllll}
+          \hline
+            & Y49Q1 & Y49Q2 & Y49Q3 & Y49Q4 & Y50Q1 & Y50Q2 & ... \\
+          \hline
+           $t$ & 1  &	2 &	3 &	4 &	5 &	6 & ... \\
+          $y_t$ & 362 &	385 &	432 &	341 &	382 &	409 & ... \\
+          $m_t$ & NA &	NA &	NA &	380	& 385	& 391 & ... \\
+            \hline 
+        \end{tabular}
+      \end{center} \pause
+      
+      \begin{center}
+        \begin{eqnarray*}
+          m_4 &=& \frac{1}{4} y_{1} + \frac{1}{4} y_{2} + \frac{1}{4} y_{3} + \frac{1}{4} y_{4} \\
+          &=& \frac{1}{4} 362 + \frac{1}{4} 385 + \frac{1}{4} 432 + \frac{1}{4} 341 \\
+          &=& 380
+        \end{eqnarray*}
+      \end{center} 
+      
+    \end{frame}
+    
+    
+    
+
+    \begin{frame}[fragile]{Smoothing the data: one-sided moving average}
+      \fontsize{8}{8}\selectfont
+  
+      <<fig.height=2.5>>=
+      # One sided moving average
+      air_ma_one <- filter(air, filter=c(1/4,1/4,1/4,1/4), sides=1)
+      plot(air, ylab="# of International Passengers ('000)")
+      lines(air_ma_one, col='green')
+      @  
+    
+    \end{frame}
+    
+    
+    
+    
+    
+    
+    
+    
+        \begin{frame}[fragile]{Smoothing the data: two-sided moving average}
+    \fontsize{9}{9}\selectfont
+        In a \alert{two-sided (centered) moving average}, the average includes the observations both from the past and the future.
+        \bigskip
+        
+        Two-sided (centered) moving average at time $t$:
+        
+        \begin{center}
+          $m_t = \frac{1}{8} y_{t-2} + \frac{1}{4} y_{t-1} + \frac{1}{4} y_{t} + \frac{1}{4} y_{t+1}  + \frac{1}{8} y_{t+2}$
+        \end{center}  
+        
+        Again, to represent each quarter with equal weight while centering the observation at $t$, we multiply $y_{t-2}$ and $y_{t+2}$ by $1/8$. 
+        
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Smoothing the data: two-sided moving average}
+      \fontsize{9}{9}\selectfont
+      \begin{center}
+          \begin{tabular}{llllllll}
+          \hline
+            & Y49Q1 & Y49Q2 & Y49Q3 & Y49Q4 & Y50Q1 & Y50Q2 & ... \\
+          \hline
+           $t$ & 1  &	2 &	3 &	4 &	5 &	6 & ... \\
+          $y_t$ & 362 &	385 &	432 &	341 &	382 &	409 & ... \\
+          $m_t$ & NA &	NA &	382.5	& 388 &	399.25 & 	413.25 & ... \\
+            \hline 
+        \end{tabular}
+      \end{center}
+      
+      \begin{center}
+        \begin{eqnarray*}
+          m_3 &=& \frac{1}{8} y_{1} + \frac{1}{4} y_{2} + \frac{1}{4} y_{3} + \frac{1}{4} y_{4} + \frac{1}{8} y_{5} \\
+          &=& \frac{1}{8} 362 + \frac{1}{4} 385 + \frac{1}{4} 432 + \frac{1}{4} 341 + \frac{1}{4} 382 \\
+          &=& 382.5
+        \end{eqnarray*} 
+      \end{center} 
+      
+    \end{frame}  
+    
+    
+    \begin{frame}[fragile]{Smoothing the data: two-sided moving average}
+      \fontsize{8}{8}\selectfont
+  
+      <<fig.height=2.5>>=
+      # One sided moving average
+      air_ma_two <- filter(air, filter=c(1/8,1/4,1/4,1/4,1/8), sides=2)
+      plot(air, ylab="# of International Passengers ('000)")
+      lines(air_ma_two, col='green')
+      @  
+    
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]{Smoothing the data}
+      \fontsize{9}{9}\selectfont
+      Smoothed data better shows the slow-down in the trend around 1954 and 1959.
+      \bigskip
+      
+      Let's also see the effect of the seasonality by eliminating the trend in the data.
+
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Smoothing the data}
+      \fontsize{9}{9}\selectfont
+     
+       <<fig.height=2.5>>=
+      air_seasonal <- air - air_ma_two 
+      plot(air_seasonal)
+      @  
+  
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]{Forecasting using Simple Exponential Smoothing}
+      \fontsize{9}{9}\selectfont
+        So far, we have smoothed the data to better observe the trend and the seasonality.
+        \bigskip
+        
+        In general, what we really want is to forecast the future numbers.
+        \bigskip
+        
+        Simple exponential smoothing (SES) is one of the well known forecasting methods.
+  
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Simple Exponential Smoothing}
+     \fontsize{9}{9}\selectfont
+      In SES:
+      
+      \begin{itemize}[<+->]
+        \item Start with a forecast for the next step.
+        \item Observe the actual number and the error in the forecast.
+        \item Adjust your forecast based on the error.
+        \item Use your adjusted forecast for the subsequent step.
+     \end{itemize}
+
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Simple Exponential Smoothing}
+     \fontsize{9}{9}\selectfont
+      $\hat{y}_t$: Forecast for time $t$ \\
+      $y_t$: Actual number at time $t$ \\ 
+      $e_t$: Error in time $t$. $e_t = y_t - \hat{y}_t$ \\
+      $\alpha$: Smoothing constant (to adjust for the error)
+      \bigskip
+      
+      \begin{center}
+          $ \hat{y}_{t+1} = \hat{y}_t + \alpha e_t $ \\ \bigskip
+          
+          \begin{tabular}{cccccc}
+          \hline
+             &  $t$ & $y_t$ & $\hat{y}_t$ & $e_t$ & $\alpha e_t$ ($\alpha=0.5$) \\
+          \hline
+          1949Q1	&	1	&	112	&	-	&	-	&	-           \\
+          1949Q2	&	2	&	118	&	112	&	6	&	3         \\
+          1949Q3	&	3	&	132	&	115	&	17	&	8.5     \\
+          1949Q4	&	4	&	129	&	123.5	&	5.5	&	2.75  \\   
+          1950Q1	&	5	&	121	&	126.25	&	-5.25	&	-2.625  \\
+          ...	&	...	&	...	&	...	&	...	&	... \\
+            \hline 
+        \end{tabular}
+      \end{center}
+    
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Simple Exponential Smoothing}
+      \fontsize{8}{8}\selectfont
+      <<fig.height=2.5, message=FALSE, warning=FALSE>>= 
+      library(forecast)
+      air_ses_05 <- ses(air, alpha = 0.5)
+      plot(air)
+      lines(air_ses_05$fitted, col='green')
+      @
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Simple Exponential Smoothing}
+      \fontsize{9}{9}\selectfont
+      
+        \begin{itemize}[<+->]
+        \item $\alpha$ determines how aggresively the forecast will react to the observed error.
+        \item A larger $\alpha$ means a more aggressive adjustment (i.e. closer forecast to the observed value).
+        \item The SES equation could also be written as:
+    \end{itemize} \pause
+    
+      \[ \hat{y}_{t+1} = \alpha \hat{y}_t  + (1-\alpha) y_t $ \] \pause
+          
+       \begin{center}
+          \begin{tabular}{cccccc}
+                          & $\hat{y}_t$   &     &   &   &   $y_t$ \\
+                          & 100           &     &   &   &   200 \\
+        \hline
+         $\hat{y}_{t+1}$  & 100           & 125 & 150 & 175 & 200 \\
+         \hline
+                          & \alpha = 0 &   \alpha = 0.25 & \alpha = 0.5 &  \alpha = 0.75 &  \alpha = 1   \\
+        \end{tabular}
+      \end{center} \pause
+      So, let's adjust the $\alpha$ to see if the forecasts get better.
+    \end{frame}
+      
+      
+      
+      
+        
+    \begin{frame}[fragile]{Simple Exponential Smoothing}
+      \fontsize{8}{8}\selectfont
+      <<fig.height=2.5, message=FALSE, warning=FALSE>>= 
+      air_ses_09 <- ses(air, alpha = 0.9)
+      plot(air)
+      lines(air_ses_09$fitted, col='green')
+      @
+    \end{frame}  
+    
+    
+    \begin{frame}[fragile]{Simple Exponential Smoothing}
+     \fontsize{9}{9}\selectfont
+      \begin{itemize}[<+->]
+        \item Regardless of the size of the $\alpha$ parameter, there seems to be always a delay in the forecast.
+        \item This is because SES method is for stationary data, i.e., when there is no trend or seasonality.
+        \item When trend and seasonality exist, one needs to use lag operations to make it stationary.
+        \item Otherwise, SES predicts the same value for all future observations.
+      \end{itemize}
+      
+    \end{frame} 
+    
+    
+    
+    \begin{frame}[fragile]{Simple Exponential Smoothing}
+      \fontsize{8}{8}\selectfont
+      <<fig.height=2.5, message=FALSE, warning=FALSE>>= 
+      air_ses_09 <- ses(air, alpha = 0.9, h=8)
+      plot(air_ses_09, col='green')
+      @
+    \end{frame}
+    
+    \begin{frame}[fragile]{Simple Exponential Smoothing}
+      \fontsize{8}{8}\selectfont
+      <<>>= 
+      air_ses_09
+      @
+    \end{frame}
+    
+  \end{darkframes}
+\end{document}
