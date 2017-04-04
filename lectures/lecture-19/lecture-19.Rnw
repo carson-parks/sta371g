@@ -11,7 +11,7 @@
   opts_chunk$set(dev='tikz', external=F, fig.path='/tmp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, tidy=F)
   knit_theme$set('camo')
   air_passengers <- read.csv('../../data/air_passengers.csv')
-  oil <- read.csv('../../data/oil_monthly.csv') 
+  oil <- read.csv('../../data/oil.csv') 
   @ 
   <<include=F, cache=F>>=
   par(fg='#fefefe', col.axis='#fefefe', col.lab='#fefefe', col.main="#fefefe", mar=c(5.1, 4.1, 1.1, 2.1))
@@ -89,6 +89,8 @@
         \item E.g. it is not clear why the 2nd quarters are higher than the 1st quarters: Is it a more active traveling period of the year or is it just more people are using air travel as time goes by?
         
         \item Smoothing the data helps identifying the trend and seasonal effects in a clearer way.
+        
+        \lc
       \end{itemize}
     \end{frame}
     
@@ -169,6 +171,10 @@
     
     \begin{frame}[fragile]{Smoothing the data}
       \fontsize{9}{9}\selectfont
+      When trend and seasonality are additive
+      \begin{center}
+        Data = Trend + Seasonality + Randomness
+      \end{center}
      
        <<fig.height=2.5>>=
       air_seasonal_additive <- air - air_ma_one 
@@ -180,12 +186,16 @@
     
       \begin{frame}[fragile]{Smoothing the data}
       \fontsize{9}{9}\selectfont
+        When trend and seasonality are multiplicative
+      \begin{center}
+        Data = Trend $\times$ Seasonality $\times$ Randomness
+      \end{center}
      
        <<fig.height=2.5>>=
       air_seasonal_multiplicative <- air/ air_ma_one 
       plot(air_seasonal_multiplicative)
       @  
-  
+    \lc
     \end{frame}
     
     
@@ -262,6 +272,14 @@
           
           $ \hat{y}_5 = \alpha y_4 + (1-\alpha) (\alpha y_3 + (1-\alpha) \hat{y}_3) $ \\
           $ \hat{y}_5 = \alpha y_4 + \alpha (1-\alpha)y_3 + (1-\alpha)^2 \hat{y}_3 $ \\ \bigskip
+          
+          In general,
+          
+          $ \hat{y}_{t+1} = \alpha y_t + \alpha (1-\alpha)y_{t-1} + (1-\alpha)^2 \hat{y}_{t-2} \ldots$ \\ 
+          
+          \bigskip
+          
+          $\hat{y}_{t+1}$ carries a portion of all past observations; the more recent the observation is, the more weight it has.
     
       \end{center}
     \end{frame}
@@ -352,13 +370,14 @@
     
     \begin{frame}[fragile]{Simple Exponential Smoothing for Oil Prices}
       \fontsize{8}{8}\selectfont
-      Let's try using SES to predict the oil pricess.
+      Let's try using SES to predict the oil pricess. \lc
       <<fig.height=2.5>>=
-      price <- ts(oil$price, start=1991, frequency=12)
+      price <- ts(oil$price, start=1979, frequency=1)
       price_ses_05 <- ses(price, alpha = 0.5)
       plot(price)
       lines(price_ses_05$fitted, col='green')
       @  
+      
     \end{frame}
     
     
@@ -378,6 +397,7 @@
       <<>>=
       price_ses$model 
       @  
+      \lc
     \end{frame}
     
     

@@ -136,6 +136,8 @@
         \item E.g. it is not clear why the 2nd quarters are higher than the 1st quarters: Is it a more active traveling period of the year or is it just more people are using air travel as time goes by?
         
         \item Smoothing the data helps identifying the trend and seasonal effects in a clearer way.
+        
+        \lc
       \end{itemize}
     \end{frame}
     
@@ -222,6 +224,10 @@
     
     \begin{frame}[fragile]{Smoothing the data}
       \fontsize{9}{9}\selectfont
+      When trend and seasonality are additive
+      \begin{center}
+        Data = Trend + Seasonality + Randomness
+      \end{center}
      
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
@@ -239,6 +245,10 @@
     
       \begin{frame}[fragile]{Smoothing the data}
       \fontsize{9}{9}\selectfont
+        When trend and seasonality are multiplicative
+      \begin{center}
+        Data = Trend $\times$ Seasonality $\times$ Randomness
+      \end{center}
      
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
@@ -250,7 +260,7 @@
 \input{/tmp/figures/unnamed-chunk-5-1.tikz}
 
 \end{knitrout}
-  
+    \lc
     \end{frame}
     
     
@@ -327,6 +337,14 @@
           
           $ \hat{y}_5 = \alpha y_4 + (1-\alpha) (\alpha y_3 + (1-\alpha) \hat{y}_3) $ \\
           $ \hat{y}_5 = \alpha y_4 + \alpha (1-\alpha)y_3 + (1-\alpha)^2 \hat{y}_3 $ \\ \bigskip
+          
+          In general,
+          
+          $ \hat{y}_{t+1} = \alpha y_t + \alpha (1-\alpha)y_{t-1} + (1-\alpha)^2 \hat{y}_{t-2} \ldots$ \\ 
+          
+          \bigskip
+          
+          $\hat{y}_{t+1}$ carries a portion of all past observations; the more recent the observation is, the more weight it has.
     
       \end{center}
     \end{frame}
@@ -450,11 +468,11 @@
     
     \begin{frame}[fragile]{Simple Exponential Smoothing for Oil Prices}
       \fontsize{8}{8}\selectfont
-      Let's try using SES to predict the oil pricess.
+      Let's try using SES to predict the oil pricess. \lc
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-\hlstd{price} \hlkwb{<-} \hlkwd{ts}\hlstd{(oil}\hlopt{$}\hlstd{price,} \hlkwc{start}\hlstd{=}\hlnum{1991}\hlstd{,} \hlkwc{frequency}\hlstd{=}\hlnum{12}\hlstd{)}
+\hlstd{price} \hlkwb{<-} \hlkwd{ts}\hlstd{(oil}\hlopt{$}\hlstd{price,} \hlkwc{start}\hlstd{=}\hlnum{1979}\hlstd{,} \hlkwc{frequency}\hlstd{=}\hlnum{1}\hlstd{)}
 \hlstd{price_ses_05} \hlkwb{<-} \hlkwd{ses}\hlstd{(price,} \hlkwc{alpha} \hlstd{=} \hlnum{0.5}\hlstd{)}
 \hlkwd{plot}\hlstd{(price)}
 \hlkwd{lines}\hlstd{(price_ses_05}\hlopt{$}\hlstd{fitted,} \hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{)}
@@ -463,6 +481,7 @@
 \input{/tmp/figures/unnamed-chunk-10-1.tikz}
 
 \end{knitrout}
+      
     \end{frame}
     
     
@@ -497,18 +516,19 @@ Call:
  ses(y = price) 
 
   Smoothing parameters:
-    alpha = 0.9999 
+    alpha = 0.9932 
 
   Initial states:
-    l = 25.2301 
+    l = 25.1832 
 
-  sigma:  1.1908
+  sigma:  5.3845
 
      AIC     AICc      BIC 
-339.0656 339.4185 345.8955 
+178.2539 179.3448 182.0282 
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
+      \lc
     \end{frame}
     
     
