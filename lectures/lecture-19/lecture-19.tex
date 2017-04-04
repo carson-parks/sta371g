@@ -60,7 +60,7 @@
 
   \frame{\maketitle}
 
-  % Show outline at beginning of each section
+  % Show outline at beginning of each section 
   \AtBeginSection[]{ 
     \begin{frame}<beamer>
       \tableofcontents[currentsection]
@@ -143,10 +143,8 @@
     
     \begin{frame}[fragile]{Smoothing the data: one-sided moving average}
     \fontsize{9}{9}\selectfont
-        \alert{Moving average} is a weighted average of the observations around time $t$. 
-        \bigskip
         
-        \alert{One-sided Moving average} is a simple average of all observations over the previous season (year).
+        \alert{(One-sided) Moving average} is a simple average of all observations over the previous season (year).
         
         \begin{center}
           $y_t:$ Number of passengers traveled at time $t$
@@ -211,77 +209,12 @@
     
     
     
-    
-    
-    
-    
-        \begin{frame}[fragile]{Smoothing the data: two-sided moving average}
-    \fontsize{9}{9}\selectfont
-        In a \alert{two-sided (centered) moving average}, the average includes the observations both from the past and the future.
-        \bigskip
-        
-        Two-sided (centered) moving average at time $t$:
-        
-        \begin{center}
-          $m_t = \frac{1}{8} y_{t-2} + \frac{1}{4} y_{t-1} + \frac{1}{4} y_{t} + \frac{1}{4} y_{t+1}  + \frac{1}{8} y_{t+2}$
-        \end{center}  
-        
-        Again, to represent each quarter with equal weight while centering the observation at $t$, we multiply $y_{t-2}$ and $y_{t+2}$ by $1/8$. 
-        
-    \end{frame}
-    
-    
-    
-    \begin{frame}[fragile]{Smoothing the data: two-sided moving average}
-      \fontsize{9}{9}\selectfont
-      \begin{center}
-          \begin{tabular}{llllllll}
-          \hline
-            & Y49Q1 & Y49Q2 & Y49Q3 & Y49Q4 & Y50Q1 & Y50Q2 & ... \\
-          \hline
-           $t$ & 1  &	2 &	3 &	4 &	5 &	6 & ... \\
-          $y_t$ & 362 &	385 &	432 &	341 &	382 &	409 & ... \\
-          $m_t$ & NA &	NA &	382.5	& 388 &	399.25 & 	413.25 & ... \\
-            \hline 
-        \end{tabular}
-      \end{center}
-      
-      \begin{center}
-        \begin{eqnarray*}
-          m_3 &=& \frac{1}{8} y_{1} + \frac{1}{4} y_{2} + \frac{1}{4} y_{3} + \frac{1}{4} y_{4} + \frac{1}{8} y_{5} \\
-          &=& \frac{1}{8} 362 + \frac{1}{4} 385 + \frac{1}{4} 432 + \frac{1}{4} 341 + \frac{1}{4} 382 \\
-          &=& 382.5
-        \end{eqnarray*} 
-      \end{center} 
-      
-    \end{frame}  
-    
-    
-    \begin{frame}[fragile]{Smoothing the data: two-sided moving average}
-      \fontsize{8}{8}\selectfont
-  
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
-\begin{alltt}
-\hlcom{# One sided moving average}
-\hlstd{air_ma_two} \hlkwb{<-} \hlkwd{filter}\hlstd{(air,} \hlkwc{filter}\hlstd{=}\hlkwd{c}\hlstd{(}\hlnum{1}\hlopt{/}\hlnum{8}\hlstd{,}\hlnum{1}\hlopt{/}\hlnum{4}\hlstd{,}\hlnum{1}\hlopt{/}\hlnum{4}\hlstd{,}\hlnum{1}\hlopt{/}\hlnum{4}\hlstd{,}\hlnum{1}\hlopt{/}\hlnum{8}\hlstd{),} \hlkwc{sides}\hlstd{=}\hlnum{2}\hlstd{)}
-\hlkwd{plot}\hlstd{(air,} \hlkwc{ylab}\hlstd{=}\hlstr{"# of International Passengers ('000)"}\hlstd{)}
-\hlkwd{lines}\hlstd{(air_ma_two,} \hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\input{/tmp/figures/unnamed-chunk-4-1.tikz}
-
-\end{knitrout}
-    
-    \end{frame}
-    
-    
     \begin{frame}[fragile]{Smoothing the data}
       \fontsize{9}{9}\selectfont
-      Smoothed data better shows the slow-down in the trend around 1954 and 1959.
+      Smoothed data better shows the slow-downs in the trend around 1954 and 1959.
       \bigskip
       
-      Let's also see the effect of the seasonality by eliminating the trend in the data.
+      Let's also see the effect of the seasonality by eliminating the trend in the data. This is called \alert{detrending}.
 
     \end{frame}
     
@@ -293,8 +226,25 @@
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
 \begin{alltt}
-      \hlstd{air_seasonal} \hlkwb{<-} \hlstd{air} \hlopt{-} \hlstd{air_ma_two}
-      \hlkwd{plot}\hlstd{(air_seasonal)}
+      \hlstd{air_seasonal_additive} \hlkwb{<-} \hlstd{air} \hlopt{-} \hlstd{air_ma_one}
+      \hlkwd{plot}\hlstd{(air_seasonal_additive)}
+\end{alltt}
+\end{kframe}
+\input{/tmp/figures/unnamed-chunk-4-1.tikz}
+
+\end{knitrout}
+  
+    \end{frame}
+    
+    
+      \begin{frame}[fragile]{Smoothing the data}
+      \fontsize{9}{9}\selectfont
+     
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+      \hlstd{air_seasonal_multiplicative} \hlkwb{<-} \hlstd{air}\hlopt{/} \hlstd{air_ma_one}
+      \hlkwd{plot}\hlstd{(air_seasonal_multiplicative)}
 \end{alltt}
 \end{kframe}
 \input{/tmp/figures/unnamed-chunk-5-1.tikz}
@@ -363,6 +313,30 @@
     
     
     \begin{frame}[fragile]{Simple Exponential Smoothing}
+     \fontsize{9}{9}\selectfont
+      \begin{center}
+          $ \hat{y}_5 = \hat{y}_4 + \alpha e_4 $ \\ 
+          $ \hat{y}_5 = \hat{y}_4 + \alpha (y_4 - \hat{y}_4) $ \\  
+          $ \hat{y}_5 = \alpha y_4 + (1-\alpha) \hat{y}_4 $ \\  \bigskip
+          
+          $ \hat{y}_4 = \hat{y}_3 + \alpha e_3 $ \\ 
+          $ \hat{y}_4 = \hat{y}_3 + \alpha (y_3 - \hat{y}_3) $ \\  
+          $ \hat{y}_4 = \alpha y_3 + (1-\alpha) \hat{y}_3 $ \\  \bigskip
+          
+          Therefore,
+          
+          $ \hat{y}_5 = \alpha y_4 + (1-\alpha) (\alpha y_3 + (1-\alpha) \hat{y}_3) $ \\
+          $ \hat{y}_5 = \alpha y_4 + \alpha (1-\alpha)y_3 + (1-\alpha)^2 \hat{y}_3 $ \\ \bigskip
+    
+      \end{center}
+    \end{frame}
+    
+    
+    
+    
+    
+    
+    \begin{frame}[fragile]{Simple Exponential Smoothing}
       \fontsize{8}{8}\selectfont
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
@@ -389,7 +363,7 @@
         \item The SES equation could also be written as:
     \end{itemize} \pause
     
-      \[ \hat{y}_{t+1} = \alpha \hat{y}_t  + (1-\alpha) y_t $ \] \pause
+      \[ \hat{y}_{t+1} = \alpha y_t  + (1-\alpha) \hat{y}_t $ \] \pause
           
        \begin{center}
           \begin{tabular}{cccccc}
@@ -472,6 +446,87 @@
 \end{kframe}
 \end{knitrout}
     \end{frame}
+    
+    
+    \begin{frame}[fragile]{Simple Exponential Smoothing for Oil Prices}
+      \fontsize{8}{8}\selectfont
+      Let's try using SES to predict the oil pricess.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+\hlstd{price} \hlkwb{<-} \hlkwd{ts}\hlstd{(oil}\hlopt{$}\hlstd{price,} \hlkwc{start}\hlstd{=}\hlnum{1991}\hlstd{,} \hlkwc{frequency}\hlstd{=}\hlnum{12}\hlstd{)}
+\hlstd{price_ses_05} \hlkwb{<-} \hlkwd{ses}\hlstd{(price,} \hlkwc{alpha} \hlstd{=} \hlnum{0.5}\hlstd{)}
+\hlkwd{plot}\hlstd{(price)}
+\hlkwd{lines}\hlstd{(price_ses_05}\hlopt{$}\hlstd{fitted,} \hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\input{/tmp/figures/unnamed-chunk-10-1.tikz}
+
+\end{knitrout}
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Simple Exponential Smoothing for Oil Prices}
+      \fontsize{8}{8}\selectfont
+      Let R decide on the optimal $\alpha$.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+\hlstd{price_ses} \hlkwb{<-} \hlkwd{ses}\hlstd{(price)}
+\hlkwd{plot}\hlstd{(price)}
+\hlkwd{lines}\hlstd{(price_ses}\hlopt{$}\hlstd{fitted,} \hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\input{/tmp/figures/unnamed-chunk-11-1.tikz}
+
+\end{knitrout}
+    \end{frame}
+    
+    \begin{frame}[fragile]{Simple Exponential Smoothing for Oil Prices}
+      \fontsize{8}{8}\selectfont
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+\hlstd{price_ses}\hlopt{$}\hlstd{model}
+\end{alltt}
+\begin{verbatim}
+Simple exponential smoothing 
+
+Call:
+ ses(y = price) 
+
+  Smoothing parameters:
+    alpha = 0.9999 
+
+  Initial states:
+    l = 25.2301 
+
+  sigma:  1.1908
+
+     AIC     AICc      BIC 
+339.0656 339.4185 345.8955 
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]{Simple Exponential Smoothing for Oil Prices}
+      \fontsize{8}{8}\selectfont
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.137, 0.137, 0.137}\begin{kframe}
+\begin{alltt}
+\hlstd{price_ses_h8} \hlkwb{<-} \hlkwd{ses}\hlstd{(price,} \hlkwc{h}\hlstd{=}\hlnum{8}\hlstd{)}
+\hlkwd{plot}\hlstd{(price_ses_h8,} \hlkwc{col}\hlstd{=}\hlstr{'green'}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\input{/tmp/figures/unnamed-chunk-13-1.tikz}
+
+\end{knitrout}
+    \end{frame}
+    
+    
     
   \end{darkframes}
 \end{document}

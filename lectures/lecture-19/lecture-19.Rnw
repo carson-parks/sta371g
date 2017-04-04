@@ -2,7 +2,7 @@
 \usepackage{../371g-slides}
 \title{Time Series: Smoothing \& Moving Average}
 \subtitle{Lecture 19}
-\author{STA 371G}
+\author{STA 371G} 
 
 \begin{document}
   <<setup, include=F, cache=F>>=
@@ -11,14 +11,15 @@
   opts_chunk$set(dev='tikz', external=F, fig.path='/tmp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, tidy=F)
   knit_theme$set('camo')
   air_passengers <- read.csv('../../data/air_passengers.csv')
-  @
+  oil <- read.csv('../../data/oil_monthly.csv') 
+  @ 
   <<include=F, cache=F>>=
   par(fg='#fefefe', col.axis='#fefefe', col.lab='#fefefe', col.main="#fefefe", mar=c(5.1, 4.1, 1.1, 2.1))
   @
 
   \frame{\maketitle}
 
-  % Show outline at beginning of each section
+  % Show outline at beginning of each section 
   \AtBeginSection[]{ 
     \begin{frame}<beamer>
       \tableofcontents[currentsection]
@@ -95,10 +96,8 @@
     
     \begin{frame}[fragile]{Smoothing the data: one-sided moving average}
     \fontsize{9}{9}\selectfont
-        \alert{Moving average} is a weighted average of the observations around time $t$. 
-        \bigskip
         
-        \alert{One-sided Moving average} is a simple average of all observations over the previous season (year).
+        \alert{(One-sided) Moving average} is a simple average of all observations over the previous season (year).
         
         \begin{center}
           $y_t:$ Number of passengers traveled at time $t$
@@ -157,71 +156,12 @@
     
     
     
-    
-    
-    
-    
-        \begin{frame}[fragile]{Smoothing the data: two-sided moving average}
-    \fontsize{9}{9}\selectfont
-        In a \alert{two-sided (centered) moving average}, the average includes the observations both from the past and the future.
-        \bigskip
-        
-        Two-sided (centered) moving average at time $t$:
-        
-        \begin{center}
-          $m_t = \frac{1}{8} y_{t-2} + \frac{1}{4} y_{t-1} + \frac{1}{4} y_{t} + \frac{1}{4} y_{t+1}  + \frac{1}{8} y_{t+2}$
-        \end{center}  
-        
-        Again, to represent each quarter with equal weight while centering the observation at $t$, we multiply $y_{t-2}$ and $y_{t+2}$ by $1/8$. 
-        
-    \end{frame}
-    
-    
-    
-    \begin{frame}[fragile]{Smoothing the data: two-sided moving average}
-      \fontsize{9}{9}\selectfont
-      \begin{center}
-          \begin{tabular}{llllllll}
-          \hline
-            & Y49Q1 & Y49Q2 & Y49Q3 & Y49Q4 & Y50Q1 & Y50Q2 & ... \\
-          \hline
-           $t$ & 1  &	2 &	3 &	4 &	5 &	6 & ... \\
-          $y_t$ & 362 &	385 &	432 &	341 &	382 &	409 & ... \\
-          $m_t$ & NA &	NA &	382.5	& 388 &	399.25 & 	413.25 & ... \\
-            \hline 
-        \end{tabular}
-      \end{center}
-      
-      \begin{center}
-        \begin{eqnarray*}
-          m_3 &=& \frac{1}{8} y_{1} + \frac{1}{4} y_{2} + \frac{1}{4} y_{3} + \frac{1}{4} y_{4} + \frac{1}{8} y_{5} \\
-          &=& \frac{1}{8} 362 + \frac{1}{4} 385 + \frac{1}{4} 432 + \frac{1}{4} 341 + \frac{1}{4} 382 \\
-          &=& 382.5
-        \end{eqnarray*} 
-      \end{center} 
-      
-    \end{frame}  
-    
-    
-    \begin{frame}[fragile]{Smoothing the data: two-sided moving average}
-      \fontsize{8}{8}\selectfont
-  
-      <<fig.height=2.5>>=
-      # One sided moving average
-      air_ma_two <- filter(air, filter=c(1/8,1/4,1/4,1/4,1/8), sides=2)
-      plot(air, ylab="# of International Passengers ('000)")
-      lines(air_ma_two, col='green')
-      @  
-    
-    \end{frame}
-    
-    
     \begin{frame}[fragile]{Smoothing the data}
       \fontsize{9}{9}\selectfont
-      Smoothed data better shows the slow-down in the trend around 1954 and 1959.
+      Smoothed data better shows the slow-downs in the trend around 1954 and 1959.
       \bigskip
       
-      Let's also see the effect of the seasonality by eliminating the trend in the data.
+      Let's also see the effect of the seasonality by eliminating the trend in the data. This is called \alert{detrending}.
 
     \end{frame}
     
@@ -231,8 +171,19 @@
       \fontsize{9}{9}\selectfont
      
        <<fig.height=2.5>>=
-      air_seasonal <- air - air_ma_two 
-      plot(air_seasonal)
+      air_seasonal_additive <- air - air_ma_one 
+      plot(air_seasonal_additive)
+      @  
+  
+    \end{frame}
+    
+    
+      \begin{frame}[fragile]{Smoothing the data}
+      \fontsize{9}{9}\selectfont
+     
+       <<fig.height=2.5>>=
+      air_seasonal_multiplicative <- air/ air_ma_one 
+      plot(air_seasonal_multiplicative)
       @  
   
     \end{frame}
@@ -297,6 +248,30 @@
     
     
     \begin{frame}[fragile]{Simple Exponential Smoothing}
+     \fontsize{9}{9}\selectfont
+      \begin{center}
+          $ \hat{y}_5 = \hat{y}_4 + \alpha e_4 $ \\ 
+          $ \hat{y}_5 = \hat{y}_4 + \alpha (y_4 - \hat{y}_4) $ \\  
+          $ \hat{y}_5 = \alpha y_4 + (1-\alpha) \hat{y}_4 $ \\  \bigskip
+          
+          $ \hat{y}_4 = \hat{y}_3 + \alpha e_3 $ \\ 
+          $ \hat{y}_4 = \hat{y}_3 + \alpha (y_3 - \hat{y}_3) $ \\  
+          $ \hat{y}_4 = \alpha y_3 + (1-\alpha) \hat{y}_3 $ \\  \bigskip
+          
+          Therefore,
+          
+          $ \hat{y}_5 = \alpha y_4 + (1-\alpha) (\alpha y_3 + (1-\alpha) \hat{y}_3) $ \\
+          $ \hat{y}_5 = \alpha y_4 + \alpha (1-\alpha)y_3 + (1-\alpha)^2 \hat{y}_3 $ \\ \bigskip
+    
+      \end{center}
+    \end{frame}
+    
+    
+    
+    
+    
+    
+    \begin{frame}[fragile]{Simple Exponential Smoothing}
       \fontsize{8}{8}\selectfont
       <<fig.height=2.5, message=FALSE, warning=FALSE>>= 
       library(forecast)
@@ -317,7 +292,7 @@
         \item The SES equation could also be written as:
     \end{itemize} \pause
     
-      \[ \hat{y}_{t+1} = \alpha \hat{y}_t  + (1-\alpha) y_t $ \] \pause
+      \[ \hat{y}_{t+1} = \alpha y_t  + (1-\alpha) \hat{y}_t $ \] \pause
           
        \begin{center}
           \begin{tabular}{cccccc}
@@ -373,6 +348,48 @@
       air_ses_09
       @
     \end{frame}
+    
+    
+    \begin{frame}[fragile]{Simple Exponential Smoothing for Oil Prices}
+      \fontsize{8}{8}\selectfont
+      Let's try using SES to predict the oil pricess.
+      <<fig.height=2.5>>=
+      price <- ts(oil$price, start=1991, frequency=12)
+      price_ses_05 <- ses(price, alpha = 0.5)
+      plot(price)
+      lines(price_ses_05$fitted, col='green')
+      @  
+    \end{frame}
+    
+    
+    
+    \begin{frame}[fragile]{Simple Exponential Smoothing for Oil Prices}
+      \fontsize{8}{8}\selectfont
+      Let R decide on the optimal $\alpha$.
+      <<fig.height=2.5>>=
+      price_ses <- ses(price)
+      plot(price)
+      lines(price_ses$fitted, col='green')
+      @  
+    \end{frame}
+    
+    \begin{frame}[fragile]{Simple Exponential Smoothing for Oil Prices}
+      \fontsize{8}{8}\selectfont
+      <<>>=
+      price_ses$model 
+      @  
+    \end{frame}
+    
+    
+    \begin{frame}[fragile]{Simple Exponential Smoothing for Oil Prices}
+      \fontsize{8}{8}\selectfont
+      <<fig.height=2.5, message=FALSE, warning=FALSE>>= 
+      price_ses_h8 <- ses(price, h=8)
+      plot(price_ses_h8, col='green')
+      @
+    \end{frame}
+    
+    
     
   \end{darkframes}
 \end{document}
