@@ -267,7 +267,7 @@
       We'll use \emph{every} previous data point to forecast the next one, but using a weight that decreases exponentially:
       \begin{align*}
         \hat{y}_{t+1} &= \alpha y_t + \alpha (1-\alpha)y_{t-1} + \alpha (1-\alpha)^2 \hat{y}_{t-2} + \cdots \\
-        &= \sum_{k=1}^t \alpha (1-\alpha)^k y_{t-k}.
+        &= \sum_{k=0}^{t-1} \alpha (1-\alpha)^k y_{t-k}.
       \end{align*}
 
       $\hat{y}_{t+1}$ carries a portion of all past observations; the more recent the observation is, the more weight it has (since $(1-\alpha)^k \to 0$ as $k$ increases).
