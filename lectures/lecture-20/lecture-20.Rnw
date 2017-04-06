@@ -180,7 +180,7 @@
       \includegraphics[width=3.5in]{FinalTree} 
       \end{center}
 
-      \text{15 is the maximum out of of 10, 13, and 15}
+      \text{22 is the maximum out of of 10, 13, and 22}
 
     \end{frame}
 

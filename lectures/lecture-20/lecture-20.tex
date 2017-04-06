@@ -99,7 +99,7 @@
 
 
     %{slide 3}
-    \begin{frame}[fragile]{Topics to cover}
+    \begin{frame}[fragile]{Topics to Cover}
     \fontsize{10}{10}\selectfont
           \begin{itemize}[<+->]
             \item Criteria for choosing among alternative decisions
@@ -118,10 +118,10 @@
       \text{Although decision making under uncertainty occurs in a wide variety of}
       \text{contexts, all problems have three common elements:}
 
-        \begin{itemize}
+        \begin{itemize}[<+->]
             \item The decisions available to the decision maker
             \item The possible outcomes and the probabilities of these outcomes
-            \item A value model that provides monetary values for the various outcomes
+            \item A value model that provides values (in monetary units usually) for the various outcomes
         \end{itemize}
 
       \text{Once these elements are defined, the decision maker can find an}
@@ -212,6 +212,7 @@
 
       \text{EV = .3(-10) + .5(20) + .2(30) = 13}
 
+      \lc %{Calculate the node EV}
     \end{frame}
 
     %{slide 11}
@@ -222,7 +223,7 @@
       \includegraphics[width=3.5in]{FinalTree} 
       \end{center}
 
-      \text{15 is the maximum out of of 10, 13, and 15}
+      \text{22 is the maximum out of of 10, 13, and 22}
 
     \end{frame}
 
@@ -237,42 +238,44 @@
      \text{If she does nothing and the economy stays good, she expects to earn 3M in}
      \text{revenue, but if the economy is bad, she expects only 1M.} 
      \text{If she expands the factory, she expects to earn 6M if the economy is}
-     \text{good and 2M if it is bad} 
+     \text{good and 2M if it is bad.} 
 
      \text{She also assumes that there is a 40 percent chance of a good economy and}
-     \text{a 60 percent chance of a bad economy} 
+     \text{a 60 percent chance of a bad economy.} 
 
      \text{Should she expand?} 
     \end{frame}
 
 
     %{slide 13}
-    \begin{frame}[fragile]{Sally Ann Sole's decision tree}
+    \begin{frame}[fragile]{Shoe Factory Expansion Decision Tree}
     \fontsize{10}{10}\selectfont  
       \begin{center}
         \includegraphics[width=3.5in]{ExpandFactory} \\
       \end{center}
     \text{EV(Expand) = (.4(6) + .6(2)) - 1.5 = 2.1M}
-    \text{EV(No Expand) = (.4(3) + .6(1)) = 1.8M}
+    \text{EV(No Expand) = (.4(3) + .6(1)) = 1.8M, }
     \text{2.1M > 1.8M, so she should expand!}
     \end{frame}
 
 
     %{slide 14}
-    \begin{frame}[fragile]{Sally Ann Soles' Shoe Factory With A Second Decision}
+    \begin{frame}[fragile]{Shoe Factory Expansion Decision Tree With An Option}
      \fontsize{10}{10}\selectfont  
      \text{A few days later, she was told that if she expands, she can opt to either} 
      \text{(a) expand the factory further, which costs 1.5M and will yield an extra} 
-     \text{2M in profit if the economy is good, but 1M if it is bad, (b) abandon} 
-     \text{the project and sell the equipment she original bought for 1.3M, or}
-     \text{(c) do nothing.} 
+     \text{2M in profit if the economy is good, but 1M if it is bad,}
+     \text{(b) abandon the project and sell the equipment she original bought for 1.3M,}
+     \text{or (c) do nothing.} 
 
 
-     \text{How has the decision changed?} 
+     \text{How has the decision changed?}
+     \text{What is the value of this option before the state of the economy is known?}  
+     \text{Intuitively, it might increase the value of the initial expansion.}
     \end{frame}
 
     %{slide 15}
-    \begin{frame}[fragile]{Sequential Decisions}
+    \begin{frame}[fragile]{A Sequential Decision}
       \begin{center}
         \includegraphics[width=3.5in]{SequentialDecision} \\
       \end{center}
@@ -282,30 +285,38 @@
 
 
     %{slide 16}
-    \begin{frame}[fragile]{EV of the Project}
-        \text{The EV of Expanding is now [.4(6.5) + .6(2.3)] - 1.5M = 2.48M}
-        \text{Therefore the value of the option is:}
-        \text{       the new EV - the old EV = 2.48M - 2.1M = 380,000 USD} 
+    \begin{frame}[fragile]{What Is The Second Expansion Option's Value?}
+      \begin{center}
+        \includegraphics[width=3.5in]{FinalOption} \\
+      \end{center}
     \end{frame}
 
 
-   %{slide 17}
+    %{slide 17}
+    \begin{frame}[fragile]{EV of the Project}
+        \text{The EV of Expanding is now [.4(6.5) + .6(2.3)] - 1.5M = 2.48M}
+        \text{Therefore the value of the option is:}
+        \text{       new EV - old EV = 2.48M - 2.1M = 380,000 USD} 
+    \end{frame}
+
+
+   %{slide 18}
     \begin{frame}[fragile]{Does This Look Familiar?}
     \fontsize{10}{10}\selectfont  
-       \text{This method of valuing a real option is used by corpotate strategists,}
+       \text{This method of valuing real optionw is used by corpotate strategists,}
        \text{management consultants, and bankers. A further refinement is to take}
-       \text{time value of money into account and present value everything.}
+       \text{time value of money into account and present value the cashflows.}
   
 
     \end{frame}
 
 
-    %{slide 18}
+    %{slide 19}
     \begin{frame}{More on Valuing Information Next Time...}
       \fontsize{10}{10}\selectfont
 
       \begin{itemize}
-        \item Don't forget start your Time Series homework!
+        \item Don't forget to do your Time Series homework!
         \item The TAs are still working on grading the test.
       \end{itemize}https://www.yahoo.com/news/analysis-trump-weight-worlds-problems-220503380.html
       
