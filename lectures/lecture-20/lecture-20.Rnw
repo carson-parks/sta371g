@@ -59,7 +59,7 @@
           \begin{itemize}[<+->]
             \item Criteria for choosing among alternative decisions
             \item How probabilities are used in the decision-making process
-            \item How early decisions affect late decisions
+            \item How early decisions affect later decisions
             \item How a decision-maker can quantify the value of information
             \item How attitudes toward risk and uncertainty can affect the analysis
           \end{itemize}
