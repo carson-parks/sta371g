@@ -50,7 +50,7 @@
 
 \usepackage{alltt}
 \usepackage{../371g-slides}
-\title{Decision Trees - Part 1}
+\title{Decision Trees 1}
 \subtitle{Lecture 20}
 \author{STA 371G}
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -88,7 +88,6 @@
 
     %{slide 2}
     \begin{frame}[fragile]{Decision Analysis}
-    \fontsize{10}{10}\selectfont
       \begin{itemize}[<+->]
         \item A framework for analyszing decision problems that involve uncertainty
         \item Decision trees: a powerful graphical tool that guides that analysis
@@ -99,13 +98,12 @@
 
 
     %{slide 3}
-    \begin{frame}[fragile]{Topics to Cover}
-    \fontsize{10}{10}\selectfont
+    \begin{frame}[fragile]{Topics to cover}
           \begin{itemize}[<+->]
             \item Criteria for choosing among alternative decisions
             \item How probabilities are used in the decision-making process
-            \item How early decisions affect decisions make later
-            \item How a decision maker can quantify the value of information
+            \item How early decisions affect late decisions
+            \item How a decision-maker can quantify the value of information
             \item How attitudes toward risk and uncertainty can affect the analysis
           \end{itemize}
 
@@ -114,31 +112,24 @@
 
     %{slide 4}
     \begin{frame}[fragile]{Elements of a Decision Analysis}
-      \fontsize{10}{10}\selectfont  
-      \text{Although decision making under uncertainty occurs in a wide variety of}
-      \text{contexts, all problems have three common elements:}
+      All problems have three common elements:
 
-        \begin{itemize}[<+->]
-            \item The decisions available to the decision maker
-            \item The possible outcomes and the probabilities of these outcomes
-            \item A value model that provides values (in monetary units usually) for the various outcomes
+        \begin{itemize}
+            \item The decisions available to the decision maker.
+            \item The possible outcomes and the probabilities of these outcomes.
+            \item A value model that provides monetary values for the various outcomes.
         \end{itemize}
 
-      \text{Once these elements are defined, the decision maker can find an}
-      \text{optimal decision.}
-
+      Once these elements are defined, the decision maker can find an optimal decision.
     \end{frame}
 
 
     %{slide #5}
     \begin{frame}[fragile]{Payoff Tables}
-      \fontsize{10}{10}\selectfont  
-      \text{A payoff table lists the payoff for each decision outcome pair}
-      \begin{itemize}
-            \item Positive values are gains and negative values are losses
-        \end{itemize}
+      A payoff table lists the payoff for each decision outcome pair; positive values are gains and negative values are losses.
+
         \begin{center}
-          \includegraphics[width=3in]{PayoffTable} 
+          \includegraphics[width=2.5in]{PayoffTable} 
         \end{center}
         \begin{itemize}
             \item This table shows three possible decisions (D1, D2, and D3) and three
@@ -152,13 +143,12 @@
 
     %{slide #6}
     \begin{frame}[fragile]{Payoff Tables}
-      \fontsize{10}{10}\selectfont  
-      \text{But we need probabilities for the outcomes to make a good decision}
+      We need to know the probability of each outcome to make a good decision!
       \begin{center}
-        \includegraphics[width=3in]{PayoffTable} 
+        \includegraphics[width=2.5in]{PayoffTable} 
       \end{center}
         \begin{itemize}
-            \item Probabilities: P(O1) = 0.3, P(O2) = 0.5, P(O3) = 0.2
+            \item Suppose $P(O1) = 0.3, P(O2) = 0.5, P(O3) = 0.2$
             \item Now which decision do you prefer?
         \end{itemize}
 
@@ -166,14 +156,13 @@
 
 
     %{slide 7}
-    \begin{frame}[fragile]{Expected Value - Remember this?}
-      \fontsize{10}{10}\selectfont  
-         \begin{itemize}
-            \item EV is a weighted average of the possible payoffs for the decision,
+    \begin{frame}[fragile]{Expected Value}
+         \begin{itemize}[<+->]
+            \item Expected value (EV) is a weighted average of the possible payoffs for the decision,
             weighted by the probabilities of the outcomes
-            \item D1: EV = 10
-            \item D2: EV = -10(0.3) + 20(0.5) - 30(0.2) = 13 
-            \item D3: EV = ?
+            \item $E(D1) = 10$
+            \item $E(D2) = -10(0.3) + 20(0.5) - 30(0.2) = 13$
+            \item $E(D3) = ?$
         \end{itemize}    
 
       \lc %{What is EV of D3?}
@@ -182,11 +171,10 @@
 
     %{slide 8}
     \begin{frame}[fragile]{Decision Trees}
-      \fontsize{10}{10}\selectfont 
           \begin{itemize}
             \item Time proceeds from left to right.
-            \item Branches leading out of a decision node represent the possible decisions
-            \item Probabilities are listed on probability branches. The probabilities are conditional on the events that have already been observed.
+            \item Branches leading out of a decision node represent the possible decisions.
+            \item Probabilities are listed on probability branches, and are conditional on the events that have already been observed (i.e., they assume that everything to the left has already happened).
             \item Monetary values are shown to the right of the end nodes.
             \item EVs are calculated through a ``rolling-back'' process.
           \end{itemize}  
@@ -194,8 +182,7 @@
 
 
     %{slide 9}
-    \begin{frame}[fragile]{Decision Tree For Our Simple Example}
-      \fontsize{10}{10}\selectfont 
+    \begin{frame}[fragile]{Example}
       \begin{center}
       \includegraphics[width=3.5in]{DecisionTree} 
       \end{center}
@@ -203,79 +190,75 @@
 
 
    %{slide 10}
-    \begin{frame}[fragile]{Rollback Procedure}
-      \fontsize{10}{10}\selectfont  
-      \text{Calculate the expected value at each probability node}
+    \begin{frame}[fragile]{Rolling back: Step 1}
+      Calculate the expected value at each probability node:
       \begin{center}
-      \includegraphics[width=3.5in]{RollingBack} 
+      \includegraphics[width=3in]{RollingBack} 
       \end{center}
 
-      \text{EV = .3(-10) + .5(20) + .2(30) = 13}
+      $E(D3) = .3(-10) + .5(20) + .2(30) = 13$
 
       \lc %{Calculate the node EV}
     \end{frame}
 
     %{slide 11}
-    \begin{frame}[fragile]{Rollback Procedure}
-      \fontsize{10}{10}\selectfont  
-      \text{Calculate the maximum at each decision node}
+    \begin{frame}[fragile]{Rolling back: Step 2}
+      Calculate the maximum at each decision node:
       \begin{center}
-      \includegraphics[width=3.5in]{FinalTree} 
+      \includegraphics[width=3in]{FinalTree} 
       \end{center}
 
-      \text{22 is the maximum out of of 10, 13, and 22}
-
+      Take decision D3 since $22 = \text{max}(10, 13, 22)$.
     \end{frame}
 
 
     %{slide 12}
     \begin{frame}[fragile]{Sally Ann Soles' Shoe Factory}
-     \fontsize{10}{10}\selectfont  
-     \text{Sally Ann Soles manages a sucessful shoe factory. She is wondering } 
-     \text{whether to expand her factory this year. The cost of the expansion is 1.5M USD} 
-     \text{is 1.5M USD.} 
+      Sally Ann Soles manages a successful shoe factory. She is wondering
+      whether to expand her factory this year. 
+      \begin{itemize}
+        \item The cost of the expansion is \$1.5M.
 
-     \text{If she does nothing and the economy stays good, she expects to earn 3M in}
-     \text{revenue, but if the economy is bad, she expects only 1M.} 
-     \text{If she expands the factory, she expects to earn 6M if the economy is}
-     \text{good and 2M if it is bad.} 
+        \item If she does nothing and the economy stays good, she expects to earn \$3M in
+        revenue, but if the economy is bad, she expects only \$1M.
 
-     \text{She also assumes that there is a 40 percent chance of a good economy and}
-     \text{a 60 percent chance of a bad economy.} 
+        \item If she expands the factory, she expects to earn \$6M if the economy is
+        good and \$2M if it is bad.
 
-     \text{Should she expand?} 
+        \item She estimates that there is a 40 percent chance of a good economy and
+        a 60 percent chance of a bad economy.
+      \end{itemize}
+     Should she expand?
     \end{frame}
 
 
     %{slide 13}
-    \begin{frame}[fragile]{Shoe Factory Expansion Decision Tree}
-    \fontsize{10}{10}\selectfont  
+    \begin{frame}
       \begin{center}
         \includegraphics[width=3.5in]{ExpandFactory} \\
       \end{center}
-    \text{EV(Expand) = (.4(6) + .6(2)) - 1.5 = 2.1M}
-    \text{EV(No Expand) = (.4(3) + .6(1)) = 1.8M, }
-    \text{2.1M > 1.8M, so she should expand!}
+    
+    $E(\text{expand}) = (.4(6) + .6(2)) - 1.5 = 2.1$
+
+    $E(\text{don't expand}) = (.4(3) + .6(1)) = 1.8$
+
+    Since $2.1 > 1.8$, she should expand!
     \end{frame}
 
 
     %{slide 14}
-    \begin{frame}[fragile]{Shoe Factory Expansion Decision Tree With An Option}
-     \fontsize{10}{10}\selectfont  
-     \text{A few days later, she was told that if she expands, she can opt to either} 
-     \text{(a) expand the factory further, which costs 1.5M and will yield an extra} 
-     \text{2M in profit if the economy is good, but 1M if it is bad,}
-     \text{(b) abandon the project and sell the equipment she original bought for 1.3M,}
-     \text{or (c) do nothing.} 
-
-
-     \text{How has the decision changed?}
-     \text{What is the value of this option before the state of the economy is known?}  
-     \text{Intuitively, it might increase the value of the initial expansion.}
+    \begin{frame}[fragile]{Sequential decisions}
+      She later learns if she expands, she can opt to either:
+      \begin{enumerate}[(a)]
+        \item expand the factory further, which costs \$1.5M and will yield an extra \$2M in profit if the economy is good, but \$1M if it is bad, 
+        \item abandon the project and sell the equipment she originally bought, for \$1.3M, or
+        \item do nothing.
+      \end{enumerate}
+      How has the decision changed?
     \end{frame}
 
     %{slide 15}
-    \begin{frame}[fragile]{A Sequential Decision}
+    \begin{frame}[fragile]{Sequential decisions}
       \begin{center}
         \includegraphics[width=3.5in]{SequentialDecision} \\
       \end{center}
@@ -285,42 +268,22 @@
 
 
     %{slide 16}
-    \begin{frame}[fragile]{What Is The Second Expansion Option's Value?}
-      \begin{center}
-        \includegraphics[width=3.5in]{FinalOption} \\
-      \end{center}
+    \begin{frame}[fragile]{Expected value of the option}
+        The EV of expanding is now 
+        \[ (.4(6.5) + .6(2.3)) - 1.5 = 2.48. \]
+        \pause
+        Therefore the value of the option is
+        \[ E(\text{new}) - E(\text{old}) = 2.48 - 2.1 = 0.38, \] 
+        or \$380,000.
     \end{frame}
 
 
-    %{slide 17}
-    \begin{frame}[fragile]{EV of the Project}
-        \text{The EV of Expanding is now [.4(6.5) + .6(2.3)] - 1.5M = 2.48M}
-        \text{Therefore the value of the option is:}
-        \text{       new EV - old EV = 2.48M - 2.1M = 380,000 USD} 
-    \end{frame}
-
-
-   %{slide 18}
-    \begin{frame}[fragile]{Does This Look Familiar?}
-    \fontsize{10}{10}\selectfont  
-       \text{This method of valuing real optionw is used by corpotate strategists,}
-       \text{management consultants, and bankers. A further refinement is to take}
-       \text{time value of money into account and present value the cashflows.}
-  
-
-    \end{frame}
-
-
-    %{slide 19}
-    \begin{frame}{More on Valuing Information Next Time...}
-      \fontsize{10}{10}\selectfont
-
-      \begin{itemize}
-        \item Don't forget to do your Time Series homework!
-        \item The TAs are still working on grading the test.
+   %{slide 17}
+    \begin{frame}[fragile]{Does this look familiar?}
+      \begin{itemize}[<+->]
+        \item This method of valuing a real option is used by corpotate strategists, management consultants, and bankers. 
+        \item A further refinement is to take time value of money into account and present value everything.
       \end{itemize}
-      
     \end{frame}
-
   \end{darkframes}
 \end{document}
