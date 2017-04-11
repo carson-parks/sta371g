@@ -1,0 +1,223 @@
+\documentclass{beamer}
+\usepackage{../371g-slides}
+\title{Decision Trees 2}
+\subtitle{Lecture 21}
+\author{STA 371G}
+
+\begin{document}
+  <<setup, include=F, cache=F>>=
+  opts_knit$set(global.par=T)
+  knit_hooks$set(crop=hook_pdfcrop)
+  opts_chunk$set(dev='tikz', external=F, fig.path='c:/tmp/figures/', comment=NA, fig.width=4, fig.height=3, crop=T, sanitize=T, tidy=F)
+  knit_theme$set('camo')
+  @
+  <<include=F, cache=F>>=
+  par(fg='#fefefe', col.axis='#fefefe', col.lab='#fefefe', col.main="#fefefe", mar=c(5.1, 4.1, 1.1, 2.1))
+  @
+
+  \frame{\maketitle}
+
+  % Show outline at beginning of each section
+  \AtBeginSection[]{ 
+    \begin{frame}<beamer>
+      \tableofcontents[currentsection]
+    \end{frame}
+  }
+
+  %%%%%%% Slides start here %%%%%%%
+
+  \begin{darkframes}
+    
+
+    %{slide 1}
+    \begin{frame}{What Is It Worth to Know More About an Uncertain Event?}
+      \fontsize{10}{10}\selectfont
+     \begin{center}
+      \includegraphics[width=3in]{ValueOfInformation.png} 
+      \end{center}
+
+    \lc %{What President hosted Bevo?}
+      
+    \end{frame}
+
+    %{slide 2}
+    \begin{frame}{Topics to Cover}
+      \fontsize{10}{10}\selectfont
+        \begin{itemize}[<+->]
+            \item Value of Information
+            \item Bevo: The Movie Example
+            \item Expected Value of Perfect Information
+            \item Expected Value of Imperfect Information
+        \end{itemize}
+      
+    \end{frame}
+
+
+    %{slide 3}
+    \begin{frame}[fragile]{Value of Information}
+
+        \begin{itemize}[<+->]
+            \item Sometimes information can lead to better decisions.
+            \item How much is information worth, and if it costs a given amount, should you purchase it?
+            \item The expected value of perfect information, or EVPI, is the most you would be willing to pay for perfect information.
+        \end{itemize}
+
+     \end{frame}
+
+
+    %{slide 4}
+    \begin{frame}[fragile]{Typical Setup}
+
+      \begin{itemize}[<+->]
+        \item In a multistage decision problem, often the first-stage decision is whether to purchase information that will help make a better second stage decision
+        \item In this case the information, if obtained, may change the probabilities of later outcomes
+        \item In addition, you typically want to learn how much the information is worth
+        \item Information usually comes at a price.  You want to know whether the information is worth its price
+        \item This leads to an investigation of the value of information
+        \end{itemize} 
+
+    \end{frame}
+
+
+
+    %{slide 5}
+    \begin{frame}[fragile]{Example: Marketing Strategy for Bevo: The Movie}
+      \fontsize{10}{10}\selectfont
+      UT Productions has to decide on a marketing strategy for it's new movie, Bevo.  Three major strategies are being considered:
+      \begin{itemize} [<+->]
+        \item (A) Aggressive: Large expenditures on television and print advertising.
+        \item (B) Basic: More modest marketing campaign.
+        \item (C) Cautious: Minimal marketing campaign.
+      \end{itemize} 
+      
+    \end{frame}
+
+
+
+    %{slide 6}
+    \begin{frame}[fragile]{Payoffs for Bevo: The Movie}
+      \fontsize{10}{10}\selectfont
+      The net payoffs depend on the market reaction to the film.
+
+        \begin{center}
+          \includegraphics[width=2.5in]{BevoPayoffs} 
+        \end{center}
+  
+    \end{frame}
+
+
+    %{slide 7}
+    \begin{frame}[fragile]{Decision Tree for Bevo: The Movie}
+
+        \begin{center}
+          \includegraphics[width=3.5in]{BevoDecisionTree} 
+        \end{center}
+
+      \lc %{What would the EV be if there were only two possible strategies, Aggressive and Cautious?}
+    \end{frame}
+
+
+    %{slide 8}
+    \begin{frame}[fragile]{Expected Value of Perfect Information (EVPI)}
+        \fontsize{10}{10}\selectfont
+        How valuable would it be to know what was going to happen?
+          \begin{itemize} [<+->]
+            \item If a clairvoyant were available to tell you what is going to happen, how much would you pay her?
+            \item Assume that you don't know what the clairvoyant will say and you have to pay her before she reveals the answer
+          \end{itemize}  
+          \pause
+          EVPI is: 
+             EV with perfect information - EV with no information
+    \end{frame}
+
+
+    %{slide 9}
+    \begin{frame}[fragile]{Finding EVPI With a Payoff Table}
+      \fontsize{10}{10}\selectfont
+      The payoffs depend on the market reaction to the film:
+        \begin{center}
+        \includegraphics[width=2.5in]{BevoPayoffs} 
+        \end{center}
+        \begin{itemize} [<+->]
+          \item With no information, the Basic strategy is best: EV = 0.45(20) + 0.55(7) = 12.85
+          \item With perfect info, select the Agressive strategy for a Strong reaction and the Cautious strategy for a Weak reaction: EV = 0.45(30) + 0.55(10) = 19
+          \item EVPI = 19 - 12.85 = 6.15
+        \end{itemize}        
+    \end{frame}     
+
+
+
+   %{slide 10}
+    \begin{frame}[fragile]{Finding EVPI With a Decision Tree}
+       \fontsize{10}{10}\selectfont   
+          \begin{itemize} [<+->]
+            \item Step 1: Set up tree without perfect information and calculate EV by rolling back
+            \item Step 2: Rearrange the tree the reflect the receipt of the information and calculate the new EV
+            \item Step 3: Compare the EV's with and without the information
+          \end{itemize}          
+
+    \end{frame}
+
+
+    %{slide 11}
+    \begin{frame}[fragile]{Finding EVPI With a Decision Tree}
+      \fontsize{10}{10}\selectfont
+
+        \begin{center}
+        \includegraphics[width=3.5in]{BevoPerfectInfo} 
+        \end{center}
+    
+    \lc %{What would the value of the information be if the payoff was 50 instead of 30 for an Aggressive strategy}
+    \end{frame}  
+
+
+    %{slide 11}
+    \begin{frame}[fragile]{What About Imperfect Information?}
+      Suppose that Myra the movie critic has a good record of picking winners
+      \begin{itemize} [<+->]
+        \item If Myra likes a movie, the probability of a Strong market reaction is 66 percent and of a Weak one is 18 percent
+        \item If Myra dislikes a movie, the probability of a Weak market reaction is 82 and of a Strong market reaction is 33 percent 
+        \item Also, remember that the probability of a Strong reaction is 45 percent and of a Weak reaction is 55 percent
+      \end{itemize}
+
+      \pause
+      What to do now???
+
+      \lc %{How much do you think Myra's information is worth?}
+    \end{frame}
+
+
+    %{slide 12}
+    \begin{frame}[fragile]{Now Redo the Decision Tree With the New Information}
+
+      \begin{center}
+        \includegraphics[width=3.5in]{MyraPayoffs} \\
+      \end{center}
+
+    \end{frame}
+
+
+    %{slide 13}
+    \begin{frame}[fragile]{Myra's Information is Is Worth Paying For}
+       It changes the decision and 14.75 - 12.85 = 1.90 in value 
+       Sometimes information isn't worth anything though
+      \begin{center}
+        \includegraphics[width=3.5in]{BevoImperfect} \\
+      \end{center}
+
+    \end{frame}
+
+
+    %{slide 14}
+    \begin{frame}[fragile]{Things to Remember About Information Value}
+       \fontsize{10}{10}\selectfont   
+          \begin{itemize} [<+->]
+            \item Perfect information is more valuable that any imperfect information
+            \item Information cannot have negative value
+            \item Information has non-zero value if and only if it changes some decision
+            \item Sometimes there is more than one correct way to draw a decision tree for a decision
+          \end{itemize}   
+    \end{frame}
+
+  \end{darkframes}
+\end{document}
