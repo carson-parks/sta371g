@@ -175,8 +175,8 @@
     \begin{frame}[fragile]{What About Imperfect Information?}
       Suppose that Myra the movie critic has a good record of picking winners
       \begin{itemize} [<+->]
-        \item If Myra likes a movie, the probability of a Strong market reaction is 66 percent and of a Weak one is 18 percent
-        \item If Myra dislikes a movie, the probability of a Weak market reaction is 82 and of a Strong market reaction is 33 percent 
+        \item In the past, Myra predicted Strong for 70 percent of movies where the audience reaction was Strong and Weak for 30 percent of them.
+        \item Similarly, she predicted Weak for 80 percent of movies where the audience reaction was Weak and predicted Strong for 20 percent of them.
         \item Also, remember that the probability of a Strong reaction is 45 percent and of a Weak reaction is 55 percent
       \end{itemize}
 
@@ -188,19 +188,28 @@
 
 
     %{slide 12}
-    \begin{frame}[fragile]{Now Redo the Decision Tree With the New Information}
+    \begin{frame}[fragile]{Reverse the Tree!}
 
       \begin{center}
-        \includegraphics[width=3.5in]{MyraPayoffs} \\
+        \includegraphics[width=3.5in]{BeforeFlip} \\
       \end{center}
 
     \end{frame}
 
 
     %{slide 13}
-    \begin{frame}[fragile]{Myra's Information is Is Worth Paying For}
-       It changes the decision and 14.75 - 12.85 = 1.90 in value 
-       Sometimes information isn't worth anything though
+    \begin{frame}[fragile]{Reverse the Tree!}
+
+      \begin{center}
+        \includegraphics[width=3.5in]{AfterFlip} \\
+      \end{center}
+
+    \end{frame}
+
+
+    %{slide 14}
+    \begin{frame}[fragile]{Tree With Imperfect Information}
+       
       \begin{center}
         \includegraphics[width=3.5in]{BevoImperfect} \\
       \end{center}
@@ -208,7 +217,17 @@
     \end{frame}
 
 
-    %{slide 14}
+    %{slide 15}
+    \begin{frame}[fragile]{Myra's Information is Is Worth Paying For}
+       It changes the decision and adds 13.65 - 12.85 = 0.80 in value 
+      \begin{center}
+        \includegraphics[width=3.5in]{BevoImperfect} \\
+      \end{center}
+
+    \end{frame}
+
+
+    %{slide 16}
     \begin{frame}[fragile]{Things to Remember About Information Value}
        \fontsize{10}{10}\selectfont   
           \begin{itemize} [<+->]
