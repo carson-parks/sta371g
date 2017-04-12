@@ -41,7 +41,7 @@
     \end{frame}
 
     %{slide 2}
-    \begin{frame}{Topics to Cover}
+    \begin{frame}{Key topics for today}
       \fontsize{10}{10}\selectfont
         \begin{itemize}[<+->]
             \item Value of Information
@@ -54,7 +54,7 @@
 
 
     %{slide 3}
-    \begin{frame}[fragile]{Value of Information}
+    \begin{frame}[fragile]{Value of information}
 
         \begin{itemize}[<+->]
             \item Sometimes information can lead to better decisions.
@@ -66,7 +66,7 @@
 
 
     %{slide 4}
-    \begin{frame}[fragile]{Typical Setup}
+    \begin{frame}[fragile]{Typical setup}
 
       \begin{itemize}[<+->]
         \item In a multistage decision problem, often the first-stage decision is whether to purchase information that will help make a better second stage decision
@@ -81,7 +81,7 @@
 
 
     %{slide 5}
-    \begin{frame}[fragile]{Example: Marketing Strategy for Bevo: The Movie}
+    \begin{frame}[fragile]{Example: Marketing Strategy for \emph{Bevo: The Movie}}
       \fontsize{10}{10}\selectfont
       UT Productions has to decide on a marketing strategy for it's new movie, Bevo.  Three major strategies are being considered:
       \begin{itemize} [<+->]
@@ -95,7 +95,7 @@
 
 
     %{slide 6}
-    \begin{frame}[fragile]{Payoffs for Bevo: The Movie}
+    \begin{frame}[fragile]{Payoffs for \emph{Bevo: The Movie}}
       \fontsize{10}{10}\selectfont
       The net payoffs depend on the market reaction to the film.
 
@@ -107,7 +107,7 @@
 
 
     %{slide 7}
-    \begin{frame}[fragile]{Decision Tree for Bevo: The Movie}
+    \begin{frame}[fragile]{Decision Tree for \emph{Bevo: The Movie}}
 
         \begin{center}
           \includegraphics[width=3.5in]{BevoDecisionTree} 
@@ -132,7 +132,7 @@
 
 
     %{slide 9}
-    \begin{frame}[fragile]{Finding EVPI With a Payoff Table}
+    \begin{frame}[fragile]{Finding EVPI with a payoff table}
       \fontsize{10}{10}\selectfont
       The payoffs depend on the market reaction to the film:
         \begin{center}
@@ -141,14 +141,14 @@
         \begin{itemize} [<+->]
           \item With no information, the Basic strategy is best: EV = 0.45(20) + 0.55(7) = 12.85
           \item With perfect info, select the Agressive strategy for a Strong reaction and the Cautious strategy for a Weak reaction: EV = 0.45(30) + 0.55(10) = 19
-          \item EVPI = 19 - 12.85 = 6.15
+          \item $\text{EVPI} = 19 - 12.85 = 6.15$
         \end{itemize}        
     \end{frame}     
 
 
 
    %{slide 10}
-    \begin{frame}[fragile]{Finding EVPI With a Decision Tree}
+    \begin{frame}[fragile]{Finding EVPI with a decision tree}
        \fontsize{10}{10}\selectfont   
           \begin{itemize} [<+->]
             \item Step 1: Set up tree without perfect information and calculate EV by rolling back
@@ -160,7 +160,7 @@
 
 
     %{slide 11}
-    \begin{frame}[fragile]{Finding EVPI With a Decision Tree}
+    \begin{frame}[fragile]{Finding EVPI with a decision tree}
       \fontsize{10}{10}\selectfont
 
         \begin{center}
@@ -172,23 +172,38 @@
 
 
     %{slide 11}
-    \begin{frame}[fragile]{What About Imperfect Information?}
-      Suppose that Myra the movie critic has a good record of picking winners
-      \begin{itemize} [<+->]
-        \item In the past, Myra predicted Strong for 70 percent of movies where the audience reaction was Strong and Weak for 30 percent of them.
-        \item Similarly, she predicted Weak for 80 percent of movies where the audience reaction was Weak and predicted Strong for 20 percent of them.
-        \item Also, remember that the probability of a Strong reaction is 45 percent and of a Weak reaction is 55 percent
+    \begin{frame}[fragile]{What about imperfect information?}
+      Suppose that Myra the movie critic has a good record of picking winners.
+      \begin{itemize}
+        \item For movies where the audience reaction was strong, Myra has historically predicted that 70\% of them would be strong.
+        \item For movies where the audience reaction was weak, Myra has historically predicted that 80\% of them would be weak.
       \end{itemize}
 
-      \pause
-      What to do now???
+      Remember that the probability of a strong reaction is 45\% and of a weak reaction is 55\%.
 
       \lc %{How much do you think Myra's information is worth?}
     \end{frame}
 
+    \begin{frame}
+      Suppose $S$ and $W$ means the audience reaction was strong or weak, respectively, and $PS$ and $PW$ means that Myra's prediction was strong or weak, respectively. Let's translate what we know:
+      \pause
+      \begin{itemize}
+        \item For movies where the audience reaction was strong, Myra has historically predicted that 70\% of them would be strong.\pause
+
+        $  P(PS|S) = \pause .7,\pause \qquad P(PW|S) = \pause .3 $ \pause
+        \item For movies where the audience reaction was weak, Myra has historically predicted that 80\% of them would be weak.\pause
+
+        $P(PW|W) = \pause .8,\pause \qquad P(PS|W) = \pause .2$  \pause
+        \item The probability of a strong reaction is 45\% and of a weak reaction is 55\%.\pause
+        
+        $  P(S) = .45, \qquad P(W) = .55 $
+      \end{itemize}
+    \end{frame}
+
+
 
     %{slide 12}
-    \begin{frame}[fragile]{Reverse the Tree!}
+    \begin{frame}[fragile]{Reverse the tree!}
 
       \begin{center}
         \includegraphics[width=3.5in]{BeforeFlip} \\
@@ -198,7 +213,7 @@
 
 
     %{slide 13}
-    \begin{frame}[fragile]{Reverse the Tree!}
+    \begin{frame}[fragile]{Reverse the tree!}
 
       \begin{center}
         \includegraphics[width=3.5in]{AfterFlip} \\
@@ -208,7 +223,7 @@
 
 
     %{slide 14}
-    \begin{frame}[fragile]{Tree With Imperfect Information}
+    \begin{frame}[fragile]{Tree with imperfect information}
        
       \begin{center}
         \includegraphics[width=3.5in]{BevoImperfect} \\
@@ -218,7 +233,7 @@
 
 
     %{slide 15}
-    \begin{frame}[fragile]{Myra's Information is Is Worth Paying For}
+    \begin{frame}[fragile]{Myra's information is worth paying for}
        It changes the decision and adds 13.65 - 12.85 = 0.80 in value 
       \begin{center}
         \includegraphics[width=3.5in]{BevoImperfect} \\
@@ -228,8 +243,7 @@
 
 
     %{slide 16}
-    \begin{frame}[fragile]{Things to Remember About Information Value}
-       \fontsize{10}{10}\selectfont   
+    \begin{frame}[fragile]{Things to remember about the value of information}
           \begin{itemize} [<+->]
             \item Perfect information is more valuable that any imperfect information
             \item Information cannot have negative value
