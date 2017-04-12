@@ -228,9 +228,9 @@
 
     %{slide 15}
     \begin{frame}[fragile]{Myra's information is worth paying for}
-       It changes the decision and adds 13.65 - 12.85 = 0.80 in value 
+       It changes the decision and adds $14.35 - 12.85 = 1.5$ in value. (Compare this to the 6.15 the clairvoyant's prediction was worth.)
       \begin{center}
-        \includegraphics[width=3.5in]{BevoImperfect} \\
+        \includegraphics[width=3in]{BevoImperfect} \\
       \end{center}
 
     \end{frame}
